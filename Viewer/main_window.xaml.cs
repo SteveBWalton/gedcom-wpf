@@ -13,15 +13,24 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace gedcom
+namespace gedcom.viewer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Member Variables
+
+        private gedcom.Gedcom gedcom_;
+
+        #endregion
+
+
         public MainWindow()
         {
+            gedcom_ = new gedcom.Gedcom();
+
             InitializeComponent();
         }
 
@@ -33,7 +42,15 @@ namespace gedcom
 
         private void AppTest_Click(object sender, RoutedEventArgs e)
         {
-            webBrowser_.NavigateToString("<h1>Hello World</h1>");
+            StringBuilder html = new StringBuilder();
+
+            foreach(gedcom.Tag tag in gedcom_.tags_)
+            {
+                html.Append("<p>" + tag.key + " = " + tag.value + "</p>");
+            }
+
+
+            webBrowser_.NavigateToString("<h1>Hello World</h1>" + html);
         }
     }
 }

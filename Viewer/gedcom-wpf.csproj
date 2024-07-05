@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{956D7770-B25C-45F3-A218-CE7008612CDC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>gedcom</RootNamespace>
+    <RootNamespace>gedcom.viewer</RootNamespace>
     <AssemblyName>gedcom-wpf</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -94,6 +94,12 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\gedcom-cs\gedcom-cs.csproj">
+      <Project>{cf0ae754-f46d-40a8-a9e3-779e42f6c267}</Project>
+      <Name>gedcom-cs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
