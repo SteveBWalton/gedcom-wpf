@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.34526.175
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gedcom-wpf", "gedcom-wpf.csproj", "{956D7770-B25C-45F3-A218-CE7008612CDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gedcom-wpf", "Viewer/gedcom-wpf.csproj", "{956D7770-B25C-45F3-A218-CE7008612CDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
