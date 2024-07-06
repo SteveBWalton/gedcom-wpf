@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gedcom.cs" />
+    <Compile Include="individual.cs" />
+    <Compile Include="individuals.cs" />
     <Compile Include="Properties\assemblyinfo.cs" />
     <Compile Include="tag.cs" />
     <Compile Include="tags.cs" />
