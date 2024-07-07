@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gedcom.viewer"
         mc:Ignorable="d"
-        Title="GedCom WPF" Height="450" Width="800">
+        Title="GedCom WPF" Height="450" Width="800" Loaded="windowLoaded">
     <DockPanel>
         <Menu Width="Auto" Height="20" DockPanel.Dock="Top">
             <MenuItem Header="_File">

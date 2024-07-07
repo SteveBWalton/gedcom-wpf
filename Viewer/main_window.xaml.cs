@@ -52,5 +52,10 @@ namespace gedcom.viewer
 
             webBrowser_.NavigateToString("<h1>Hello World</h1>" + html);
         }
+
+        private void windowLoaded(object sender, RoutedEventArgs e)
+        {
+            gedcom_.open("walton.ged");
+        }
     }
 }
