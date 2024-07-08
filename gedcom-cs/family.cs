@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace gedcom
 {
-    /// <summary>Class to represent an individual in a gedcom.</summary>
-    public class Individual : TopLevel
+    /// <summary>Class to represent a family in a gedcom file.</summary>
+    public class Family : TopLevel
     {
         #region Member Variables
 
@@ -16,13 +16,13 @@ namespace gedcom
         #region Class Constructors
 
         /// <summary>Empty class constructor.</summary>
-        public Individual()
+        public Family()
         {
         }
 
         /// <summary>Create an individual from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the individual from.</param>
-        public Individual(Tag tag) : base(tag)
+        public Family(Tag tag) : base(tag)
         {
         }
 
@@ -34,17 +34,11 @@ namespace gedcom
         {
             get
             {
-                Tag tagName = _tag.children.findOne("NAME");
-                if (tagName == null)
-                {
-                    return "Error";
-                }
-
-                // This is not really correct.
-                return tagName.value;
+                return "Undefined";
             }
         }
 
         #endregion
+
     }
 }

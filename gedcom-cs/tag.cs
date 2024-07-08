@@ -11,57 +11,106 @@ namespace gedcom
     {
         #region Member Variables
 
-        // Block stuff that we want to get rid of.
+        /// <summary>The original line that created this tag. </summary>
         private string _line;
+        /// <summary>The original level of this tag.</summary>
         private int _level;
-
-
-        private string key_;
-        private string value_;
+        /// <summary>The child tags of this tag.</summary>
         private Tags _children;
+        /// <summary>The key of the tag.</summary>
+        private string _key;
+        /// <summary>The value of the tag.</summary>
+        private string _value;
 
         #endregion
 
         #region Class Constructors
 
+        /// <summary>Empty class constructor.</summary>
         public Tag()
         {
             _line = "";
             _level = -1;
-
             _children = new Tags();
+            _key = "";
+            _value = "";
         }
-
-        /*
-        public Tag(string key, string value)
-        {
-
-            key_ = key;
-            value_ = value;
-        }
-        */
 
         #endregion
 
+        /// <summary>Returns the specified key as an index string.</summary>
+        /// <param name="key">Specifies the key to convert to an index string.</param>
+        public static string toIdx(string key)
+        {
+            // Really expect this to be true.
+            if (key.StartsWith("@") && key.EndsWith("@"))
+            {
+                return key.Substring(1, key.Length - 2);
+            }
+            // Don't really expect this.
+            return key;
+        }
+
+
+        /// <summary>Add a line from a gedcom file to this tag.</summary>
+        /// <param name="line">Specifies the line to add.</param>
+        /// <returns>True for success, false otherwise.</returns>
         public bool add(string line)
         {
             // Console.WriteLine(line);
+            // Get the level of this line.
+            int firstSpace = 1;
+            if (line[1] != ' ')
+            {
+                firstSpace = 2;
+            }
+            // One character for level.
             int level = line[0] - '0';
+            if (firstSpace == 2)
+            {
+                // Two characters for level.
+                level = 10 * level + line[1] - '0';
+            }
             if (_line == "")
             {
+                // This tag is defined by the line.
                 _line = line;
                 _level = level;
+                // Find the second space.
+                int secondSpace = firstSpace + 1;
+                while(line[secondSpace]!=' ')
+                {
+                    secondSpace++;
+                    if (secondSpace >= line.Length)
+                    {
+                        secondSpace = -1;
+                        break;
+                    }
+                }
+                if (secondSpace == -1)
+                {
+                    _key = _line.Substring(firstSpace + 1);
+                    _value = "";
+
+                }
+                else
+                {
+                    _key = _line.Substring(firstSpace + 1, secondSpace - firstSpace-1);
+                    _value = _line.Substring(secondSpace + 1);
+                }
                 return true;
             }
             if (level == _level + 1)
             {
+                // A new child tag is defined by the line.
                 Tag newChild = new Tag();
                 newChild.add(line);
                 _children.add(newChild);
                 return true;
             }
-            Tag lastBlock = (Tag)_children[_children.count - 1];
-            return lastBlock.add(line);
+            // New information to added to the last tag by the line.
+            Tag lastTag = (Tag)_children[_children.count - 1];
+            return lastTag.add(line);
         }
 
         public string display(int indent)
@@ -77,22 +126,28 @@ namespace gedcom
             return output.ToString();
         }
 
+
+
+        #region Properties
+
+        /// <summary>The whole (original?) line that created this tag.</summary>
         public string line
         {
             get { return _line; }
         }
 
-        #region Properties
-
+        /// <summary>The type or key of the gedcom tag.</summary>
         public string key
         {
-            get { return key_; }
+            get { return _key; }
         }
+        /// <summary>The value of the gedcom tag.</summary>
         public string value
         {
-            get { return value_; }
-            set { value_ = value; }
+            get { return _value; }
+            set { _value = value; }
         }
+        /// <summary>The child tags of this gedcom tag.</summary>
         public Tags children
         {
             get { return _children; }

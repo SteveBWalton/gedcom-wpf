@@ -82,10 +82,10 @@ namespace gedcom.viewer
                 return;
             }
 
-            Console.WriteLine("uri.Query = " + e.Uri.Query);
-            Console.WriteLine("uri.LocalPath = " + e.Uri.LocalPath);
-            Console.WriteLine("uri.Host = " + e.Uri.Host);
-            Console.WriteLine("uri.Scheme = " + e.Uri.Scheme);
+            // Console.WriteLine("uri.Query = " + e.Uri.Query);
+            // Console.WriteLine("uri.LocalPath = " + e.Uri.LocalPath);
+            // Console.WriteLine("uri.Host = " + e.Uri.Host);
+            // Console.WriteLine("uri.Scheme = " + e.Uri.Scheme);
 
             // An in application link.
             if (e.Uri.Scheme == "app")

@@ -95,5 +95,23 @@ namespace gedcom
 
 
         #endregion
+
+        #region Public Methods
+
+        public Tag findOne(string tagName)
+        {
+            foreach (Tag child in this)
+            {
+                if (child.key == tagName)
+                {
+                    return child;
+                }
+            }
+
+            // Return failure
+            return null;
+        }
+
+        #endregion
     }
 }

@@ -15,25 +15,19 @@ namespace gedcom
     {
         /// <summary>The individuals in this gedcom.</summary>
         public Individuals individuals;
-
-        // Just for testing.
-        public Tags tags_;
+        /// <summary>The families in this gedcom.</summary>
+        public Families families;
 
         public Gedcom()
         {
             clear();
-
-            // Just for testing.
-            tags_ = new Tags();
-
-            //Tag tag = new Tag("One", "Two");
-            //tags_.add(tag);
         }
 
         /// <summary>Initialise and empty the gedcom object.</summary>
         public void clear()
         {
             individuals = new Individuals();
+            families = new Families();
         }
 
         public bool open(string fileName)
@@ -41,8 +35,8 @@ namespace gedcom
             // Remove any existing data.
             clear();
 
-            Tag block = new Tag();
-            int count = 0;
+            // Read the lines in the gedcom file.
+            Tag tag = new Tag();
             using (FileStream fileStream = File.OpenRead(fileName))
             {
                 using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8, true, 1024))
@@ -50,35 +44,34 @@ namespace gedcom
                     string line;
                     while ((line = streamReader.ReadLine()) != null)
                     {
+                        // Check for top level tag.
                         if (line.StartsWith("0"))
                         {
-                            if (block.line != "")
+                            // Deal with the previous top level tag, if any.
+                            if (tag.line != "")
                             {
-                                if (block.line.EndsWith("INDI"))
+                                if (tag.line.EndsWith("INDI"))
                                 {
-                                    Individual individual = new Individual(block);
+                                    Individual individual = new Individual(tag);
                                     individuals.add(individual);
                                 }
-                                // Deal with previous block.
-                                // Console.WriteLine(block.line);
+                                else if (tag.line.EndsWith("FAM"))
+                                {
+                                    Family family = new Family(tag);
+                                    families.add(family);
+                                }
                             }
 
-                            count++;
-                            if (count == 3)
-                            {
-                                Console.WriteLine("Test Block");
-                                Console.WriteLine(block.display(0));
-                            }
-
-                            // Start a new block.
-                            block = new Tag();
+                            // Start a new top level tag.
+                            tag = new Tag();
                         }
 
-                        block.add(line);
+                        // Add the data from the gedcom file to the tag.
+                        tag.add(line);
                     }
                 }
             }
-            if (block.line != "")
+            if (tag.line != "")
             {
                 // Deal with final block.
             }

@@ -8,20 +8,20 @@ using System.Collections;
 
 namespace gedcom
 {
-    /// <summary>Class to represent a collection of individuals in a gedcom.</summary>
-    public class Individuals : IEnumerable<Individual>
+    /// <summary>Class to represent a collection of family objects.</summary>
+    public class Families : IEnumerable<Family>
     {
         #region Member Variables
 
         /// <summary>The collection of tags.</summary>
-        private ArrayList _individuals;
+        private ArrayList _families;
 
         #endregion
 
         #region Class Constructor
 
         /// <summary>Empty class constructor.</summary>
-        public Individuals()
+        public Families()
         {
             clear();
         }
@@ -36,37 +36,37 @@ namespace gedcom
         /// <returns>True for success, false otherwise.</returns>
         public bool clear()
         {
-            _individuals = new ArrayList();
+            _families = new ArrayList();
             return true;
         }
 
 
 
-        /// <summary>The numbers of individuals in the collection.</summary>
+        /// <summary>The numbers of families in the collection.</summary>
         public int count
         {
-            get { return _individuals.Count; }
+            get { return _families.Count; }
         }
 
 
 
-        /// <summary>Add an individual to the collection.</summary>
-        /// <param name="tag">Specifies the individual to add to the collection.</param>
+        /// <summary>Add a family to the collection.</summary>
+        /// <param name="tag">Specifies the family to add to the collection.</param>
         /// <returns>True for success, false otherwise.</returns>
-        public bool add(Individual individual)
+        public bool add(Family family)
         {
-            _individuals.Add(individual);
+            _families.Add(family);
             return true;
         }
 
 
 
         /// <summary>An indexer for this class.</summary>
-        /// <param name="idx">Specifies the index of the individual [0..count-1].</param>
+        /// <param name="idx">Specifies the index of the family [0..count-1].</param>
         /// <returns>The tag at the specified position.</returns>
-        public Individual this[int idx]
+        public Family this[int idx]
         {
-            get { return (Individual)_individuals[idx]; }
+            get { return (Family)_families[idx]; }
         }
 
 
@@ -84,11 +84,11 @@ namespace gedcom
 
 
 
-        public IEnumerator<Individual> GetEnumerator()
+        public IEnumerator<Family> GetEnumerator()
         {
-            for (int idx = 0; idx < _individuals.Count; idx++)
+            for (int idx = 0; idx < _families.Count; idx++)
             {
-                yield return (Individual)_individuals[idx];
+                yield return (Family)_families[idx];
             }
         }
 
@@ -96,21 +96,19 @@ namespace gedcom
 
         #endregion
 
-        /// <summary>Return the individual with the specified index.</summary>
+        /// <summary>Return the family with the specified index.</summary>
         /// <param name="idx">Specifies the index to search for.</param>
-        /// <returns>The individual with the specified index or null.</returns>
-        public Individual find(string idx)
+        /// <returns>The family with the specified index or null.</returns>
+        public Family find(string idx)
         {
-            foreach (Individual individual in this)
+            foreach (Family family in this)
             {
-                if (individual.idx == idx)
+                if (family.idx == idx)
                 {
-                    return individual;
+                    return family;
                 }
             }
             return null;
         }
-
-
     }
 }
