@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+// DispatcherTimer.
+using System.Windows.Threading;
 
 namespace gedcom.viewer
 {
@@ -22,40 +24,83 @@ namespace gedcom.viewer
     {
         #region Member Variables
 
-        private gedcom.Gedcom gedcom_;
+        private gedcom.Gedcom _gedcom;
+        private Render _render;
+        //private DispatcherTimer _dispatcherTimer;
+        //private string _newUrl;
 
         #endregion
 
 
         public MainWindow()
         {
-            gedcom_ = new gedcom.Gedcom();
+            _gedcom = new gedcom.Gedcom();
+            _render = new Render(_gedcom);
+            //_newUrl = "";
+            //_dispatcherTimer = new DispatcherTimer();
+            //_dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            //_dispatcherTimer.Tick += dispatcherTimerTick;
 
             InitializeComponent();
         }
 
-        private void AppExit_Click(object sender, RoutedEventArgs e)
+        /*
+        private void dispatcherTimerTick(object sender, EventArgs e)
+        {
+            if (_newUrl != "")
+            {
+                _webBrowser.NavigateToString(_render.getContent(_newUrl));
+                _newUrl = "";
+            }
+        }
+        */
+
+        private void appExitClick(object sender, RoutedEventArgs e)
         {
             // Close the main window and exit the program.
             Close();
         }
 
-        private void AppTest_Click(object sender, RoutedEventArgs e)
+        private void appHomeClick(object sender, RoutedEventArgs e)
         {
-            StringBuilder html = new StringBuilder();
-
-            foreach(gedcom.Tag tag in gedcom_.tags_)
-            {
-                html.Append("<p>" + tag.key + " = " + tag.value + "</p>");
-            }
-
-
-            webBrowser_.NavigateToString("<h1>Hello World</h1>" + html);
+            // Show the home page.
+            _webBrowser.NavigateToString(_render.getContent("home"));
         }
 
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
-            gedcom_.open("walton.ged");
+            _gedcom.open("walton.ged");
+
+            _webBrowser.NavigateToString(_render.getContent("home"));
         }
+
+        private void webBrowserNavigating(object sender, NavigatingCancelEventArgs e)
+        {
+            if (e.Uri == null)
+            {
+                // Probably navigating to a string, so okay.
+                return;
+            }
+
+            // Probably following a link, so check for an in app link.
+            string url = e.Uri.ToString();
+            if (url.StartsWith("app://"))
+            {
+                // A within app link, so build ourselves not web browser follow.
+                e.Cancel = true;
+
+                // Build the content within the application.
+                string newUrl = url.Substring(6);
+                // _dispatcherTimer.Start();
+                _webBrowser.NavigateToString(_render.getContent(newUrl));
+
+                // Close this navigation.
+                return;
+            }
+
+            // Allow the web browser control to deal with the uri.
+            return;
+        }
+
     }
 }

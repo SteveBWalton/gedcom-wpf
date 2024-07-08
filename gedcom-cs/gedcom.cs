@@ -21,6 +21,8 @@ namespace gedcom
 
         public Gedcom()
         {
+            clear();
+
             // Just for testing.
             tags_ = new Tags();
 
@@ -28,8 +30,17 @@ namespace gedcom
             //tags_.add(tag);
         }
 
+        /// <summary>Initialise and empty the gedcom object.</summary>
+        public void clear()
+        {
+            individuals = new Individuals();
+        }
+
         public bool open(string fileName)
         {
+            // Remove any existing data.
+            clear();
+
             Tag block = new Tag();
             int count = 0;
             using (FileStream fileStream = File.OpenRead(fileName))
@@ -43,7 +54,7 @@ namespace gedcom
                         {
                             if (block.line != "")
                             {
-                                if (block.line.EndsWith("INDI"));
+                                if (block.line.EndsWith("INDI"))
                                 {
                                     Individual individual = new Individual(block);
                                     individuals.add(individual);

@@ -9,8 +9,8 @@
     <DockPanel>
         <Menu Width="Auto" Height="20" DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem x:Name="appTest" Header="Test" HorizontalAlignment="Left" Width="140" Click="AppTest_Click" />
-                <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="AppExit_Click" />
+                <MenuItem x:Name="appTest" Header="Home" HorizontalAlignment="Left" Width="140" Click="appHomeClick" />
+                <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="appExitClick" />
             </MenuItem>
             <MenuItem Header="_Tools">
                 <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left" Width="140"/>
@@ -19,6 +19,6 @@
                 <MenuItem x:Name="About" Header="&amp;About" HorizontalAlignment="Left" Width="140"/>
             </MenuItem>
         </Menu>
-        <WebBrowser x:Name="webBrowser_" />
+        <WebBrowser x:Name="_webBrowser" Navigating="webBrowserNavigating" />
     </DockPanel>
 </Window>

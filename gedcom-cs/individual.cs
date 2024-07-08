@@ -33,5 +33,14 @@ namespace gedcom
 
         #endregion
 
+        #region Properties
+
+        /// <summary>The gedcom tags on this individual. </summary>
+        public Tags tags
+        {
+            get { return _tags; }
+        }
+
+        #endregion
     }
 }
