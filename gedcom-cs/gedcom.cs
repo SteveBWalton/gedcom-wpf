@@ -5,11 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 // File
 using System.IO;
+// ArrayList
+using System.Collections;
+
 
 namespace gedcom
 {
     public class Gedcom
     {
+        /// <summary>The individuals in this gedcom.</summary>
+        public Individuals individuals;
+
         // Just for testing.
         public Tags tags_;
 
@@ -18,12 +24,14 @@ namespace gedcom
             // Just for testing.
             tags_ = new Tags();
 
-            Tag tag = new Tag("One", "Two");
-            tags_.add(tag);
+            //Tag tag = new Tag("One", "Two");
+            //tags_.add(tag);
         }
 
         public bool open(string fileName)
         {
+            Tag block = new Tag();
+            int count = 0;
             using (FileStream fileStream = File.OpenRead(fileName))
             {
                 using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8, true, 1024))
@@ -31,9 +39,37 @@ namespace gedcom
                     string line;
                     while ((line = streamReader.ReadLine()) != null)
                     {
-                        Console.WriteLine(line);
+                        if (line.StartsWith("0"))
+                        {
+                            if (block.line != "")
+                            {
+                                if (block.line.EndsWith("INDI"));
+                                {
+                                    Individual individual = new Individual(block);
+                                    individuals.add(individual);
+                                }
+                                // Deal with previous block.
+                                // Console.WriteLine(block.line);
+                            }
+
+                            count++;
+                            if (count == 3)
+                            {
+                                Console.WriteLine("Test Block");
+                                Console.WriteLine(block.display(0));
+                            }
+
+                            // Start a new block.
+                            block = new Tag();
+                        }
+
+                        block.add(line);
                     }
                 }
+            }
+            if (block.line != "")
+            {
+                // Deal with final block.
             }
 
             // Return success.

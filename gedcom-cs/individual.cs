@@ -12,7 +12,7 @@ namespace gedcom
         #region Member Variables
 
         /// <summary>The gedcom tags for this individual.</summary>
-        private Tags tags_;
+        private Tags _tags;
 
         #endregion
 
@@ -21,7 +21,14 @@ namespace gedcom
         /// <summary>Empty class constructor.</summary>
         public Individual()
         {
-            tags_ = new Tags();
+            _tags = new Tags();
+        }
+
+        /// <summary>Create an individual from the specified tag.</summary>
+        /// <param name="tag">Specifies the tag to build the individual from.</param>
+        public Individual(Tag tag)
+        {
+            _tags = tag.children;
         }
 
         #endregion
