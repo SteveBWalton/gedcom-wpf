@@ -64,14 +64,14 @@ namespace gedcom.viewer
         private void appHomeClick(object sender, RoutedEventArgs e)
         {
             // Show the home page.
-            _webBrowser.NavigateToString(_render.getContent("home"));
+            _webBrowser.NavigateToString(_render.getContent("home", ""));
         }
 
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
             _gedcom.open("walton.ged");
 
-            _webBrowser.NavigateToString(_render.getContent("home"));
+            _webBrowser.NavigateToString(_render.getContent("home", ""));
         }
 
         private void webBrowserNavigating(object sender, NavigatingCancelEventArgs e)
@@ -82,17 +82,19 @@ namespace gedcom.viewer
                 return;
             }
 
-            // Probably following a link, so check for an in app link.
-            string url = e.Uri.ToString();
-            if (url.StartsWith("app://"))
+            Console.WriteLine("uri.Query = " + e.Uri.Query);
+            Console.WriteLine("uri.LocalPath = " + e.Uri.LocalPath);
+            Console.WriteLine("uri.Host = " + e.Uri.Host);
+            Console.WriteLine("uri.Scheme = " + e.Uri.Scheme);
+
+            // An in application link.
+            if (e.Uri.Scheme == "app")
             {
                 // A within app link, so build ourselves not web browser follow.
                 e.Cancel = true;
 
                 // Build the content within the application.
-                string newUrl = url.Substring(6);
-                // _dispatcherTimer.Start();
-                _webBrowser.NavigateToString(_render.getContent(newUrl));
+                _webBrowser.NavigateToString(_render.getContent(e.Uri.Host, e.Uri.Query));
 
                 // Close this navigation.
                 return;

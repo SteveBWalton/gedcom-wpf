@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+// This requires an additional reference to System.Web in references.
+// HttpUtility
+using System.Web;
+// NameValueCollection.
+using System.Collections.Specialized;
 
 namespace gedcom.viewer
 {
@@ -18,17 +23,17 @@ namespace gedcom.viewer
             _gedcom = gedcom;
         }
 
-        public string getContent(string url)
+        public string getContent(string host, string query)
         {
-            if (url.StartsWith("home"))
+            if (host == "home")
             {
                 return getHome();
             }
-            if (url.StartsWith("individual"))
+            if (host == "individual")
             {
-                return getIndividual(url);
+                return getIndividual(query);
             }
-            return getError(url);
+            return getError(host, query);
         }
 
         private string getHome()
@@ -50,23 +55,34 @@ namespace gedcom.viewer
             return html.ToString();
         }
 
-        private string getIndividual(string url)
+        private string getIndividual(string query)
         {
             StringBuilder html = new StringBuilder();
 
             html.Append("<h1>Individual</h1>");
-            html.Append("<p>Url is '" + url + "'</p>");
+            html.Append("<p>query is '" + query + "'</p>");
+            NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
+            string idx = queryParams.Get("id");
+            html.Append("<p>id is '" + idx + "'</p>");
+            string missing = queryParams.Get("missing");
+            html.Append("<p>missing is '" + missing + "'</p>");
             html.Append("<p><a href=\"app://home\">Home</a></p>");
+
+            // This will be some like of lookup in future.
+            int individualIdx = int.Parse(idx);
+
+            Individual individual = _gedcom.individuals[individualIdx];
+            html.Append("<pre>" + individual.tag.display(0) + "</pre>");
 
             return html.ToString();
         }
 
-        private string getError(string url)
+        private string getError(string host, string query)
         {
             StringBuilder html = new StringBuilder();
 
             html.Append("<h1>Error</h1>");
-            html.Append("<p>Url is '" + url + "'</p>");
+            html.Append("<p>host is '" + host + "', query is '" + query + "'</p>");
             html.Append("<p><a href=\"app://home\">Home</a></p>");
 
             return html.ToString();

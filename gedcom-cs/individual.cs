@@ -14,6 +14,11 @@ namespace gedcom
         /// <summary>The gedcom tags for this individual.</summary>
         private Tags _tags;
 
+        /// <summary>
+        /// The gedcom tag for this individual.
+        /// </summary>
+        private Tag _tag;
+
         #endregion
 
         #region Class Constructors
@@ -29,6 +34,7 @@ namespace gedcom
         public Individual(Tag tag)
         {
             _tags = tag.children;
+            _tag = tag;
         }
 
         #endregion
@@ -39,6 +45,11 @@ namespace gedcom
         public Tags tags
         {
             get { return _tags; }
+        }
+
+        public Tag tag
+        {
+            get { return _tag; }
         }
 
         #endregion
