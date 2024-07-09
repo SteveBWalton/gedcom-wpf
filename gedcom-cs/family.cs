@@ -22,7 +22,8 @@ namespace gedcom
 
         /// <summary>Create an individual from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the individual from.</param>
-        public Family(Tag tag) : base(tag)
+        /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
+        public Family(Tag tag, Gedcom gedcom) : base(tag, gedcom)
         {
         }
 
@@ -46,7 +47,35 @@ namespace gedcom
         {
             get
             {
-                return "Undefined";
+                string name = "";
+                Tag tagHusband = _tag.children.findOne("HUSB");
+                if (tagHusband != null)
+                {
+                    Individual husband = _gedcom.individuals.find(Tag.toIdx(tagHusband.value));
+                    if (husband != null)
+                    {
+                        name = husband.fullName;
+                    }
+                }
+
+                Tag tagWife = _tag.children.findOne("WIFE");
+                if (tagWife != null)
+                {
+                    Individual wife = _gedcom.individuals.find(Tag.toIdx(tagWife.value));
+                    if (wife != null)
+                    {
+                        if (name != "")
+                        {
+                            name += " and ";
+                        }
+                        name += wife.fullName;
+                    }
+                }
+                if (name == "")
+                {
+                    return "Undefined";
+                }
+                return name;
             }
         }
 

@@ -68,12 +68,12 @@ namespace gedcom
                             {
                                 if (tag.line.EndsWith("INDI"))
                                 {
-                                    Individual individual = new Individual(tag);
+                                    Individual individual = new Individual(tag, this);
                                     individuals.add(individual);
                                 }
                                 else if (tag.line.EndsWith("FAM"))
                                 {
-                                    Family family = new Family(tag);
+                                    Family family = new Family(tag, this);
                                     families.add(family);
                                 }
                             }
