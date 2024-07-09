@@ -13,10 +13,18 @@ namespace gedcom
 {
     public class Gedcom
     {
+        #region Member Variables
+
+        /// <summary>The filename of this gedcom file.</summary>
+        private string _fileName;
         /// <summary>The individuals in this gedcom.</summary>
         public Individuals individuals;
         /// <summary>The families in this gedcom.</summary>
         public Families families;
+
+        #endregion
+
+        #region Constructors
 
         public Gedcom()
         {
@@ -26,14 +34,22 @@ namespace gedcom
         /// <summary>Initialise and empty the gedcom object.</summary>
         public void clear()
         {
+            _fileName = "";
             individuals = new Individuals();
             families = new Families();
         }
+
+        #endregion
+
+        #region File IO
 
         public bool open(string fileName)
         {
             // Remove any existing data.
             clear();
+
+            // Save the file name.
+            _fileName = fileName;
 
             // Read the lines in the gedcom file.
             Tag tag = new Tag();
@@ -79,5 +95,17 @@ namespace gedcom
             // Return success.
             return true;
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>The file name of this gedcom file.</summary>
+        public string fileName
+        {
+            get { return _fileName; }
+        }
+
+        #endregion
     }
 }

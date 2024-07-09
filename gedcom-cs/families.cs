@@ -110,5 +110,18 @@ namespace gedcom
             }
             return null;
         }
+
+        public Family[] inDateOrder()
+        {
+            // Get an array of the individuals.
+            Family[] array = (Family[])_families.ToArray(typeof(Family));
+
+            // Sort the array.
+            Array.Sort(array);
+
+            // Return the sorted array.
+            return array;
+        }
+
     }
 }

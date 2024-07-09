@@ -111,6 +111,17 @@ namespace gedcom
             return null;
         }
 
+        public Individual[] inDateOrder()
+        {
+            // Get an array of the individuals.
+            Individual[] array = (Individual[])_individuals.ToArray(typeof(Individual));
+
+            // Sort the array.
+            Array.Sort(array);
+
+            // Return the sorted array.
+            return array;
+        }
 
     }
 }

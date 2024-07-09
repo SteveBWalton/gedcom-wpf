@@ -40,35 +40,49 @@ namespace gedcom.viewer
             return getError(host, query);
         }
 
+        /// <summary>Render the home page in html.</summary>
+        /// <returns>The home page in html.</returns>
         private string getHome()
         {
             StringBuilder html = new StringBuilder();
 
-            html.Append("<h1>Hello World</h1>");
+            html.Append("<h1>" + _gedcom.fileName + "</h1>");
 
             html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
             html.Append("<legend>Individuals</legend>");
+            html.Append("<table>");
             int count = 0;
-            foreach (Individual individual in _gedcom.individuals)
+            Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
+            foreach (Individual individual in individualsInDateOrder)
             {
-                html.Append("<p><a href=\"app://individual?id=" + individual.idx + "\">" + individual.idx + "-" + individual.fullName + " " + individual.lastChanged.ToString() + "</a>");
-
-                html.Append("</p>");
+                html.Append("<tr><td><a href=\"app://individual?id=" + individual.idx + "\">" + individual.fullName + "</a></td><tr>");
                 count++;
+                if (count >= 10)
+                {
+                    break;
+                }
             }
+            html.Append("</table>");
+            html.Append("<p>There are " + _gedcom.individuals.count.ToString() + " individuals.");
             html.Append("</fieldset>");
             // html.Append("</div>");
 
             html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
             html.Append("<legend>Families</legend>");
+            html.Append("<table>");
             count = 0;
-            foreach (Family family in _gedcom.families)
+            Family[] familiesInDateOrder = _gedcom.families.inDateOrder();
+            foreach (Family family in familiesInDateOrder)
             {
-                html.Append("<p><a href=\"app://family?id=" + family.idx + "\">" + family.idx + "-" + family.fullName + " " + family.lastChanged.ToString() + "</a>");
-
-                html.Append("</p>");
+                html.Append("<tr><td><a href=\"app://family?id=" + family.idx + "\">" + family.fullName + "</a></td></tr>");
                 count++;
+                if (count >= 10)
+                {
+                    break;
+                }
             }
+            html.Append("</table>");
+            html.Append("<p>There are " + _gedcom.families.count.ToString() + " families.");
             html.Append("</fieldset>");
 
 

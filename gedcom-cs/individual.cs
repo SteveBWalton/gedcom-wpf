@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Collections;
+
 namespace gedcom
 {
     /// <summary>Class to represent an individual in a gedcom.</summary>
-    public class Individual : TopLevel
+    public class Individual : TopLevel, IComparable<Individual>
     {
         #region Member Variables
 
@@ -24,6 +26,18 @@ namespace gedcom
         /// <param name="tag">Specifies the tag to build the individual from.</param>
         public Individual(Tag tag) : base(tag)
         {
+        }
+
+        #endregion
+
+        #region IComparable<Individual>
+
+        /// <summary>Impliment a compare function for sorting.</summary>
+        /// <param name="otherIndividual">Specifies the individual to compare with.</param>
+        /// <returns>The comparison of the last edit date of the two individuals.</returns>
+        public int CompareTo(Individual otherIndividual)
+        {
+            return otherIndividual.lastChanged.CompareTo(lastChanged);
         }
 
         #endregion
