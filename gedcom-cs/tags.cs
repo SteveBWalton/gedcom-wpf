@@ -14,7 +14,8 @@ namespace gedcom
         #region Member Variables
 
         /// <summary>The collection of tags.</summary>
-        private ArrayList tags_;
+        // private ArrayList _tags;
+        private List<Tag> _tags;
 
         #endregion
 
@@ -36,7 +37,7 @@ namespace gedcom
         /// <returns>True for success, false otherwise.</returns>
         public bool clear()
         {
-            tags_ = new ArrayList();
+            _tags = new List<Tag>();
             return true;
         }
 
@@ -45,7 +46,7 @@ namespace gedcom
         /// <summary>The numbers of tags in the collection.</summary>
         public int count
         {
-            get { return tags_.Count; }
+            get { return _tags.Count; }
         }
 
 
@@ -55,7 +56,7 @@ namespace gedcom
         /// <returns>True for success, false otherwise.</returns>
         public bool add(Tag tag)
         {
-            tags_.Add(tag);
+            _tags.Add(tag);
             return true;
         }
 
@@ -66,7 +67,7 @@ namespace gedcom
         /// <returns>The tag at the specified position.</returns>
         public Tag this[int idx]
         {
-            get { return (Tag)tags_[idx]; }
+            get { return (Tag)_tags[idx]; }
         }
 
 
@@ -86,9 +87,9 @@ namespace gedcom
 
         public IEnumerator<Tag> GetEnumerator()
         {
-            for (int idx = 0; idx < tags_.Count; idx++)
+            for (int idx = 0; idx < _tags.Count; idx++)
             {
-                yield return (Tag)tags_[idx];
+                yield return (Tag)_tags[idx];
             }
         }
 
@@ -98,11 +99,14 @@ namespace gedcom
 
         #region Public Methods
 
-        public Tag findOne(string tagName)
+        /// <summary>Returns the first tag with the specified key or null.</summary>
+        /// <param name="tagKey">Specifies the key to search for.</param>
+        /// <returns>The first tag with the specified key or null.</returns>
+        public Tag findOne(string tagKey)
         {
             foreach (Tag child in this)
             {
-                if (child.key == tagName)
+                if (child.key == tagKey)
                 {
                     return child;
                 }
