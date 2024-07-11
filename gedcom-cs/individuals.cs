@@ -13,8 +13,9 @@ namespace gedcom
     {
         #region Member Variables
 
-        /// <summary>The collection of tags.</summary>
-        private ArrayList _individuals;
+        /// <summary>The collection of individuals.</summary>
+        // private ArrayList _individuals;
+        private List<Individual> _individuals;
 
         #endregion
 
@@ -36,7 +37,7 @@ namespace gedcom
         /// <returns>True for success, false otherwise.</returns>
         public bool clear()
         {
-            _individuals = new ArrayList();
+            _individuals = new List<Individual>();
             return true;
         }
 
@@ -114,7 +115,8 @@ namespace gedcom
         public Individual[] inDateOrder()
         {
             // Get an array of the individuals.
-            Individual[] array = (Individual[])_individuals.ToArray(typeof(Individual));
+            // Individual[] array = (Individual[])_individuals.ToArray(typeof(Individual));
+            Individual[] array = (Individual[])_individuals.ToArray();
 
             // Sort the array.
             Array.Sort(array);
