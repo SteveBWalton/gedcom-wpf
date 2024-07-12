@@ -14,7 +14,7 @@ namespace gedcom
         #region Member Variables
 
         /// <summary>The collection of tags.</summary>
-        private ArrayList _families;
+        private List<Family> _families;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace gedcom
         /// <returns>True for success, false otherwise.</returns>
         public bool clear()
         {
-            _families = new ArrayList();
+            _families = new List<Family>();
             return true;
         }
 
@@ -73,7 +73,7 @@ namespace gedcom
 
         #endregion
 
-        #region IEnumerable<Individual>
+        #region IEnumerable<Family>
 
 
 
@@ -96,6 +96,8 @@ namespace gedcom
 
         #endregion
 
+
+
         /// <summary>Return the family with the specified index.</summary>
         /// <param name="idx">Specifies the index to search for.</param>
         /// <returns>The family with the specified index or null.</returns>
@@ -111,10 +113,14 @@ namespace gedcom
             return null;
         }
 
+
+
+        /// <summary>Returns an array of Family in last edit order.</summary>
+        /// <returns>An array of Family in last edit order.</returns>
         public Family[] inDateOrder()
         {
-            // Get an array of the individuals.
-            Family[] array = (Family[])_families.ToArray(typeof(Family));
+            // Get an array of the families.
+            Family[] array = (Family[])_families.ToArray();
 
             // Sort the array.
             Array.Sort(array);
@@ -122,6 +128,8 @@ namespace gedcom
             // Return the sorted array.
             return array;
         }
+
+
 
     }
 }
