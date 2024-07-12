@@ -48,6 +48,7 @@ namespace gedcom.viewer
 
             html.Append("<h1>" + _gedcom.fileName + "</h1>");
 
+            // Display the individuals.
             html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
             html.Append("<legend>Individuals</legend>");
             html.Append("<table>");
@@ -65,8 +66,8 @@ namespace gedcom.viewer
             html.Append("</table>");
             html.Append("<p>There are " + _gedcom.individuals.count.ToString() + " individuals.");
             html.Append("</fieldset>");
-            // html.Append("</div>");
-
+            
+            // Display the families.
             html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
             html.Append("<legend>Families</legend>");
             html.Append("<table>");
@@ -85,10 +86,33 @@ namespace gedcom.viewer
             html.Append("<p>There are " + _gedcom.families.count.ToString() + " families.");
             html.Append("</fieldset>");
 
+            // Display the sources.
+            html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
+            html.Append("<legend>Sources</legend>");
+            html.Append("<table>");
+            count = 0;
+            Source[] sourcesInDateOrder = _gedcom.sources.inDateOrder();
+            foreach (Source source in sourcesInDateOrder)
+            {
+                html.Append("<tr><td><a href=\"app://source?id=" + source.idx + "\">" + source.idx + "</a></td></tr>");
+                count++;
+                if (count >= 10)
+                {
+                    break;
+                }
+            }
+            html.Append("</table>");
+            html.Append("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
+            html.Append("</fieldset>");
 
             return html.ToString();
         }
 
+
+
+        /// <summary>Render the specified individual in html.</summary>
+        /// <param name="query">Specifies the request query for this individual.</param>
+        /// <returns>A html description of the specified individual.</returns>
         private string getIndividual(string query)
         {
             StringBuilder html = new StringBuilder();
@@ -123,6 +147,11 @@ namespace gedcom.viewer
             return html.ToString();
         }
 
+
+
+        /// <summary>Render the specified family in html.</summary>
+        /// <param name="query">Specifies the request query for this family.</param>
+        /// <returns>A html description of the specified family.</returns>
         private string getFamily(string query)
         {
             StringBuilder html = new StringBuilder();
@@ -157,6 +186,12 @@ namespace gedcom.viewer
             return html.ToString();
         }
 
+
+
+        /// <summary>Render an error in html.</summary>
+        /// <param name="host">Specifies request host.</param>
+        /// <param name="query">Specifies the request query.</param>
+        /// <returns>An error message in html format.</returns>
         private string getError(string host, string query)
         {
             StringBuilder html = new StringBuilder();

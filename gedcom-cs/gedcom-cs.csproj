@@ -48,6 +48,7 @@
     <Compile Include="individuals.cs" />
     <Compile Include="Properties\assemblyinfo.cs" />
     <Compile Include="source.cs" />
+    <Compile Include="sources.cs" />
     <Compile Include="tag.cs" />
     <Compile Include="tags.cs" />
     <Compile Include="top_level.cs" />

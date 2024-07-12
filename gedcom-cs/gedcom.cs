@@ -21,6 +21,8 @@ namespace gedcom
         public Individuals individuals;
         /// <summary>The families in this gedcom.</summary>
         public Families families;
+        /// <summary>The sources in this gedcom.</summary>
+        public Sources sources;
 
         #endregion
 
@@ -37,6 +39,7 @@ namespace gedcom
             _fileName = "";
             individuals = new Individuals();
             families = new Families();
+            sources = new Sources();
         }
 
         #endregion
@@ -76,13 +79,18 @@ namespace gedcom
                                     Family family = new Family(tag, this);
                                     families.add(family);
                                 }
+                                else if (tag.line.EndsWith("SOUR"))
+                                {
+                                    Source source = new Source(tag, this);
+                                    sources.add(source);
+                                }
                             }
 
                             // Start a new top level tag.
                             tag = new Tag();
                         }
 
-                        // Add the data from the gedcom file to the tag.
+                        // Add the data from the gedcom file to the current tag.
                         tag.add(line);
                     }
                 }
