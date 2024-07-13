@@ -47,7 +47,7 @@ namespace gedcom
         {
             get
             {
-                Tag tagName = _tag.children.findOne("NAME");
+                Tag tagName = _tag.children.findOne("TITL");
                 if (tagName == null)
                 {
                     return "Error";

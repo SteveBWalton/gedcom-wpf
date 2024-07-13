@@ -11,18 +11,31 @@ using System.Collections.Specialized;
 
 namespace gedcom.viewer
 {
-    /// <summary>
-    /// Class to render content.
-    /// </summary>
+    /// <summary>Class to render content.</summary>
     public class Render
     {
+        #region Member Variables
+     
+        /// <summary>The gedcom to render.</summary>
         private Gedcom _gedcom;
 
+        #endregion
+
+        #region Class Constructors
+
+        /// <summary>Class constructor.</summary>
+        /// <param name="gedcom">Specifies the gedcom that this will render.</param>
         public Render(Gedcom gedcom)
         {
             _gedcom = gedcom;
         }
 
+        #endregion
+
+        /// <summary>Redner the requested host and query as html.</summary>
+        /// <param name="host">Specifies the request host. This is usually just the name of page.</param>
+        /// <param name="query">Specifies the request query. This is usually just the parameters for the page.</param>
+        /// <returns>The requested page as html.</returns>
         public string getContent(string host, string query)
         {
             if (host == "home")
@@ -37,8 +50,14 @@ namespace gedcom.viewer
             {
                 return getFamily(query);
             }
+            else if (host == "source")
+            {
+                return getSource(query);
+            }
             return getError(host, query);
         }
+
+
 
         /// <summary>Render the home page in html.</summary>
         /// <returns>The home page in html.</returns>
@@ -94,7 +113,7 @@ namespace gedcom.viewer
             Source[] sourcesInDateOrder = _gedcom.sources.inDateOrder();
             foreach (Source source in sourcesInDateOrder)
             {
-                html.Append("<tr><td><a href=\"app://source?id=" + source.idx + "\">" + source.idx + "</a></td></tr>");
+                html.Append("<tr><td><a href=\"app://source?id=" + source.idx + "\">" + source.fullName + "</a></td></tr>");
                 count++;
                 if (count >= 10)
                 {
@@ -183,6 +202,46 @@ namespace gedcom.viewer
                 html.Append("<pre>" + family.tag.display(0) + "</pre>");
             }
 
+            return html.ToString();
+        }
+
+
+
+        /// <summary>Render the requested source as html.</summary>
+        /// <param name="query">Specifies the request query for this source.</param>
+        /// <returns>The requested source as html.</returns>
+        private string getSource(string query)
+        {
+            StringBuilder html = new StringBuilder();
+            html.Append("<p><a href=\"app://home\">Home</a></p>");
+
+            NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
+            string idx = queryParams.Get("id");
+
+            Source source = _gedcom.sources.find(idx);
+            if (source == null)
+            {
+                html.Append("<h1>Source</h1>");
+                html.Append("<p>query is '" + query + "'</p>");
+                html.Append("<p>Can't find '" + idx + "'.</p>");
+                html.Append(idx + " not found!");
+            }
+            else
+            {
+                html.Append("<h1>" + source.fullName + " (" + source.idx + ")</h1>");
+                html.Append("<p>Last Changed " + source.lastChanged.ToString() + "</p>");
+
+                // Show some tags.
+                foreach (Tag tag in source.tag.children)
+                {
+                    html.Append("<p>'" + tag.key + "' = '" + tag.value + "'</p>");
+                }
+
+                // Show the original gedcom.
+                html.Append("<pre>" + source.tag.display(0) + "</pre>");
+            }
+
+            // Return the built html.
             return html.ToString();
         }
 
