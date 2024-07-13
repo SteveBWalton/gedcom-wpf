@@ -18,16 +18,19 @@ namespace gedcom.viewer
      
         /// <summary>The gedcom to render.</summary>
         private Gedcom _gedcom;
-
+        /// <summary>The user options.</summary>
+        private UserOptions _userOptions;
+        
         #endregion
 
         #region Class Constructors
 
         /// <summary>Class constructor.</summary>
         /// <param name="gedcom">Specifies the gedcom that this will render.</param>
-        public Render(Gedcom gedcom)
+        public Render(Gedcom gedcom,UserOptions userOptions)
         {
-            _gedcom = gedcom;
+            _gedcom = gedcom;        
+            _userOptions = userOptions;
         }
 
         #endregion
@@ -124,7 +127,8 @@ namespace gedcom.viewer
             html.Append("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
             html.Append("</fieldset>");
 
-            return html.ToString();
+            // Return the built string as html.
+            return _userOptions.renderHtml(html.ToString());
         }
 
 
@@ -160,10 +164,11 @@ namespace gedcom.viewer
                 }
 
                 // Show the original gedcom.
-                html.Append("<pre>" + individual.tag.display(0) + "</pre>");
+                html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");
             }
 
-            return html.ToString();
+            // Return the built string as html.
+            return _userOptions.renderHtml(html.ToString());
         }
 
 
@@ -202,7 +207,8 @@ namespace gedcom.viewer
                 html.Append("<pre>" + family.tag.display(0) + "</pre>");
             }
 
-            return html.ToString();
+            // Return the built string as html.
+            return _userOptions.renderHtml(html.ToString());
         }
 
 
@@ -241,8 +247,8 @@ namespace gedcom.viewer
                 html.Append("<pre>" + source.tag.display(0) + "</pre>");
             }
 
-            // Return the built html.
-            return html.ToString();
+            // Return the built string as html.
+            return _userOptions.renderHtml(html.ToString());
         }
 
 
@@ -259,7 +265,8 @@ namespace gedcom.viewer
             html.Append("<p>host is '" + host + "', query is '" + query + "'</p>");
             html.Append("<p><a href=\"app://home\">Home</a></p>");
 
-            return html.ToString();
+            // Return the built string as html.
+            return _userOptions.renderHtml(html.ToString());
         }
     }
 }

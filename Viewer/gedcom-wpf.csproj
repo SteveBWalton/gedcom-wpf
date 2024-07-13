@@ -61,6 +61,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="render.cs" />
+    <Compile Include="user_options.cs" />
     <Page Include="main_window.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

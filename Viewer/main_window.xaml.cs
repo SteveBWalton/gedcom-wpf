@@ -24,23 +24,27 @@ namespace gedcom.viewer
     {
         #region Member Variables
 
+        /// <summary>The gedom to display.</summary>
         private gedcom.Gedcom _gedcom;
+        /// <summary>The class to render the gedom to html.</summary>
         private Render _render;
         //private DispatcherTimer _dispatcherTimer;
         //private string _newUrl;
-
+        /// <summary>The user preferences.</summary>
+        private UserOptions _userOptions;
         #endregion
 
 
         public MainWindow()
         {
             _gedcom = new gedcom.Gedcom();
-            _render = new Render(_gedcom);
+            _userOptions = new UserOptions();
+            _render = new Render(_gedcom, _userOptions);
             //_newUrl = "";
             //_dispatcherTimer = new DispatcherTimer();
             //_dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             //_dispatcherTimer.Tick += dispatcherTimerTick;
-
+            
             InitializeComponent();
         }
 
