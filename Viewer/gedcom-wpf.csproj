@@ -60,6 +60,8 @@
       <DependentUpon>app.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="html_source.cs" />
+    <Compile Include="html_sources.cs" />
     <Compile Include="render.cs" />
     <Compile Include="user_options.cs" />
     <Page Include="main_window.xaml">

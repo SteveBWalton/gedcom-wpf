@@ -35,6 +35,8 @@ namespace gedcom.viewer
 
         #endregion
 
+
+
         /// <summary>Redner the requested host and query as html.</summary>
         /// <param name="host">Specifies the request host. This is usually just the name of page.</param>
         /// <param name="query">Specifies the request query. This is usually just the parameters for the page.</param>
@@ -154,14 +156,33 @@ namespace gedcom.viewer
             }
             else
             {
+                // Title the page with the individual name.
                 html.Append("<h1>" + individual.fullName + " (" + individual.idx + ")</h1>");
-                html.Append("<p>Last Changed " + individual.lastChanged.ToString() + "</p>");
+
+                // Initialise the sources referenced in this individual.
+                HtmlSources htmlSources = new HtmlSources();
+
+                // Deal with the sources.
+                Tag[] sourceTags = individual.tag.children.findAll("SOUR");
+                foreach (Tag sourceTag in sourceTags)
+                {
+                    string sourceIdx = Tag.toIdx(sourceTag.value);
+                    Source source = _gedcom.sources.find(sourceIdx);
+                    int refIdx = htmlSources.add(source);
+                    html.Append("<p>" + refIdx.ToString() + "</p>");
+                }
 
                 // Show some tags.
                 foreach (Tag tag in individual.tag.children)
                 {
                     html.Append("<p>'" + tag.line + "' = '" + tag.key + "' = '" + tag.value + "'</p>");
                 }
+
+                // Show the referenced tags.
+                html.Append(htmlSources.toHtml());
+
+                html.Append("<p>Last Changed " + individual.lastChanged.ToString() + "</p>");
+
 
                 // Show the original gedcom.
                 html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");

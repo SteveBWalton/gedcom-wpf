@@ -40,11 +40,15 @@ namespace gedcom
 
         #region Properties
 
-        /// <summary>The top level that defined this top level element.</summary>
+
+
+        /// <summary>The top level tag that defined this top level element.</summary>
         public Tag tag
         {
             get { return _tag; }
         }
+
+
 
         /// <summary>The index of this top level element.</summary>
         public string idx
@@ -55,6 +59,17 @@ namespace gedcom
             }
         }
 
+
+
+        /// <summary>The gedcom that contains this top level element.</summary>
+        public Gedcom gedcom
+        {
+            get { return _gedcom; }
+        }
+
+
+
+        /// <summary>The datetime that this top level element was last changed.</summary>
         public DateTime lastChanged
         {
             get

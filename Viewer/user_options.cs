@@ -29,14 +29,14 @@ namespace gedcom.viewer
             fontHtmlSuperscript=new SimpleFont("Verdana", 8f);
         }
 
-    #endregion
+        #endregion
 
-    #region Html
+        #region Html
 
-    /// <summary>Adds the html headers to the specified html content, ready for display.</summary>
-    /// <param name="htmlContent">Specifies the body content of the html page.</param>
-    /// <returns>Fully specified html ready for display.</returns>
-    public string renderHtml(string htmlContent)
+        /// <summary>Adds the html headers to the specified html content, ready for display.</summary>
+        /// <param name="htmlContent">Specifies the body content of the html page.</param>
+        /// <returns>Fully specified html ready for display.</returns>
+        public string renderHtml(string htmlContent)
         {
             StringBuilder html = new StringBuilder();
             html.AppendLine("<html>");
@@ -79,6 +79,8 @@ namespace gedcom.viewer
             htmlStyles.AppendLine(".marriage {font-family: 'Times New Roman'; font-size: 8pt; color: seagreen; margin-top: 3pt; margin-bottom: 3pt}");
             htmlStyles.AppendLine(".birth {font-family: 'Times New Roman'; font-size: 8pt; color: orangered; margin-top: 3pt; margin-bottom: 3pt}");
             htmlStyles.AppendLine(".death {font-family: 'Times New Roman'; font-size: 8pt; color: purple; margin-top: 3pt; margin-bottom: 3pt}");
+            htmlStyles.AppendLine("table.sourceref { border: 2px solid black; background-color: white; margin-top: 3pt; margin-bottom: 3pt}");
+            htmlStyles.AppendLine("table.sourceref td { font-size: 8pt; margin: 0px; padding: 2px; }"); // border: 1px solid black;
             htmlStyles.AppendLine("--> </style>");
 
             // Return the style block.

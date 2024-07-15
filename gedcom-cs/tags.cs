@@ -106,10 +106,12 @@ namespace gedcom
         /// <returns>The first tag with the specified key or null.</returns>
         public Tag findOne(string tagKey)
         {
+            // Loop the tags in this collection.
             foreach (Tag child in this)
             {
                 if (child.key == tagKey)
                 {
+                    // Return success.
                     return child;
                 }
             }
@@ -119,6 +121,27 @@ namespace gedcom
         }
 
 
+
+        /// <summary>Returns all the tags with the specified key or null.</summary>
+        /// <param name="tagKey">Specifies the key to search for.</param>
+        /// <returns>The collection of tags with the specifeid key.</returns>
+        public Tag[] findAll(string tagKey)
+        {
+            // Start a collection of tags.
+            List<Tag> tags = new List<Tag>();
+
+            // Loop the tags in this collection.
+            foreach (Tag child in this)
+            {
+                if (child.key == tagKey)
+                {
+                    tags.Add(child);
+                }
+            }
+
+            // Return built collection.
+            return tags.ToArray();
+        }
 
         #endregion
     }

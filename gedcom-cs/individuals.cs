@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-// ArrayList
+// IEnumerable.
 using System.Collections;
 
 namespace gedcom
@@ -111,6 +111,8 @@ namespace gedcom
             }
             return null;
         }
+
+
 
         public Individual[] inDateOrder()
         {

@@ -17,10 +17,14 @@ namespace gedcom
 
         #region Class Constructors
 
+
+
         /// <summary>Empty class constructor.</summary>
         public Individual()
         {
         }
+
+
 
         /// <summary>Create an individual from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the individual from.</param>
@@ -29,9 +33,13 @@ namespace gedcom
         {
         }
 
+
+
         #endregion
 
         #region IComparable<Individual>
+
+
 
         /// <summary>Impliment a compare function for sorting.</summary>
         /// <param name="otherIndividual">Specifies the individual to compare with.</param>
@@ -41,9 +49,13 @@ namespace gedcom
             return otherIndividual.lastChanged.CompareTo(lastChanged);
         }
 
+
+
         #endregion
 
         #region Properties
+
+
 
         public string fullName
         {
@@ -59,6 +71,8 @@ namespace gedcom
                 return tagName.value;
             }
         }
+
+
 
         #endregion
     }
