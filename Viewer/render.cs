@@ -35,7 +35,185 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Supporting Functions
 
+
+
+        /// <summary>Show all the tags in the collection that are not in the dealt with collection.</summary>
+        /// <param name="html">Specifies the html string to add to.</param>
+        /// <param name="tags">Specifies the full collection of tags.</param>
+        /// <param name="dealtWith">Specifies the tag keys that are already dealt with.</param>
+        /// <returns>The number of tags that were not dealt with.</returns>
+        private int addRemainingTags(StringBuilder html, Tags tags, List<String> dealtWith)
+        {
+            int count = 0;
+            foreach (Tag tag in tags)
+            {
+                if (!dealtWith.Contains(tag.key))
+                {
+                    // Show this key because it has not been dealt with.
+                    // html.Append("<p>'" + tag.line + "' = '" + tag.key + "' = '" + tag.value + "'</p>");
+                    html.Append("<p>'" + tag.key + "' = '" + tag.value + "'</p>");
+                    count++;
+                }
+            }
+            // Return the number of tags.
+            return count;
+        }
+
+
+
+        /// <summary>Returns the long description of a date tag in html.</summary>
+        /// <param name="tag">Specifies the date tag to return.</param>
+        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
+        /// <returns></returns>
+        private string getTagLongDate(Tag tag, HtmlSources htmlSources)
+        {
+            // Build a long description of the date tag.
+            StringBuilder html = new StringBuilder();
+
+            // Examine the date value.
+            string dateValue = tag.value;
+
+            // Default date.
+            html.Append("on ");
+
+            // Add the unformated date information.
+            html.Append(dateValue);
+
+            // Dealt with about.
+            html.Replace("ABT", "about");
+
+            // Dealt with months.
+            html.Replace("JAN", "december");
+            html.Replace("FEB", "february");
+            html.Replace("MAR", "march");
+            html.Replace("APR", "april");
+            html.Replace("MAY", "may");
+            html.Replace("JUN", "june");
+            html.Replace("JUL", "july");
+            html.Replace("AUG", "august");
+            html.Replace("SEP", "september");
+            html.Replace("OCT", "october");
+            html.Replace("NOV", "november");
+            html.Replace("DEC", "december");
+
+            // Show the sources.
+            Tag[] sources = tag.children.findAll("SOUR");
+            foreach (Tag sourceTag in sources)
+            {
+                string sourceIdx = Tag.toIdx(sourceTag.value);
+                Source source = _gedcom.sources.find(sourceIdx);
+                int refIdx = htmlSources.add(source);
+                html.Append("<sup>");
+                html.Append(Convert.ToChar('A' + refIdx));
+                html.Append("</sup>");
+            }
+
+            // Return the long date description.
+            return html.ToString();
+        }
+
+
+
+        /// <summary>Returns the long description of a place tag in html.</summary>
+        /// <param name="tag">Specifies the place tag to return.</param>
+        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
+        /// <returns></returns>
+        private string getTagLongPlace(Tag tag, HtmlSources htmlSources)
+        {
+            // Build a long description of the date tag.
+            StringBuilder html = new StringBuilder();
+
+            // Examine the date value.
+            string placeValue = tag.value;
+
+            // Default date.
+            html.Append("at ");
+
+            Tag tagAddress = tag.children.findOne("ADDR");
+            if (tagAddress!= null)
+            {
+                placeValue = tagAddress.value + ", " + placeValue;
+            }
+
+            // Add the full place information.
+            html.Append(placeValue);
+
+            // Show the sources.
+            Tag[] sources = tag.children.findAll("SOUR");
+            foreach (Tag sourceTag in sources)
+            {
+                string sourceIdx = Tag.toIdx(sourceTag.value);
+                Source source = _gedcom.sources.find(sourceIdx);
+                int refIdx = htmlSources.add(source);
+                html.Append("<sup>");
+                html.Append(Convert.ToChar('A' + refIdx));
+                html.Append("</sup>");
+            }
+
+            // Return the long date description.
+            return html.ToString();
+        }
+
+
+
+        /// <summary>Return a long html description of the specified tag.</summary>
+        /// <param name="tag">Specifies the tag to describe.</param>
+        /// <param name="proNoun">Specifies the pronoun to use in the description.</param>
+        /// <param name="verb">Specifies the verb to use in the description.  Lookup from tag in future?</param>
+        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
+        /// <returns>A long html description of the specified tag.</returns>
+        private string getTagLongHtml(Tag tag, string proNoun, string verb, HtmlSources htmlSources)
+        {
+            // Build a long description of the tag.
+            StringBuilder html = new StringBuilder();
+            html.Append(proNoun);
+            html.Append(" ");
+            html.Append(verb);
+
+            if (tag.value.Length > 1)
+            {
+                html.Append(" ");
+                html.Append(tag.value);
+            }
+
+            // Show any date information.
+            Tag tagDate = tag.children.findOne("DATE");
+            if (tagDate != null)
+            {
+                html.Append(" ");
+                html.Append(getTagLongDate(tagDate, htmlSources));
+            }
+
+            // Show any place information.
+            Tag tagPlace = tag.children.findOne("PLAC");
+            if (tagPlace != null)
+            {
+                html.Append(" ");
+                html.Append(getTagLongPlace(tagPlace, htmlSources));
+            }
+
+            // Show the sources.
+            Tag[] sources = tag.children.findAll("SOUR");
+            foreach (Tag sourceTag in sources)
+            {
+                string sourceIdx = Tag.toIdx(sourceTag.value);
+                Source source = _gedcom.sources.find(sourceIdx);
+                int refIdx = htmlSources.add(source);
+                html.Append(Convert.ToChar('A' + refIdx));
+            }
+
+            // Finish the long description.
+            html.Append(".");
+            
+            // Return the long description.
+            return html.ToString();
+        }
+
+
+
+        #endregion
 
         /// <summary>Redner the requested host and query as html.</summary>
         /// <param name="host">Specifies the request host. This is usually just the name of page.</param>
@@ -156,33 +334,66 @@ namespace gedcom.viewer
             }
             else
             {
+                // Remember which keys are dealt with.
+                List<String> dealtWith = new List<String>();
+
                 // Title the page with the individual name.
-                html.Append("<h1>" + individual.fullName + " (" + individual.idx + ")</h1>");
+                string fullName = individual.fullName;
+                dealtWith.Add("NAME");
+                html.Append("<h1>" + fullName + " (" + individual.idx + ")</h1>");
 
                 // Initialise the sources referenced in this individual.
                 HtmlSources htmlSources = new HtmlSources();
+                dealtWith.Add("SEX");
+                Tag tag = individual.tag.children.findOne("SEX");
+                string heShe = "He";
+                if (tag!= null)
+                {
+                    if (tag.value=="F")
+                    {
+                        heShe = "She";
+                    }
+                }
+                dealtWith.Add("BIRT");
+                tag = individual.tag.children.findOne("BIRT");
+                if (tag != null)
+                {
+                    html.Append(getTagLongHtml(tag, fullName, "was born", htmlSources));
+                }
+
+                // Deal with family.
+                dealtWith.Add("FAMC");
+
+                // Deal with parent's family.
+                dealtWith.Add("FAMS");
+
+                // Deal with death.
+                dealtWith.Add("DEAT");
+                tag = individual.tag.children.findOne("DEAT");
+                if (tag != null)
+                {
+                    html.Append(getTagLongHtml(tag, heShe, "died", htmlSources));
+                }
 
                 // Deal with the sources.
+                dealtWith.Add("SOUR");
                 Tag[] sourceTags = individual.tag.children.findAll("SOUR");
                 foreach (Tag sourceTag in sourceTags)
                 {
                     string sourceIdx = Tag.toIdx(sourceTag.value);
                     Source source = _gedcom.sources.find(sourceIdx);
                     int refIdx = htmlSources.add(source);
-                    html.Append("<p>" + refIdx.ToString() + "</p>");
                 }
 
                 // Show some tags.
-                foreach (Tag tag in individual.tag.children)
-                {
-                    html.Append("<p>'" + tag.line + "' = '" + tag.key + "' = '" + tag.value + "'</p>");
-                }
+                dealtWith.Add("CHAN");
+                addRemainingTags(html, individual.tag.children, dealtWith);
 
                 // Show the referenced tags.
                 html.Append(htmlSources.toHtml());
 
+                // Show the last changed information.
                 html.Append("<p>Last Changed " + individual.lastChanged.ToString() + "</p>");
-
 
                 // Show the original gedcom.
                 html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");

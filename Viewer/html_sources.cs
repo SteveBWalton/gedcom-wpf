@@ -129,7 +129,7 @@ namespace gedcom.viewer
             foreach (HtmlSource htmlSource in this)
             {
                 html.Append("<tr>");
-                html.Append("<td>" + idx.ToString() + "</td>");
+                html.Append("<td>" + Convert.ToChar('A' + idx) + "</td>");
                 html.Append("<td>" + htmlSource.source.fullName + "</td>");
                 html.AppendLine("<tr>");
                 idx++;

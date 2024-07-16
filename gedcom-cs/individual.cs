@@ -57,6 +57,7 @@ namespace gedcom
 
 
 
+        /// <summary>The full name of the individual.</summary>
         public string fullName
         {
             get
@@ -67,8 +68,13 @@ namespace gedcom
                     return "Error";
                 }
 
+                string fullName = tagName.value;
+
+                // One way (not the best).
+                fullName = fullName.Replace("/", "");
+
                 // This is not really correct.
-                return tagName.value;
+                return fullName;
             }
         }
 
