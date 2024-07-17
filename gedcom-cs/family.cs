@@ -43,34 +43,92 @@ namespace gedcom
 
         #region Properties
 
+
+
+        /// <summary>The index of the husband in this family or null.</summary>
+        public string husbandIdx
+        {
+            get
+            {
+                Tag tagHusband = _tag.children.findOne("HUSB");
+                if (tagHusband == null)
+                {
+                    return null;
+                }
+                return Tag.toIdx(tagHusband.value);
+            }
+        }
+
+
+
+        /// <summary>The index of the wife in this family or null.</summary>
+        public string wifeIdx
+        {
+            get
+            {
+                Tag tagWife = _tag.children.findOne("WIFE");
+                if (tagWife == null)
+                {
+                    return null;
+                }
+                return Tag.toIdx(tagWife.value);
+            }
+        }
+
+
+
+        /// <summary>The individual who is the husband in this family or null.</summary>
+        public Individual husband
+        {
+            get
+            {
+                string idx = husbandIdx;
+                if (idx == null)
+                {
+                    return null;
+                }
+                return _gedcom.individuals.find(idx);
+            }
+        }
+
+
+
+        /// <summary>The individual who is the wife in this family or null.</summary>
+        public Individual wife
+
+        {
+            get
+            {
+                string idx = wifeIdx;
+                if (idx == null)
+                {
+                    return null;
+                }
+                return _gedcom.individuals.find(idx);
+            }
+        }
+
+
+
         public string fullName
         {
             get
             {
                 string name = "";
-                Tag tagHusband = _tag.children.findOne("HUSB");
-                if (tagHusband != null)
+                if (husband != null)
                 {
-                    Individual husband = _gedcom.individuals.find(Tag.toIdx(tagHusband.value));
-                    if (husband != null)
-                    {
-                        name = husband.fullName;
-                    }
+                    name = husband.fullName;
                 }
 
-                Tag tagWife = _tag.children.findOne("WIFE");
-                if (tagWife != null)
+                if (wife != null)
                 {
-                    Individual wife = _gedcom.individuals.find(Tag.toIdx(tagWife.value));
-                    if (wife != null)
+                    if (name != "")
                     {
-                        if (name != "")
-                        {
-                            name += " and ";
-                        }
-                        name += wife.fullName;
+                        name += " and ";
                     }
+                    name += wife.fullName;
                 }
+
                 if (name == "")
                 {
                     return "Undefined";

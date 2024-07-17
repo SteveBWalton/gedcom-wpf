@@ -99,46 +99,16 @@ namespace gedcom.viewer
             html.Replace("DEC", "december");
 
             // Show the sources.
-            Tag[] sources = tag.children.findAll("SOUR");
-            foreach (Tag sourceTag in sources)
-            {
-                string sourceIdx = Tag.toIdx(sourceTag.value);
-                Source source = _gedcom.sources.find(sourceIdx);
-                int refIdx = htmlSources.add(source);
-                html.Append("<sup>");
-                html.Append(Convert.ToChar('A' + refIdx));
-                html.Append("</sup>");
-            }
+            html.Append(addSourceReferences(tag, htmlSources));
 
             // Return the long date description.
             return html.ToString();
         }
 
-
-
-        /// <summary>Returns the long description of a place tag in html.</summary>
-        /// <param name="tag">Specifies the place tag to return.</param>
-        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
-        /// <returns></returns>
-        private string getTagLongPlace(Tag tag, HtmlSources htmlSources)
+        private string addSourceReferences(Tag tag, HtmlSources htmlSources)
         {
-            // Build a long description of the date tag.
+            // Build a source reference.
             StringBuilder html = new StringBuilder();
-
-            // Examine the date value.
-            string placeValue = tag.value;
-
-            // Default date.
-            html.Append("at ");
-
-            Tag tagAddress = tag.children.findOne("ADDR");
-            if (tagAddress!= null)
-            {
-                placeValue = tagAddress.value + ", " + placeValue;
-            }
-
-            // Add the full place information.
-            html.Append(placeValue);
 
             // Show the sources.
             Tag[] sources = tag.children.findAll("SOUR");
@@ -151,8 +121,40 @@ namespace gedcom.viewer
                 html.Append(Convert.ToChar('A' + refIdx));
                 html.Append("</sup>");
             }
+            
+            // Return the source references.
+            return html.ToString();
 
-            // Return the long date description.
+        }
+
+        /// <summary>Returns the long description of a place tag in html.</summary>
+        /// <param name="tag">Specifies the place tag to return.</param>
+        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
+        /// <returns>The long description of a place tag in html.</returns>
+        private string getTagLongPlace(Tag tag, HtmlSources htmlSources)
+        {
+            // Build a long description of the date tag.
+            StringBuilder html = new StringBuilder();
+
+            // Examine the date value.
+            string placeValue = tag.value;
+
+            // Default date.
+            html.Append("at ");
+
+            Tag tagAddress = tag.children.findOne("ADDR");
+            if (tagAddress != null)
+            {
+                placeValue = tagAddress.value + ", " + placeValue;
+            }
+
+            // Add the full place information.
+            html.Append(placeValue);
+
+            // Show the sources.
+            html.Append(addSourceReferences(tag, htmlSources));
+
+            // Return the long place description.
             return html.ToString();
         }
 
@@ -195,14 +197,7 @@ namespace gedcom.viewer
             }
 
             // Show the sources.
-            Tag[] sources = tag.children.findAll("SOUR");
-            foreach (Tag sourceTag in sources)
-            {
-                string sourceIdx = Tag.toIdx(sourceTag.value);
-                Source source = _gedcom.sources.find(sourceIdx);
-                int refIdx = htmlSources.add(source);
-                html.Append(Convert.ToChar('A' + refIdx));
-            }
+            html.Append(addSourceReferences(tag, htmlSources));
 
             // Finish the long description.
             html.Append(".");
@@ -214,6 +209,8 @@ namespace gedcom.viewer
 
 
         #endregion
+
+        #region Content
 
         /// <summary>Redner the requested host and query as html.</summary>
         /// <param name="host">Specifies the request host. This is usually just the name of page.</param>
@@ -313,6 +310,26 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Render an error in html.</summary>
+        /// <param name="host">Specifies request host.</param>
+        /// <param name="query">Specifies the request query.</param>
+        /// <returns>An error message in html format.</returns>
+        private string getError(string host, string query)
+        {
+            StringBuilder html = new StringBuilder();
+
+            html.Append("<h1>Error</h1>");
+            html.Append("<p>host is '" + host + "', query is '" + query + "'</p>");
+            html.Append("<p><a href=\"app://home\">Home</a></p>");
+
+            // Return the built string as html.
+            return _userOptions.renderHtml(html.ToString());
+        }
+
+        #endregion
+
+        #region Individual
+
         /// <summary>Render the specified individual in html.</summary>
         /// <param name="query">Specifies the request query for this individual.</param>
         /// <returns>A html description of the specified individual.</returns>
@@ -363,9 +380,19 @@ namespace gedcom.viewer
 
                 // Deal with family.
                 dealtWith.Add("FAMC");
+                tag = individual.tag.children.findOne("FAMC");
+                if (tag != null)
+                {
+                    html.Append(getTagLongParents(individual, tag, heShe, htmlSources));
+                }
 
-                // Deal with parent's family.
+                // Deal with partners.
                 dealtWith.Add("FAMS");
+                Tag[] tags = individual.tag.children.findAll("FAMS");
+                foreach (Tag marriageTag in tags)
+                {
+                    html.Append(getTagLongPartner(individual, marriageTag, heShe, htmlSources));
+                }
 
                 // Deal with death.
                 dealtWith.Add("DEAT");
@@ -377,8 +404,8 @@ namespace gedcom.viewer
 
                 // Deal with the sources.
                 dealtWith.Add("SOUR");
-                Tag[] sourceTags = individual.tag.children.findAll("SOUR");
-                foreach (Tag sourceTag in sourceTags)
+                tags = individual.tag.children.findAll("SOUR");
+                foreach (Tag sourceTag in tags)
                 {
                     string sourceIdx = Tag.toIdx(sourceTag.value);
                     Source source = _gedcom.sources.find(sourceIdx);
@@ -404,6 +431,93 @@ namespace gedcom.viewer
         }
 
 
+
+        private string getTagLongParents(Individual individual, Tag parentsTag, string proNoun, HtmlSources htmlSources)
+        {
+            // Find the family tag.
+            string familyIdx = Tag.toIdx(parentsTag.value);
+            Family family = _gedcom.families.find(familyIdx);
+            Tag tag = family.tag;
+
+            // Build a long description of the tag.
+            StringBuilder html = new StringBuilder();
+
+            if (family.husband != null)
+            {
+                html.Append(proNoun);
+                html.Append(" father was ");
+                html.Append(family.husband.fullName);
+                // Show the sources.
+                html.Append(addSourceReferences(tag, htmlSources));
+                html.Append(". ");
+            }
+            if (family.wife != null)
+            {
+                html.Append(proNoun);
+                html.Append(" mother was ");
+                html.Append(family.wife.fullName);
+                // Show the sources.
+                html.Append(addSourceReferences(tag, htmlSources));
+                // Finish the long description.
+                html.Append(". ");
+            }
+
+            // Return the long description.
+            return html.ToString();
+        }
+
+
+
+
+        private string getTagLongPartner(Individual individual, Tag familyTag, string proNoun, HtmlSources htmlSources)
+        {
+            // Find the family tag.
+            string familyIdx = Tag.toIdx(familyTag.value);
+            Family family = _gedcom.families.find(familyIdx);
+            Tag tag = family.tag;
+
+            // Build a long description of the tag.
+            StringBuilder html = new StringBuilder();
+            if (individual.idx == family.husbandIdx)
+            {
+                html.Append("He married ");
+                html.Append(family.wife.fullName);
+            }
+            if (individual.idx == family.wifeIdx)
+            {
+                html.Append("She married ");
+                html.Append(family.husband.fullName);
+            }
+
+            // Show the sources.
+            html.Append(addSourceReferences(tag, htmlSources));
+
+            // Show any date information.
+            Tag tagDate = tag.children.findOne("DATE");
+            if (tagDate != null)
+            {
+                html.Append(" ");
+                html.Append(getTagLongDate(tagDate, htmlSources));
+            }
+
+            // Show any place information.
+            Tag tagPlace = tag.children.findOne("PLAC");
+            if (tagPlace != null)
+            {
+                html.Append(" ");
+                html.Append(getTagLongPlace(tagPlace, htmlSources));
+            }
+
+            // Finish the long description.
+            html.Append(".");
+
+            // Return the long description.
+            return html.ToString();
+        }
+
+        #endregion
+
+        #region Family
 
         /// <summary>Render the specified family in html.</summary>
         /// <param name="query">Specifies the request query for this family.</param>
@@ -443,7 +557,9 @@ namespace gedcom.viewer
             return _userOptions.renderHtml(html.ToString());
         }
 
+        #endregion
 
+        #region Source
 
         /// <summary>Render the requested source as html.</summary>
         /// <param name="query">Specifies the request query for this source.</param>
@@ -483,22 +599,7 @@ namespace gedcom.viewer
             return _userOptions.renderHtml(html.ToString());
         }
 
+        #endregion
 
-
-        /// <summary>Render an error in html.</summary>
-        /// <param name="host">Specifies request host.</param>
-        /// <param name="query">Specifies the request query.</param>
-        /// <returns>An error message in html format.</returns>
-        private string getError(string host, string query)
-        {
-            StringBuilder html = new StringBuilder();
-
-            html.Append("<h1>Error</h1>");
-            html.Append("<p>host is '" + host + "', query is '" + query + "'</p>");
-            html.Append("<p><a href=\"app://home\">Home</a></p>");
-
-            // Return the built string as html.
-            return _userOptions.renderHtml(html.ToString());
-        }
     }
 }
