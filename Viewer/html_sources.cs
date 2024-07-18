@@ -130,7 +130,7 @@ namespace gedcom.viewer
             {
                 html.Append("<tr>");
                 html.Append("<td>" + Convert.ToChar('A' + idx) + "</td>");
-                html.Append("<td>" + htmlSource.source.fullName + "</td>");
+                html.Append("<td><a href=\"app://source?id=" + htmlSource.source.idx + "\">" + htmlSource.source.fullName + "</a></td>");
                 html.AppendLine("<tr>");
                 idx++;
             }
@@ -139,7 +139,7 @@ namespace gedcom.viewer
             return html.ToString();
         }
 
-
+        
 
     }
 }

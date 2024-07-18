@@ -124,8 +124,9 @@ namespace gedcom.viewer
             
             // Return the source references.
             return html.ToString();
-
         }
+
+
 
         /// <summary>Returns the long description of a place tag in html.</summary>
         /// <param name="tag">Specifies the place tag to return.</param>
@@ -255,7 +256,7 @@ namespace gedcom.viewer
             Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
             foreach (Individual individual in individualsInDateOrder)
             {
-                html.Append("<tr><td><a href=\"app://individual?id=" + individual.idx + "\">" + individual.fullName + "</a></td><tr>");
+                html.Append("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
                 count++;
                 if (count >= 10)
                 {
@@ -293,7 +294,7 @@ namespace gedcom.viewer
             Source[] sourcesInDateOrder = _gedcom.sources.inDateOrder();
             foreach (Source source in sourcesInDateOrder)
             {
-                html.Append("<tr><td><a href=\"app://source?id=" + source.idx + "\">" + source.fullName + "</a></td></tr>");
+                html.Append("<tr><td>" + htmlSource(source) + "</td></tr>");
                 count++;
                 if (count >= 10)
                 {
@@ -432,6 +433,16 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Returns the full name of the individual in html with a link.</summary>
+        /// <param name="individual">Specifies the individual to display.</param>
+        /// <returns>The html for the individual with the full name and a link.</returns>
+        private string htmlIndividual(Individual individual)
+        {
+            return "<a href=\"app://individual?id=" + individual.idx + "\">" + individual.fullName + "</a>";
+        }
+
+
+
         private string getTagLongParents(Individual individual, Tag parentsTag, string proNoun, HtmlSources htmlSources)
         {
             // Find the family tag.
@@ -445,8 +456,8 @@ namespace gedcom.viewer
             if (family.husband != null)
             {
                 html.Append(proNoun);
-                html.Append(" father was ");
-                html.Append(family.husband.fullName);
+                html.Append(" <a href=\"app://family?id=" + familyIdx + "\">father</a> was ");
+                html.Append(htmlIndividual(family.husband));
                 // Show the sources.
                 html.Append(addSourceReferences(tag, htmlSources));
                 html.Append(". ");
@@ -454,8 +465,8 @@ namespace gedcom.viewer
             if (family.wife != null)
             {
                 html.Append(proNoun);
-                html.Append(" mother was ");
-                html.Append(family.wife.fullName);
+                html.Append(" <a href=\"app://family?id=" + familyIdx + "\">mother</a> was ");
+                html.Append(htmlIndividual(family.wife));
                 // Show the sources.
                 html.Append(addSourceReferences(tag, htmlSources));
                 // Finish the long description.
@@ -480,13 +491,13 @@ namespace gedcom.viewer
             StringBuilder html = new StringBuilder();
             if (individual.idx == family.husbandIdx)
             {
-                html.Append("He married ");
-                html.Append(family.wife.fullName);
+                html.Append("He <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                html.Append(htmlIndividual(family.wife));
             }
             if (individual.idx == family.wifeIdx)
             {
-                html.Append("She married ");
-                html.Append(family.husband.fullName);
+                html.Append("She <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                html.Append(htmlIndividual(family.husband));
             }
 
             // Show the sources.
@@ -597,6 +608,16 @@ namespace gedcom.viewer
 
             // Return the built string as html.
             return _userOptions.renderHtml(html.ToString());
+        }
+
+
+
+        /// <summary>Returns the full name of the source with a link in html.</summary>
+        /// <param name="source">Specifies the source to display.</param>
+        /// <returns>The full name of the source with a link in html.</returns>
+        private string htmlSource(Source source)
+        {
+            return "<a href=\"app://source?id=" + source.idx + "\">" + source.fullName + "</a>";
         }
 
         #endregion
