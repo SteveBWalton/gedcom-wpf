@@ -85,18 +85,18 @@ namespace gedcom.viewer
             html.Replace("ABT", "about");
 
             // Dealt with months.
-            html.Replace("JAN", "december");
-            html.Replace("FEB", "february");
-            html.Replace("MAR", "march");
-            html.Replace("APR", "april");
-            html.Replace("MAY", "may");
-            html.Replace("JUN", "june");
-            html.Replace("JUL", "july");
-            html.Replace("AUG", "august");
-            html.Replace("SEP", "september");
-            html.Replace("OCT", "october");
-            html.Replace("NOV", "november");
-            html.Replace("DEC", "december");
+            html.Replace("JAN", "January");
+            html.Replace("FEB", "February");
+            html.Replace("MAR", "March");
+            html.Replace("APR", "April");
+            html.Replace("MAY", "May");
+            html.Replace("JUN", "June");
+            html.Replace("JUL", "July");
+            html.Replace("AUG", "August");
+            html.Replace("SEP", "September");
+            html.Replace("OCT", "October");
+            html.Replace("NOV", "November");
+            html.Replace("DEC", "December");
 
             // Show the sources.
             html.Append(addSourceReferences(tag, htmlSources));
@@ -105,6 +105,12 @@ namespace gedcom.viewer
             return html.ToString();
         }
 
+
+
+        /// <summary>Returns references to the sources on the specified tag.</summary>
+        /// <param name="tag">Specifies the tag to add the sources from.</param>
+        /// <param name="htmlSources">Specifies and returns the source references.</param>
+        /// <returns></returns>
         private string addSourceReferences(Tag tag, HtmlSources htmlSources)
         {
             // Build a source reference.
@@ -130,7 +136,7 @@ namespace gedcom.viewer
 
         /// <summary>Returns the long description of a place tag in html.</summary>
         /// <param name="tag">Specifies the place tag to return.</param>
-        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
+        /// <param name="htmlSources">Specifies and returns the source references.</param>
         /// <returns>The long description of a place tag in html.</returns>
         private string getTagLongPlace(Tag tag, HtmlSources htmlSources)
         {
@@ -165,7 +171,7 @@ namespace gedcom.viewer
         /// <param name="tag">Specifies the tag to describe.</param>
         /// <param name="proNoun">Specifies the pronoun to use in the description.</param>
         /// <param name="verb">Specifies the verb to use in the description.  Lookup from tag in future?</param>
-        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
+        /// <param name="htmlSources">Specifies and returns the source references.</param>
         /// <returns>A long html description of the specified tag.</returns>
         private string getTagLongHtml(Tag tag, string proNoun, string verb, HtmlSources htmlSources)
         {
@@ -201,13 +207,21 @@ namespace gedcom.viewer
             html.Append(addSourceReferences(tag, htmlSources));
 
             // Finish the long description.
-            html.Append(".");
+            html.Append(". ");
             
             // Return the long description.
             return html.ToString();
         }
 
 
+
+        /// <summary>Return the specified text with the first character as a capital.</summary>
+        /// <param name="text">Specifies the text to add a capital to.</param>
+        /// <returns>The specified text with the first character as a capital.</returns>
+        private string firstCaps(string text)
+        {
+            return text.Substring(0, 1).ToUpper() + text.Substring(1);
+        }
 
         #endregion
 
@@ -358,22 +372,13 @@ namespace gedcom.viewer
                 // Title the page with the individual name.
                 string fullName = individual.fullName;
                 dealtWith.Add("NAME");
+                dealtWith.Add("SEX");
                 html.Append("<h1>" + fullName + " (" + individual.idx + ")</h1>");
 
                 // Initialise the sources referenced in this individual.
                 HtmlSources htmlSources = new HtmlSources();
-                dealtWith.Add("SEX");
-                Tag tag = individual.tag.children.findOne("SEX");
-                string heShe = "He";
-                if (tag!= null)
-                {
-                    if (tag.value=="F")
-                    {
-                        heShe = "She";
-                    }
-                }
                 dealtWith.Add("BIRT");
-                tag = individual.tag.children.findOne("BIRT");
+                Tag tag = individual.tag.children.findOne("BIRT");
                 if (tag != null)
                 {
                     html.Append(getTagLongHtml(tag, fullName, "was born", htmlSources));
@@ -384,7 +389,7 @@ namespace gedcom.viewer
                 tag = individual.tag.children.findOne("FAMC");
                 if (tag != null)
                 {
-                    html.Append(getTagLongParents(individual, tag, heShe, htmlSources));
+                    html.Append(getTagLongParents(individual, tag, htmlSources));
                 }
 
                 // Deal with partners.
@@ -392,7 +397,7 @@ namespace gedcom.viewer
                 Tag[] tags = individual.tag.children.findAll("FAMS");
                 foreach (Tag marriageTag in tags)
                 {
-                    html.Append(getTagLongPartner(individual, marriageTag, heShe, htmlSources));
+                    html.Append(getTagLongPartner(individual, marriageTag, individual.isMale ? "He" : "She", htmlSources));
                 }
 
                 // Deal with death.
@@ -400,7 +405,7 @@ namespace gedcom.viewer
                 tag = individual.tag.children.findOne("DEAT");
                 if (tag != null)
                 {
-                    html.Append(getTagLongHtml(tag, heShe, "died", htmlSources));
+                    html.Append(getTagLongHtml(tag, individual.isMale ? "He" : "She", "died", htmlSources));
                 }
 
                 // Deal with the sources.
@@ -443,7 +448,12 @@ namespace gedcom.viewer
 
 
 
-        private string getTagLongParents(Individual individual, Tag parentsTag, string proNoun, HtmlSources htmlSources)
+        /// <summary>Describe the parents of the specified individual.</summary>
+        /// <param name="individual">Specifies the individual.</param>
+        /// <param name="parentsTag">Specifies the tag that gives the family of the parents.</param>
+        /// <param name="htmlSources">Specifies and returns the source references.</param>
+        /// <returns>A long description of the parents of the specified individual.</returns>
+        private string getTagLongParents(Individual individual, Tag parentsTag, HtmlSources htmlSources)
         {
             // Find the family tag.
             string familyIdx = Tag.toIdx(parentsTag.value);
@@ -455,7 +465,7 @@ namespace gedcom.viewer
 
             if (family.husband != null)
             {
-                html.Append(proNoun);
+                html.Append(individual.isMale ? "His" : "Her");
                 html.Append(" <a href=\"app://family?id=" + familyIdx + "\">father</a> was ");
                 html.Append(htmlIndividual(family.husband));
                 // Show the sources.
@@ -464,7 +474,7 @@ namespace gedcom.viewer
             }
             if (family.wife != null)
             {
-                html.Append(proNoun);
+                html.Append(individual.isMale ? "His" : "Her");
                 html.Append(" <a href=\"app://family?id=" + familyIdx + "\">mother</a> was ");
                 html.Append(htmlIndividual(family.wife));
                 // Show the sources.
@@ -479,7 +489,12 @@ namespace gedcom.viewer
 
 
 
-
+        /// <summary>Describe the relationship for the specified individual.</summary>
+        /// <param name="individual">Specifies the individual.</param>
+        /// <param name="familyTag">Specifies the family to describe.</param>
+        /// <param name="proNoun"></param>
+        /// <param name="htmlSources">Specifies and returns the source references.</param>
+        /// <returns>A long description of the family for the specified individual.</returns>
         private string getTagLongPartner(Individual individual, Tag familyTag, string proNoun, HtmlSources htmlSources)
         {
             // Find the family tag.
@@ -489,34 +504,49 @@ namespace gedcom.viewer
 
             // Build a long description of the tag.
             StringBuilder html = new StringBuilder();
+
+            // Marriage
+            Tag tagMarriage = tag.children.findOne("MARR");
+            if (tagMarriage != null)
+            {
+                Tag tagDate = tagMarriage.children.findOne("DATE");
+                if (tag != null)
+                {
+                    html.Append(firstCaps(getTagLongDate(tagDate, htmlSources)));
+                    html.Append(" "+individual.heShe.ToLower() + " <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                }
+                else
+                {
+                    html.Append(individual.heShe + " <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                }
+            }
+            else
+            {
+                html.Append(individual.heShe + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+            }
+
             if (individual.idx == family.husbandIdx)
             {
-                html.Append("He <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                
                 html.Append(htmlIndividual(family.wife));
             }
             if (individual.idx == family.wifeIdx)
             {
-                html.Append("She <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
                 html.Append(htmlIndividual(family.husband));
             }
 
             // Show the sources.
             html.Append(addSourceReferences(tag, htmlSources));
 
-            // Show any date information.
-            Tag tagDate = tag.children.findOne("DATE");
-            if (tagDate != null)
-            {
-                html.Append(" ");
-                html.Append(getTagLongDate(tagDate, htmlSources));
-            }
-
             // Show any place information.
-            Tag tagPlace = tag.children.findOne("PLAC");
-            if (tagPlace != null)
+            if (tagMarriage != null)
             {
-                html.Append(" ");
-                html.Append(getTagLongPlace(tagPlace, htmlSources));
+                Tag tagPlace = tagMarriage.children.findOne("PLAC");
+                if (tagPlace != null)
+                {
+                    html.Append(" ");
+                    html.Append(getTagLongPlace(tagPlace, htmlSources));
+                }
             }
 
             // Finish the long description.

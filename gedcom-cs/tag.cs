@@ -113,6 +113,8 @@ namespace gedcom
             return lastTag.add(line);
         }
 
+
+
         public string display(int indent)
         {
             StringBuilder output = new StringBuilder();

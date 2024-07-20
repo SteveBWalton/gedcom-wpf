@@ -80,6 +80,36 @@ namespace gedcom
 
 
 
+        /// <summary>True if the individual is male.</summary>
+        public bool isMale
+        {
+            get
+            {
+                Tag tagSex = _tag.children.findOne("SEX");
+                if (tagSex==null)
+                {
+                    return true;
+                }
+                return tagSex.value == "M";
+            }
+        }
+
+
+
+        /// <summary>True if the individual is female.</summary>
+        public bool isFemale
+        {
+            get { return !isMale; }
+        }
+
+
+
+        /// <summary>He for a male, She for a female.</summary>
+        public string heShe
+        {
+            get { return isMale ? "He" : "She"; }
+        }
+
         #endregion
     }
 }
