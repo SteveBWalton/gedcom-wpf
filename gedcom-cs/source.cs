@@ -42,7 +42,8 @@ namespace gedcom
         #endregion
 
         #region Properties
-
+        
+        /// <summary>The name of the source.</summary>
         public string fullName
         {
             get
@@ -53,7 +54,7 @@ namespace gedcom
                     return "Error";
                 }
 
-                // This is not really correct.
+                // Return the name of the source.
                 return tagName.value;
             }
         }
