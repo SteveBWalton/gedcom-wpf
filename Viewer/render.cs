@@ -75,8 +75,17 @@ namespace gedcom.viewer
             // Examine the date value.
             string dateValue = tag.value;
 
-            // Default date.
-            html.Append("on ");
+            if (dateValue.Contains("BEF"))
+            {
+                // Before date.
+                dateValue = dateValue.Replace("BEF", "");
+                html.Append("before ");
+            }
+            else
+            {
+                // Default date.
+                html.Append("on ");
+            }
 
             // Add the unformated date information.
             html.Append(dateValue);
