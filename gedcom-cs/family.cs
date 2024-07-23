@@ -41,6 +41,36 @@ namespace gedcom
 
         #endregion
 
+        #region Functions
+
+
+
+        /// <summary>Returns the children in this family.</summary>
+        /// <returns>The children in this family.</returns>
+        public Individual[] getChildren()
+        {
+            // Build a list of the children.
+            List<Individual> children = new List<Individual>();
+
+            // Find the tags for the children.
+            Tag[] tags = _tag.children.findAll("CHIL");
+            foreach (Tag tag in tags)
+            {
+                Individual child = _gedcom.individuals.find(Tag.toIdx(tag.value));
+                if (child!=null)
+                {
+                    children.Add(child);
+                }
+            }
+
+            // Return the children found.
+            return children.ToArray();
+        }
+
+
+
+        #endregion
+
         #region Properties
 
 
@@ -136,6 +166,8 @@ namespace gedcom
                 return name;
             }
         }
+
+
 
         #endregion
 

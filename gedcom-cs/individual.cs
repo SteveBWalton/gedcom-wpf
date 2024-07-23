@@ -104,12 +104,6 @@ namespace gedcom
 
 
 
-        /// <summary>He for a male, She for a female.</summary>
-        public string heShe
-        {
-            get { return isMale ? "He" : "She"; }
-        }
-
         #endregion
     }
 }
