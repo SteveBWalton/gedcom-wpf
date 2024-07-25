@@ -52,7 +52,6 @@ namespace gedcom.viewer
                 if (!dealtWith.Contains(tag.key))
                 {
                     // Show this key because it has not been dealt with.
-                    // html.Append("<p>'" + tag.line + "' = '" + tag.key + "' = '" + tag.value + "'</p>");
                     html.Append("<p>'" + tag.key + "' = '" + tag.value + "'</p>");
                     count++;
                 }
@@ -643,7 +642,7 @@ namespace gedcom.viewer
                 Individual[] children = family.getChildren();
                 if (children.Count() == 0)
                 {
-                    html.Append("They had no children.");
+                    html.Append("They had no children. ");
                 }
                 else
                 {
@@ -671,6 +670,32 @@ namespace gedcom.viewer
                             html.Append(htmlIndividual(child) + ", ");
                         }
                     }
+                }
+
+                dealtWith.Add("DIV");
+                Tag tagDivorce = family.tag.children.findOne("DIV");
+                if (tagDivorce != null)
+                {
+                    html.Append("They ");
+                    if (tagMarriage != null)
+                    {
+                        html.Append("divorced");
+                    }
+                    else
+                    {
+                        html.Append("separated");
+                    }
+
+                    // Show the divorce sources.
+                    html.Append(addSourceReferences(tagDivorce, htmlSources));
+
+                    Tag tagDate = tagDivorce.children.findOne("DATE");
+                    if (tagDate != null)
+                    {
+                        html.Append(" " + getTagLongDate(tagDate, htmlSources));
+                    }
+
+                    html.Append(". ");
                 }
 
                 // Show the remaining tags.
