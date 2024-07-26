@@ -128,9 +128,64 @@ namespace gedcom
             return output.ToString();
         }
 
+        #region Functions
 
+
+
+        /// <summary>Return the value and any continuations as an array of strings.</summary>
+        /// <returns>The complete continued value.</returns>
+        public string [] getMultiLineValue()
+        {
+            // Create a list of lines to hold the result.
+            List<string> lines = new List<string>();
+            lines.Add(_value);
+
+            // Search for continuations.
+            Tag[] tagContinues = _children.findAll("CONT");
+            foreach (Tag tag in tagContinues)
+            {
+                lines.Add(tag.value);
+            }
+
+            // Return the calculated value.
+            return lines.ToArray();
+        }
+
+
+
+        /// <summary>Return the value and any continations as a jagged array of strings.</summary>
+        /// <returns>The compelete continued value as a grid.</returns>
+        public string [][] getGridValue()
+        {
+            // Create a jagged array to hold the grid.
+            List<string[]> grid = new List<string[]>();
+
+            string[] line = _value.Split(':');
+            if (_value.StartsWith("GRID:"))
+            {
+                line = _value.Substring(5).Split(':');
+            }
+            grid.Add(line);
+
+            // Search for continuations.
+            Tag[] tagContinues = _children.findAll("CONT");
+            foreach (Tag tag in tagContinues)
+            {
+                line = tag.value.Split(':');
+                grid.Add(line);
+            }
+
+            // Return the calculated list.
+            return grid.ToArray();
+        }
+
+
+
+        #endregion
 
         #region Properties
+
+
 
         /// <summary>The whole (original?) line that created this tag.</summary>
         public string line
@@ -138,22 +193,32 @@ namespace gedcom
             get { return _line; }
         }
 
+
+
         /// <summary>The type or key of the gedcom tag.</summary>
         public string key
         {
             get { return _key; }
         }
+
+
+
         /// <summary>The value of the gedcom tag.</summary>
         public string value
         {
             get { return _value; }
             set { _value = value; }
         }
+
+
+
         /// <summary>The child tags of this gedcom tag.</summary>
         public Tags children
         {
             get { return _children; }
         }
+
+
 
         #endregion
 

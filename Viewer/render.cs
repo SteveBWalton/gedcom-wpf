@@ -751,14 +751,72 @@ namespace gedcom.viewer
             }
             else
             {
+                // Remember which keys are dealt with.
+                List<String> dealtWith = new List<String>();
+
+                // Title for the source.
                 html.Append("<h1>" + source.fullName + " (" + source.idx + ")</h1>");
+                dealtWith.Add("TITL");
+
+                // Initialise the sources referenced in this source.  Really expect this to be empty.
+                HtmlSources htmlSources = new HtmlSources();
+
+                // Deal with the note tags.
+                dealtWith.Add("NOTE");
+                Tag[] tagNotes = source.tag.children.findAll("NOTE");
+                foreach(Tag tagNote in tagNotes)
+                {
+                    if (tagNote.value.StartsWith("GRID:"))
+                    {
+                        // Grid value.
+                        html.Append("<table style=\"border: 2px solid black;\">");
+                        string[][] grid = tagNote.getGridValue();
+                        foreach (string[] row in grid)
+                        {
+                            html.Append("<tr>");
+                            foreach (string cell in row)
+                            {
+                                html.Append("<td>");
+                                html.Append(cell);
+                                html.Append("</td>");
+                            }
+                            html.Append("</tr>");
+                        }
+                        html.Append("</table>");
+                    }
+                    else
+                    {
+                        // Standard value.
+                        html.Append("<p>");
+                        string[] lines = tagNote.getMultiLineValue();
+                        bool isFirst = true;
+                        foreach (string line in lines)
+                        {
+                            if (!isFirst)
+                            {
+                                html.Append("<br/>");
+
+                            }
+                            else
+                            {
+                                isFirst = false;
+                            }
+                            html.Append(line);
+                        }
+                        html.Append("</p>");
+                    }
+                }
+                
+                // Show the remaining tags.
+                dealtWith.Add("CHAN");
+                addRemainingTags(html, source.tag.children, dealtWith);
+
+                // Show the source references.
+                html.Append(htmlSources.toHtml());
+
+                // Show the last changed information.
                 html.Append("<p>Last Changed " + source.lastChanged.ToString() + "</p>");
 
-                // Show some tags.
-                foreach (Tag tag in source.tag.children)
-                {
-                    html.Append("<p>'" + tag.key + "' = '" + tag.value + "'</p>");
-                }
 
                 // Show the original gedcom.
                 html.Append("<pre>" + source.tag.display(0) + "</pre>");
