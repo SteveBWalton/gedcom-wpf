@@ -86,6 +86,12 @@ namespace gedcom.viewer
                 dateValue = dateValue.Replace("BET", "");
                 html.Append("between ");
             }
+            else if (dateValue.Contains("FROM"))
+            {
+                // Between date.
+                dateValue = dateValue.Replace("FROM", "");
+                html.Append("from ");
+            }
             else
             {
                 // Default date.
@@ -98,6 +104,7 @@ namespace gedcom.viewer
             // Dealt with about, and.
             html.Replace("ABT", "about");
             html.Replace("AND", "and");
+            html.Replace("TO", "to");
 
             // Dealt with months.
             html.Replace("JAN", "January");
@@ -162,7 +169,8 @@ namespace gedcom.viewer
             string placeValue = tag.value;
 
             // Default date.
-            html.Append("at ");
+            // html.Append("at ");
+            html.Append("in ");
 
             Tag tagAddress = tag.children.findOne("ADDR");
             if (tagAddress != null)
@@ -192,7 +200,19 @@ namespace gedcom.viewer
         {
             // Build a long description of the tag.
             StringBuilder html = new StringBuilder();
-            html.Append(proNoun);
+
+            // Show any date information.
+            Tag tagDate = tag.children.findOne("DATE");
+            if (tagDate != null)
+            {
+                html.Append(firstCaps(getTagLongDate(tagDate, htmlSources)));
+                html.Append(" ");
+                html.Append(proNoun);
+            }
+            else 
+            {
+                html.Append(firstCaps(proNoun));
+            }
             html.Append(" ");
             html.Append(verb);
 
@@ -202,13 +222,6 @@ namespace gedcom.viewer
                 html.Append(tag.value);
             }
 
-            // Show any date information.
-            Tag tagDate = tag.children.findOne("DATE");
-            if (tagDate != null)
-            {
-                html.Append(" ");
-                html.Append(getTagLongDate(tagDate, htmlSources));
-            }
 
             // Show any place information.
             Tag tagPlace = tag.children.findOne("PLAC");
@@ -415,12 +428,20 @@ namespace gedcom.viewer
                     html.Append(getTagLongPartner(individual, marriageTag, htmlSources));
                 }
 
+                // Deal with education.
+                dealtWith.Add("EDUC");
+                tags = individual.tag.children.findAll("EDUC");
+                foreach (Tag educationTag in tags)
+                {
+                    html.Append(getTagLongHtml(educationTag, individual.isMale ? "he":"she" , "was educated at", htmlSources));
+                }
+
                 // Deal with death.
                 dealtWith.Add("DEAT");
                 tag = individual.tag.children.findOne("DEAT");
                 if (tag != null)
                 {
-                    html.Append(getTagLongHtml(tag, individual.isMale ? "He" : "She", "died", htmlSources));
+                    html.Append(getTagLongHtml(tag, individual.isMale ? "he" : "she", "died", htmlSources));
                 }
 
                 // Deal with the sources.
