@@ -378,11 +378,15 @@ namespace gedcom.viewer
         /// <returns>A html description of the specified individual.</returns>
         private string getIndividual(string query)
         {
-            StringBuilder html = new StringBuilder();
-            html.Append("<p><a href=\"app://home\">Home</a></p>");
-
+            // Get the index of the individual.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
+
+            // Start a html page for the individual.
+            StringBuilder html = new StringBuilder();
+
+            // Build a really poor menu bar (for now!).
+            html.Append("<p><a href=\"app://home\">Home</a>&nbsp;|&nbsp;<a href=\"dialog://individual?id=" + idx + "\">Edit</a></p>");
 
             // Find the specified individual.
             Individual individual = _gedcom.individuals.find(idx);

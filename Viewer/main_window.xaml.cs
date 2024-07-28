@@ -104,6 +104,29 @@ namespace gedcom.viewer
                 return;
             }
 
+            // An in-application dialog.
+            if (e.Uri.Scheme == "dialog")
+            {
+                // A within app link, so build ourselves not web browser follow.
+                e.Cancel = true;
+
+                // Show the dialog and allow the user to edit it.
+                switch (e.Uri.Host)
+                {
+                case "individual":
+                    DialogIndividual dialogIndividual = new DialogIndividual(_gedcom);
+                    dialogIndividual.ShowDialog();
+                    break;
+                }
+                
+                // Build the content within the application.
+                _webBrowser.NavigateToString(_render.getContent(e.Uri.Host, e.Uri.Query));
+
+                // Close this navigation.
+                return;
+            }
+
+
             // Allow the web browser control to deal with the uri.
             return;
         }
