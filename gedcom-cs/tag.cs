@@ -115,6 +115,7 @@ namespace gedcom
 
 
 
+        /// <summary>Return the tag for display in gedcom format.</summary>
         public string display(int indent)
         {
             StringBuilder output = new StringBuilder();
