@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:gedcom.viewer"
         mc:Ignorable="d"
         Title="Edit Individual" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <DockPanel>
+        <Grid>
+            <Label Content="Name"/>
+            <TextBox Width="200" />
+        </Grid>
+    </DockPanel>
 </Window>
