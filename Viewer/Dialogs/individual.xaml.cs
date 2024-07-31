@@ -14,9 +14,7 @@ using System.Windows.Shapes;
 
 namespace gedcom.viewer
 {
-    /// <summary>
-    /// Interaction logic for individual.xaml
-    /// </summary>
+    /// <summary>Interaction logic for individual.xaml.</summary>
     public partial class DialogIndividual : Window
     {
         #region Member Variables
