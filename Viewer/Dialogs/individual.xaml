@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="Edit Individual" Height="450" Width="800">
     <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Button Margin="5" Padding="5">Cancel</Button>
+            <Button Margin="5" Padding="5">OK</Button>
+        </StackPanel>
         <Grid>
             <Label Content="Name"/>
             <TextBox Width="200" />
