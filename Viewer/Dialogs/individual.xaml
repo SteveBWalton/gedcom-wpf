@@ -8,8 +8,8 @@
         Title="Edit Individual" Height="450" Width="800">
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" >
-            <Button Margin="5" Padding="5">Cancel</Button>
-            <Button Margin="5" Padding="5">OK</Button>
+            <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancel_Click" IsCancel="True">Cancel</Button>
+            <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOK_Click">OK</Button>
         </StackPanel>
         <Grid>
             <Label Content="Name"/>

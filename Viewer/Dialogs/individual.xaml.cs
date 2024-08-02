@@ -37,5 +37,16 @@ namespace gedcom.viewer
         }
 
         #endregion
+
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            
+            
+        }
+
+        private void buttonOK_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
     }
 }
