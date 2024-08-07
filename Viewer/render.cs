@@ -437,7 +437,15 @@ namespace gedcom.viewer
                 tags = individual.tag.children.findAll("EDUC");
                 foreach (Tag educationTag in tags)
                 {
-                    html.Append(getTagLongHtml(educationTag, individual.isMale ? "he":"she" , "was educated at", htmlSources));
+                    html.Append(getTagLongHtml(educationTag, individual.isMale ? "he" : "she", "was educated at", htmlSources));
+                }
+
+                // Deal with occupation.
+                dealtWith.Add("OCCU");
+                tags = individual.tag.children.findAll("OCCU");
+                foreach (Tag occupationTag in tags)
+                {
+                    html.Append(getTagLongHtml(occupationTag, individual.isMale ? "he" : "she", "worked as", htmlSources));
                 }
 
                 // Deal with death.
