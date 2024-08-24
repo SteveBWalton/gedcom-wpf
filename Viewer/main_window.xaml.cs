@@ -114,7 +114,7 @@ namespace gedcom.viewer
                 switch (e.Uri.Host)
                 {
                 case "individual":
-                    DialogIndividual dialogIndividual = new DialogIndividual(_gedcom);
+                    DialogIndividual dialogIndividual = new DialogIndividual(_gedcom, e.Uri.Query);
                     dialogIndividual.ShowDialog();
                     break;
                 }
