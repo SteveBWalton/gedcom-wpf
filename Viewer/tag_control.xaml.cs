@@ -22,32 +22,59 @@ namespace gedcom.viewer
     {
         /// <summary>The tag to display.</summary>
         private Tag _tag;
+        private bool _isExpand;
 
-        public TagControl(Tag tag)
+        public TagControl(Tag tag, bool isExpand)
         {
             InitializeComponent();
 
+            // Record the parameters.
+            _tag = tag;
+            _isExpand = isExpand;
+
+            const int LINE_HEIGHT = 17;
+
             // Add a master row for the actual tag.
             RowDefinition rowDefinition = new RowDefinition();
-            rowDefinition.Height = new GridLength(30);
+            rowDefinition.Height = new GridLength(LINE_HEIGHT);
             _mainGrid.RowDefinitions.Add(rowDefinition);
 
-            TextBlock textBox = new TextBlock();
-            textBox.Text = "1";
-            _mainGrid.Children.Add(textBox);
+            TextBlock textblockTag = new TextBlock();
+            textblockTag.Text = tag.key;
+            textblockTag.TextAlignment = TextAlignment.Right;
+            textblockTag.Margin = new Thickness(0, 0, 4, 0);
+            _mainGrid.Children.Add(textblockTag);
+            Grid.SetRow(textblockTag, 0);
+            Grid.SetColumn(textblockTag, 0);
 
-            TextBlock textBoxTag = new TextBlock();
-            textBoxTag.Text = tag.key;
-            _mainGrid.Children.Add(textBoxTag);
-
-            TextBlock textBoxValue = new TextBlock();
+            TextBox textBoxValue = new TextBox();
             textBoxValue.Text = tag.value;
+            textBoxValue.Width = 200;
             _mainGrid.Children.Add(textBoxValue);
+            Grid.SetRow(textBoxValue, 0);
+            Grid.SetColumn(textBoxValue, 1);
 
+            this.Height = LINE_HEIGHT;
 
+            if (_isExpand)
+            {
+                // Create rows for the tags.
+                for (int i = 0; i < _tag.children.count; i++)
+                {
+                    TagControl tagControl = new TagControl(_tag.children[i], true);
 
+                    rowDefinition = new RowDefinition();
+                    rowDefinition.Height = new GridLength(tagControl.Height);
 
+                    _childGrid.RowDefinitions.Add(rowDefinition);
+                    _childGrid.Children.Add(tagControl);
+                    Grid.SetRow(tagControl, i);
 
+                    this.Height += tagControl.Height;
+                }
+            }
         }
+
+        
     }
 }

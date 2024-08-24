@@ -54,15 +54,14 @@ namespace gedcom.viewer
             // Create rows for the tags.
             for (int i = 0; i < individual.tag.children.count; i++)
             {
-                TextBlock textBox = new TextBlock();
-                textBox.Text = "Hello " + i.ToString();
-
+                TagControl tagControl = new TagControl(individual.tag.children[i], true);
+                
                 RowDefinition rowDefinition = new RowDefinition();
-                rowDefinition.Height = new GridLength(45);
+                rowDefinition.Height = new GridLength(tagControl.Height);
 
                 _mainGrid.RowDefinitions.Add(rowDefinition);
-                _mainGrid.Children.Add(textBox);
-                Grid.SetRow(textBox, i);
+                _mainGrid.Children.Add(tagControl);
+                Grid.SetRow(tagControl, i);
             }
         }
 

@@ -6,11 +6,17 @@
              xmlns:local="clr-namespace:gedcom.viewer"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid x:Name="_mainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="100" />
-            <ColumnDefinition Width="auto" />
-        </Grid.ColumnDefinitions>
-    </Grid>
+    <StackPanel>
+        <Grid x:Name="_mainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid x:Name="_childGrid" Margin="20,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+        </Grid>
+    </StackPanel>
 </UserControl>
