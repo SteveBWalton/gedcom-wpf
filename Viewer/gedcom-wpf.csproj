@@ -66,6 +66,9 @@
       <DependentUpon>individual.xaml</DependentUpon>
     </Compile>
     <Compile Include="render.cs" />
+    <Compile Include="tag_control.xaml.cs">
+      <DependentUpon>tag_control.xaml</DependentUpon>
+    </Compile>
     <Compile Include="user_options.cs" />
     <Page Include="Dialogs\individual.xaml">
       <SubType>Designer</SubType>
@@ -74,6 +77,10 @@
     <Page Include="main_window.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="tag_control.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
