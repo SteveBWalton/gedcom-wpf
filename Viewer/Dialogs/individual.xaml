@@ -11,10 +11,12 @@
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True">Cancel</Button>
             <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick">OK</Button>
         </StackPanel>
-        <Grid x:Name="_mainGrid">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions> 
-        </Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid x:Name="_mainGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions> 
+            </Grid>
+        </ScrollViewer>
     </DockPanel>
 </Window>
