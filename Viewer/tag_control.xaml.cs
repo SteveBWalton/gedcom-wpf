@@ -45,14 +45,14 @@ namespace gedcom.viewer
             textblockTag.Margin = new Thickness(0, 0, 4, 0);
             _mainGrid.Children.Add(textblockTag);
             Grid.SetRow(textblockTag, 0);
-            Grid.SetColumn(textblockTag, 0);
+            Grid.SetColumn(textblockTag, 1);
 
             TextBox textBoxValue = new TextBox();
             textBoxValue.Text = tag.value;
             textBoxValue.Width = 200;
             _mainGrid.Children.Add(textBoxValue);
             Grid.SetRow(textBoxValue, 0);
-            Grid.SetColumn(textBoxValue, 1);
+            Grid.SetColumn(textBoxValue, 2);
 
             this.Height = LINE_HEIGHT;
 
