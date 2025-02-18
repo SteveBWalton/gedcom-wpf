@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>tree_02.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -123,6 +126,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\file_open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\file_exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\file_new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="tree_02.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
