@@ -17,9 +17,7 @@ using System.Windows.Threading;
 
 namespace gedcom.viewer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    /// <summary>Class to represent the main window for the gedcom-wpf application.</summary>
     public partial class MainWindow : Window
     {
         #region Member Variables
@@ -34,7 +32,9 @@ namespace gedcom.viewer
         private UserOptions _userOptions;
         #endregion
 
+        #region Class Constructors
 
+        /// <summary>Class constructor for the main window.</summary>
         public MainWindow()
         {
             _gedcom = new gedcom.Gedcom();
@@ -48,6 +48,8 @@ namespace gedcom.viewer
             InitializeComponent();
         }
 
+        #endregion
+
         /*
         private void dispatcherTimerTick(object sender, EventArgs e)
         {
@@ -58,6 +60,8 @@ namespace gedcom.viewer
             }
         }
         */
+
+        #region Signal Handlers
 
         private void appExitClick(object sender, RoutedEventArgs e)
         {
@@ -73,7 +77,7 @@ namespace gedcom.viewer
 
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
-            _gedcom.open("walton.ged");
+            // _gedcom.open("walton.ged");
 
             _webBrowser.NavigateToString(_render.getContent("home", ""));
         }
@@ -130,6 +134,8 @@ namespace gedcom.viewer
             // Allow the web browser control to deal with the uri.
             return;
         }
+
+        #endregion
 
     }
 }
