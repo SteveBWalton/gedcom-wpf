@@ -135,6 +135,27 @@ namespace gedcom.viewer
             return;
         }
 
+
+
+        /// <summary>Signal handler for the File -> Open menu point click.</summary>
+        private void menuFileOpenClick(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                Title = "Select Gedcom File",
+                Filter = "Gedcom Files (*.ged)|*.ged|All Files (*.*)|*.*"
+            };
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                // Open the specified file.
+                _gedcom.open(openFileDialog.FileName);
+
+                // Display the home page.
+                _webBrowser.NavigateToString(_render.getContent("home", ""));
+            }
+        }
+
         #endregion
 
     }
