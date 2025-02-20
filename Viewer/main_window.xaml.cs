@@ -23,13 +23,13 @@ namespace gedcom.viewer
         #region Member Variables
 
         /// <summary>The gedom to display.</summary>
-        private gedcom.Gedcom _gedcom;
+        private readonly gedcom.Gedcom _gedcom;
         /// <summary>The class to render the gedom to html.</summary>
-        private Render _render;
+        private readonly Render _render;
         //private DispatcherTimer _dispatcherTimer;
         //private string _newUrl;
         /// <summary>The user preferences.</summary>
-        private UserOptions _userOptions;
+        private readonly UserOptions _userOptions;
         #endregion
 
         #region Class Constructors
@@ -140,12 +140,18 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the File -> Open menu point click.</summary>
         private void menuFileOpenClick(object sender, RoutedEventArgs e)
         {
+            // Check that the current gedcom does not need saving.
+
+
+            // Get a gedcom file from the user.
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
             {
                 Title = "Select Gedcom File",
                 Filter = "Gedcom Files (*.ged)|*.ged|All Files (*.*)|*.*"
             };
             bool? result = openFileDialog.ShowDialog();
+
+            // Open the selected gedcom file.
             if (result == true)
             {
                 // Open the specified file.
@@ -154,6 +160,20 @@ namespace gedcom.viewer
                 // Display the home page.
                 _webBrowser.NavigateToString(_render.getContent("home", ""));
             }
+        }
+
+
+
+        /// <summary>Signal handler for the File -> New menu point click.</summary>        
+        private void menuFileNewClick(object sender, RoutedEventArgs e)
+        {
+            // Check that the current gedcom does not need saving.
+
+            // Creata a new empty document.
+            _gedcom.clear();
+
+            // Display the home page.
+            _webBrowser.NavigateToString(_render.getContent("home", ""));
         }
 
         #endregion

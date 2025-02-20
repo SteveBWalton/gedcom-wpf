@@ -12,7 +12,7 @@
         <StackPanel DockPanel.Dock="Top">
             <Menu Width="Auto" Height="20">
                 <MenuItem Header="_File">
-                    <MenuItem Header="New">
+                    <MenuItem Header="New" Click="menuFileNewClick">
                         <MenuItem.Icon>
                             <Image Source="/Resources/file_new.png" />
                         </MenuItem.Icon>
@@ -38,10 +38,10 @@
             </Menu>
             <ToolBarTray>
                 <ToolBar>
-                    <Button ToolTip="Start a new document.">
+                    <Button ToolTip="Start a new document." Click="menuFileNewClick">
                         <Image Source="/Resources/file_new.png" />
                     </Button>
-                    <Button ToolTip="Open a gedcom document.">
+                    <Button ToolTip="Open a gedcom document." Click="menuFileOpenClick">
                         <Image Source="/Resources/file_open.png" />
                     </Button>
                     <Button>
