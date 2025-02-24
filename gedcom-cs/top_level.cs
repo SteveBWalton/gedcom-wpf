@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace gedcom
 {
     /// <summary>The common attributes that all top level elements share.</summary>
+    /// <remarks>
+    /// This has a tag member (contains tag) should it really devive from tag class?
+    /// </remarks>
     public class TopLevel
     {
         #region Member Variables

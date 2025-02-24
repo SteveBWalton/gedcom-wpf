@@ -33,6 +33,8 @@ namespace gedcom
             clear();
         }
 
+
+
         /// <summary>Initialise and empty the gedcom object.</summary>
         public void clear()
         {
@@ -40,6 +42,16 @@ namespace gedcom
             individuals = new Individuals();
             families = new Families();
             sources = new Sources();
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>The file name of this gedcom file.</summary>
+        public string fileName
+        {
+            get { return _fileName; }
         }
 
         #endregion
@@ -106,14 +118,5 @@ namespace gedcom
 
         #endregion
 
-        #region Properties
-
-        /// <summary>The file name of this gedcom file.</summary>
-        public string fileName
-        {
-            get { return _fileName; }
-        }
-
-        #endregion
     }
 }
