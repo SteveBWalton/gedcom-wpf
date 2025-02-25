@@ -29,8 +29,10 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="_Tools">
+                <MenuItem Header="_Edit">
                     <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left" Width="140"/>
+                </MenuItem>
+                <MenuItem Header="_View">
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem x:Name="About" Header="_About" HorizontalAlignment="Left" Width="140"/>
@@ -39,15 +41,15 @@
             <ToolBarTray>
                 <ToolBar>
                     <Button ToolTip="Start a new document." Click="menuFileNewClick">
-                        <Image Source="/Resources/file_new.png" />
+                        <Image Source="/Resources/24/file_new.png" />
                     </Button>
                     <Button ToolTip="Open a gedcom document." Click="menuFileOpenClick">
-                        <Image Source="/Resources/file_open.png" />
+                        <Image Source="/Resources/24/file_open.png" />
                     </Button>
                     <Button>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/file_exit.png" />
-                            <TextBlock Margin="2,0,0,0">Exit</TextBlock>
+                            <Image Source="/Resources/24/file_exit.png" />
+                            <TextBlock Margin="2,8,0,0">Exit</TextBlock>
                         </StackPanel>
                     </Button>
                 </ToolBar>

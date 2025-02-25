@@ -139,5 +139,14 @@
   <ItemGroup>
     <Resource Include="tree_02.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\24\file_new.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\24\file_open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\24\file_exit.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
