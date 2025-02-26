@@ -69,11 +69,7 @@ namespace gedcom.viewer
             Close();
         }
 
-        private void appHomeClick(object sender, RoutedEventArgs e)
-        {
-            // Show the home page.
-            _webBrowser.NavigateToString(_render.getContent("home", ""));
-        }
+
 
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
@@ -81,6 +77,8 @@ namespace gedcom.viewer
 
             _webBrowser.NavigateToString(_render.getContent("home", ""));
         }
+
+
 
         private void webBrowserNavigating(object sender, NavigatingCancelEventArgs e)
         {
@@ -173,6 +171,15 @@ namespace gedcom.viewer
             _gedcom.clear();
 
             // Display the home page.
+            _webBrowser.NavigateToString(_render.getContent("home", ""));
+        }
+
+
+
+        /// <summary>Signal handler for the 'View' => 'Home' menu point click.</summary>
+        private void menuViewHomeClick(object sender, RoutedEventArgs e)
+        {
+            // Show the home page.
             _webBrowser.NavigateToString(_render.getContent("home", ""));
         }
 

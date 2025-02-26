@@ -22,7 +22,6 @@
                             <Image Source="/Resources/file_open.png" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem x:Name="appTest" Header="Home" HorizontalAlignment="Left" Width="140" Click="appHomeClick" />
                     <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="appExitClick" >
                         <MenuItem.Icon>
                             <Image Source="/Resources/file_exit.png" />
@@ -30,9 +29,19 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left" Width="140"/>
+                    <MenuItem Header="Edit">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/24/textbox.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="_Options"/>
                 </MenuItem>
                 <MenuItem Header="_View">
+                    <MenuItem x:Name="appTest" Header="Home" HorizontalAlignment="Left" Width="140" Click="menuViewHomeClick" >
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/24/home.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem x:Name="About" Header="_About" HorizontalAlignment="Left" Width="140"/>
@@ -41,15 +50,27 @@
             <ToolBarTray>
                 <ToolBar>
                     <Button ToolTip="Start a new document." Click="menuFileNewClick">
-                        <Image Source="/Resources/24/file_new.png" />
+                        <Image Source="/Resources/24/file_new.png" Height="24" />
                     </Button>
                     <Button ToolTip="Open a gedcom document." Click="menuFileOpenClick">
-                        <Image Source="/Resources/24/file_open.png" />
+                        <Image Source="/Resources/24/file_open.png" Height="24"/>
+                    </Button>
+                    <Button Click="menuViewHomeClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/24/home.png" Height="24"/>
+                            <TextBlock Margin="2,4,0,0">Home</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="menuViewHomeClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources/24/textbox.png" Height="24" />
+                            <TextBlock Margin="2,4,0,0">Edit</TextBlock>
+                        </StackPanel>
                     </Button>
                     <Button>
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="/Resources/24/file_exit.png" />
-                            <TextBlock Margin="2,8,0,0">Exit</TextBlock>
+                            <Image Source="/Resources/24/file_exit.png" Height="24"/>
+                            <TextBlock Margin="2,4,0,0">Exit</TextBlock>
                         </StackPanel>
                     </Button>
                 </ToolBar>
