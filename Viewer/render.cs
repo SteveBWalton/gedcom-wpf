@@ -259,7 +259,7 @@ namespace gedcom.viewer
         /// <param name="host">Specifies the request host. This is usually just the name of page.</param>
         /// <param name="query">Specifies the request query. This is usually just the parameters for the page.</param>
         /// <returns>The requested page as html.</returns>
-        public string getContent(string host, string query)
+        public PageContent getContent(string host, string query)
         {
             if (host == "home")
             {
@@ -269,14 +269,14 @@ namespace gedcom.viewer
             {
                 return getIndividual(query);
             }
-            else if (host == "family")
-            {
-                return getFamily(query);
-            }
-            else if (host == "source")
-            {
-                return getSource(query);
-            }
+            //else if (host == "family")
+            //{
+            //    return getFamily(query);
+            //}
+            //else if (host == "source")
+            //{
+            //    return getSource(query);
+            //}
             return getError(host, query);
         }
 
@@ -284,71 +284,72 @@ namespace gedcom.viewer
 
         /// <summary>Render the home page in html.</summary>
         /// <returns>The home page in html.</returns>
-        private string getHome()
+        private PageContent getHome()
         {
-            StringBuilder html = new StringBuilder();
+            PageContent pageContent = new PageContent();
 
-            html.Append("<h1>" + _gedcom.fileName + "</h1>");
+            pageContent.html.Append("<h1>" + _gedcom.fileName + "</h1>");
 
             // Display the individuals.
-            html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
-            html.Append("<legend>Individuals</legend>");
-            html.Append("<table>");
+            pageContent.html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.Append("<legend>Individuals</legend>");
+            pageContent.html.Append("<table>");
             int count = 0;
             Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
             foreach (Individual individual in individualsInDateOrder)
             {
-                html.Append("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
+                pageContent.html.Append("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
                 count++;
                 if (count >= 10)
                 {
                     break;
                 }
             }
-            html.Append("</table>");
-            html.Append("<p>There are " + _gedcom.individuals.count.ToString() + " individuals.");
-            html.Append("</fieldset>");
-            
+            pageContent.html.Append("</table>");
+            pageContent.html.Append("<p>There are " + _gedcom.individuals.count.ToString() + " individuals.");
+            pageContent.html.Append("</fieldset>");
+
             // Display the families.
-            html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
-            html.Append("<legend>Families</legend>");
-            html.Append("<table>");
+            pageContent.html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.Append("<legend>Families</legend>");
+            pageContent.html.Append("<table>");
             count = 0;
             Family[] familiesInDateOrder = _gedcom.families.inDateOrder();
             foreach (Family family in familiesInDateOrder)
             {
-                html.Append("<tr><td><a href=\"app://family?id=" + family.idx + "\">" + family.fullName + "</a></td></tr>");
+                pageContent.html.Append("<tr><td><a href=\"app://family?id=" + family.idx + "\">" + family.fullName + "</a></td></tr>");
                 count++;
                 if (count >= 10)
                 {
                     break;
                 }
             }
-            html.Append("</table>");
-            html.Append("<p>There are " + _gedcom.families.count.ToString() + " families.");
-            html.Append("</fieldset>");
+            pageContent.html.Append("</table>");
+            pageContent.html.Append("<p>There are " + _gedcom.families.count.ToString() + " families.");
+            pageContent.html.Append("</fieldset>");
 
             // Display the sources.
-            html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
-            html.Append("<legend>Sources</legend>");
-            html.Append("<table>");
+            pageContent.html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.Append("<legend>Sources</legend>");
+            pageContent.html.Append("<table>");
             count = 0;
             Source[] sourcesInDateOrder = _gedcom.sources.inDateOrder();
             foreach (Source source in sourcesInDateOrder)
             {
-                html.Append("<tr><td>" + htmlSource(source) + "</td></tr>");
+                pageContent.html.Append("<tr><td>" + htmlSource(source) + "</td></tr>");
                 count++;
                 if (count >= 10)
                 {
                     break;
                 }
             }
-            html.Append("</table>");
-            html.Append("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
-            html.Append("</fieldset>");
+            pageContent.html.Append("</table>");
+            pageContent.html.Append("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
+            pageContent.html.Append("</fieldset>");
 
             // Return the built string as html.
-            return _userOptions.renderHtml(html.ToString());
+            // return _userOptions.renderHtml(html.ToString());
+            return pageContent;
         }
 
 
@@ -357,16 +358,18 @@ namespace gedcom.viewer
         /// <param name="host">Specifies request host.</param>
         /// <param name="query">Specifies the request query.</param>
         /// <returns>An error message in html format.</returns>
-        private string getError(string host, string query)
+        private PageContent getError(string host, string query)
         {
-            StringBuilder html = new StringBuilder();
+            PageContent pageContent = new PageContent();
+            // StringBuilder html = new StringBuilder();
 
-            html.Append("<h1>Error</h1>");
-            html.Append("<p>host is '" + host + "', query is '" + query + "'</p>");
-            html.Append("<p><a href=\"app://home\">Home</a></p>");
+            pageContent.html.Append("<h1>Error</h1>");
+            pageContent.html.Append("<p>host is '" + host + "', query is '" + query + "'</p>");
+            pageContent.html.Append("<p><a href=\"app://home\">Home</a></p>");
 
             // Return the built string as html.
-            return _userOptions.renderHtml(html.ToString());
+            // return _userOptions.renderHtml(html.ToString());
+            return pageContent;
         }
 
         #endregion
@@ -376,25 +379,26 @@ namespace gedcom.viewer
         /// <summary>Render the specified individual in html.</summary>
         /// <param name="query">Specifies the request query for this individual.</param>
         /// <returns>A html description of the specified individual.</returns>
-        private string getIndividual(string query)
+        private PageContent getIndividual(string query)
         {
             // Get the index of the individual.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
 
             // Start a html page for the individual.
-            StringBuilder html = new StringBuilder();
+            // StringBuilder html = new StringBuilder();
+            PageContent pageContent = new PageContent();
 
             // Build a really poor menu bar (for now!).
-            html.Append("<p><a href=\"app://home\">Home</a>&nbsp;|&nbsp;<a href=\"dialog://individual?id=" + idx + "\">Edit</a></p>");
+            pageContent.html.Append("<p><a href=\"app://home\">Home</a>&nbsp;|&nbsp;<a href=\"dialog://individual?id=" + idx + "\">Edit</a></p>");
 
             // Find the specified individual.
             Individual individual = _gedcom.individuals.find(idx);
             if (individual == null)
             {
-                html.Append("<h1>Individual</h1>");
-                html.Append("<p>query is '" + query + "'.</p>");
-                html.Append("<p>Can not find '" + idx + "'.</p>");
+                pageContent.html.Append("<h1>Individual</h1>");
+                pageContent.html.Append("<p>query is '" + query + "'.</p>");
+                pageContent.html.Append("<p>Can not find '" + idx + "'.</p>");
             }
             else
             {
@@ -405,7 +409,7 @@ namespace gedcom.viewer
                 string fullName = individual.fullName;
                 dealtWith.Add("NAME");
                 dealtWith.Add("SEX");
-                html.Append("<h1>" + fullName + " (" + individual.idx + ")</h1>");
+                pageContent.html.Append("<h1>" + fullName + " (" + individual.idx + ")</h1>");
 
                 // Initialise the sources referenced in this individual.
                 HtmlSources htmlSources = new HtmlSources();
@@ -413,7 +417,7 @@ namespace gedcom.viewer
                 Tag tag = individual.tag.children.findOne("BIRT");
                 if (tag != null)
                 {
-                    html.Append(getTagLongHtml(tag, fullName, "was born", htmlSources));
+                    pageContent.html.Append(getTagLongHtml(tag, fullName, "was born", htmlSources));
                 }
 
                 // Deal with family.
@@ -421,7 +425,7 @@ namespace gedcom.viewer
                 tag = individual.tag.children.findOne("FAMC");
                 if (tag != null)
                 {
-                    html.Append(getTagLongParents(individual, tag, htmlSources));
+                    pageContent.html.Append(getTagLongParents(individual, tag, htmlSources));
                 }
 
                 // Deal with partners.
@@ -429,7 +433,7 @@ namespace gedcom.viewer
                 Tag[] tags = individual.tag.children.findAll("FAMS");
                 foreach (Tag marriageTag in tags)
                 {
-                    html.Append(getTagLongPartner(individual, marriageTag, htmlSources));
+                    pageContent.html.Append(getTagLongPartner(individual, marriageTag, htmlSources));
                 }
 
                 // Deal with education.
@@ -437,7 +441,7 @@ namespace gedcom.viewer
                 tags = individual.tag.children.findAll("EDUC");
                 foreach (Tag educationTag in tags)
                 {
-                    html.Append(getTagLongHtml(educationTag, individual.isMale ? "he" : "she", "was educated at", htmlSources));
+                    pageContent.html.Append(getTagLongHtml(educationTag, individual.isMale ? "he" : "she", "was educated at", htmlSources));
                 }
 
                 // Deal with occupation.
@@ -445,7 +449,7 @@ namespace gedcom.viewer
                 tags = individual.tag.children.findAll("OCCU");
                 foreach (Tag occupationTag in tags)
                 {
-                    html.Append(getTagLongHtml(occupationTag, individual.isMale ? "he" : "she", "worked as", htmlSources));
+                    pageContent.html.Append(getTagLongHtml(occupationTag, individual.isMale ? "he" : "she", "worked as", htmlSources));
                 }
 
                 // Deal with death.
@@ -453,7 +457,7 @@ namespace gedcom.viewer
                 tag = individual.tag.children.findOne("DEAT");
                 if (tag != null)
                 {
-                    html.Append(getTagLongHtml(tag, individual.isMale ? "he" : "she", "died", htmlSources));
+                    pageContent.html.Append(getTagLongHtml(tag, individual.isMale ? "he" : "she", "died", htmlSources));
                 }
 
                 // Deal with the sources.
@@ -468,20 +472,21 @@ namespace gedcom.viewer
 
                 // Show the remaining tags.
                 dealtWith.Add("CHAN");
-                addRemainingTags(html, individual.tag.children, dealtWith);
+                addRemainingTags(pageContent.html, individual.tag.children, dealtWith);
 
                 // Show the source references.
-                html.Append(htmlSources.toHtml());
+                pageContent.html.Append(htmlSources.toHtml());
 
                 // Show the last changed information.
-                html.Append("<p>Last Changed " + individual.lastChanged.ToString() + "</p>");
+                pageContent.html.Append("<p>Last Changed " + individual.lastChanged.ToString() + "</p>");
 
                 // Show the original gedcom.
-                html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");
+                pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");
             }
 
             // Return the built string as html.
-            return _userOptions.renderHtml(html.ToString());
+            // return _userOptions.renderHtml(html.ToString());
+            return pageContent;
         }
 
 

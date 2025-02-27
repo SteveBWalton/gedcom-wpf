@@ -61,6 +61,19 @@ namespace gedcom.viewer
         }
         */
 
+        private bool populateWindow(string host, string query)
+        {
+            //string html = _render.getContent(host, query);
+            //_webBrowser.NavigateToString(html);
+            PageContent pageContent = _render.getContent(host, query);
+            _webBrowser.NavigateToString(_userOptions.renderHtml(pageContent.html.ToString()));
+
+            // Return success.
+            return true;
+        }
+
+
+
         #region Signal Handlers
 
         private void appExitClick(object sender, RoutedEventArgs e)
@@ -75,7 +88,7 @@ namespace gedcom.viewer
         {
             // _gedcom.open("walton.ged");
 
-            _webBrowser.NavigateToString(_render.getContent("home", ""));
+            populateWindow("home", "");
         }
 
 
@@ -100,7 +113,7 @@ namespace gedcom.viewer
                 e.Cancel = true;
 
                 // Build the content within the application.
-                _webBrowser.NavigateToString(_render.getContent(e.Uri.Host, e.Uri.Query));
+                populateWindow(e.Uri.Host, e.Uri.Query);
 
                 // Close this navigation.
                 return;
@@ -122,7 +135,7 @@ namespace gedcom.viewer
                 }
                 
                 // Build the content within the application.
-                _webBrowser.NavigateToString(_render.getContent(e.Uri.Host, e.Uri.Query));
+                populateWindow(e.Uri.Host, e.Uri.Query);
 
                 // Close this navigation.
                 return;
@@ -156,7 +169,7 @@ namespace gedcom.viewer
                 _gedcom.open(openFileDialog.FileName);
 
                 // Display the home page.
-                _webBrowser.NavigateToString(_render.getContent("home", ""));
+                populateWindow("home", "");
             }
         }
 
@@ -171,7 +184,7 @@ namespace gedcom.viewer
             _gedcom.clear();
 
             // Display the home page.
-            _webBrowser.NavigateToString(_render.getContent("home", ""));
+            populateWindow("home", "");
         }
 
 
@@ -180,7 +193,7 @@ namespace gedcom.viewer
         private void menuViewHomeClick(object sender, RoutedEventArgs e)
         {
             // Show the home page.
-            _webBrowser.NavigateToString(_render.getContent("home", ""));
+            populateWindow("home", "");
         }
 
         #endregion

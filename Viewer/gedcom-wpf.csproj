@@ -69,6 +69,7 @@
     <Compile Include="Dialogs\individual.xaml.cs">
       <DependentUpon>individual.xaml</DependentUpon>
     </Compile>
+    <Compile Include="page_content.cs" />
     <Compile Include="render.cs" />
     <Compile Include="tag_control.xaml.cs">
       <DependentUpon>tag_control.xaml</DependentUpon>
