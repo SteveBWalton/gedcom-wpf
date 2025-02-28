@@ -269,14 +269,14 @@ namespace gedcom.viewer
             {
                 return getIndividual(query);
             }
-            //else if (host == "family")
-            //{
-            //    return getFamily(query);
-            //}
-            //else if (host == "source")
-            //{
-            //    return getSource(query);
-            //}
+            else if (host == "family")
+            {
+                return getFamily(query);
+            }
+            else if (host == "source")
+            {
+                return getSource(query);
+            }
             return getError(host, query);
         }
 
@@ -391,6 +391,8 @@ namespace gedcom.viewer
 
             // Build a really poor menu bar (for now!).
             pageContent.html.Append("<p><a href=\"app://home\">Home</a>&nbsp;|&nbsp;<a href=\"dialog://individual?id=" + idx + "\">Edit</a></p>");
+            // pageContent.editForm = "dialog://individual?id=" + idx;
+            pageContent.editForm = "individual?id=" + idx;
 
             // Find the specified individual.
             Individual individual = _gedcom.individuals.find(idx);
@@ -616,10 +618,10 @@ namespace gedcom.viewer
         /// <summary>Render the specified family in html.</summary>
         /// <param name="query">Specifies the request query for this family.</param>
         /// <returns>A html description of the specified family.</returns>
-        private string getFamily(string query)
+        private PageContent getFamily(string query)
         {
-            StringBuilder html = new StringBuilder();
-            html.Append("<p><a href=\"app://home\">Home</a></p>");
+            PageContent pageContent = new PageContent();
+            pageContent.html.Append("<p><a href=\"app://home\">Home</a></p>");
 
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
@@ -627,10 +629,10 @@ namespace gedcom.viewer
             Family family = _gedcom.families.find(idx);
             if (family == null)
             {
-                html.Append("<h1>Family</h1>");
-                html.Append("<p>query is '" + query + "'</p>");
-                html.Append("<p>Can't find '" + idx + "'.</p>");
-                html.Append(idx + " not found!");
+                pageContent.html.Append("<h1>Family</h1>");
+                pageContent.html.Append("<p>query is '" + query + "'</p>");
+                pageContent.html.Append("<p>Can't find '" + idx + "'.</p>");
+                pageContent.html.Append(idx + " not found!");
             }
             else
             {
@@ -638,7 +640,7 @@ namespace gedcom.viewer
                 List<String> dealtWith = new List<String>();
 
                 // Add a title for this family page.
-                html.Append("<h1>" + family.fullName + " (" + family.idx + ")</h1>");
+                pageContent.html.Append("<h1>" + family.fullName + " (" + family.idx + ")</h1>");
                 dealtWith.Add("HUSB");
                 dealtWith.Add("WIFE");
 
@@ -652,60 +654,60 @@ namespace gedcom.viewer
                     Tag tagDate = tagMarriage.children.findOne("DATE");
                     if (tagDate != null)
                     {
-                        html.Append(firstCaps(getTagLongDate(tagDate, htmlSources)));
-                        html.Append(" " + htmlIndividual(family.husband) + " married ");
+                        pageContent.html.Append(firstCaps(getTagLongDate(tagDate, htmlSources)));
+                        pageContent.html.Append(" " + htmlIndividual(family.husband) + " married ");
                     }
                     else
                     {
-                        html.Append(htmlIndividual(family.husband) + " married ");
+                        pageContent.html.Append(htmlIndividual(family.husband) + " married ");
                     }
                 }
                 else
                 {
-                    html.Append(htmlIndividual(family.husband) + " had a relationship with ");
+                    pageContent.html.Append(htmlIndividual(family.husband) + " had a relationship with ");
                 }
-                html.Append(htmlIndividual(family.wife) + " ");
+                pageContent.html.Append(htmlIndividual(family.wife) + " ");
                 if (tagMarriage != null)
                 {
                     Tag tagPlace = tagMarriage.children.findOne("PLAC");
                     if (tagPlace != null)
                     {
-                        html.Append(getTagLongPlace(tagPlace, htmlSources));
+                        pageContent.html.Append(getTagLongPlace(tagPlace, htmlSources));
                     }
                 }
-                html.Append(". ");
+                pageContent.html.Append(". ");
 
                 // Show the children.
                 dealtWith.Add("CHIL");
                 Individual[] children = family.getChildren();
                 if (children.Count() == 0)
                 {
-                    html.Append("They had no children. ");
+                    pageContent.html.Append("They had no children. ");
                 }
                 else
                 {
                     if (children.Count() == 1)
                     {
-                        html.Append("They had one child, ");
+                        pageContent.html.Append("They had one child, ");
                     }
                     else
                     {
-                        html.Append("They had " + children.Count().ToString() + " children, ");
+                        pageContent.html.Append("They had " + children.Count().ToString() + " children, ");
                     }
                     for(int childIdx = 0; childIdx< children.Count(); childIdx++)
                     {
                         Individual child = children[childIdx];
                         if (childIdx == children.Count() - 1)
                         {
-                            html.Append(htmlIndividual(child) + ". ");
+                            pageContent.html.Append(htmlIndividual(child) + ". ");
                         }
                         else if (childIdx == children.Count() - 2)
                         {
-                            html.Append(htmlIndividual(child) + " and ");
+                            pageContent.html.Append(htmlIndividual(child) + " and ");
                         }
                         else
                         {
-                            html.Append(htmlIndividual(child) + ", ");
+                            pageContent.html.Append(htmlIndividual(child) + ", ");
                         }
                     }
                 }
@@ -714,31 +716,31 @@ namespace gedcom.viewer
                 Tag tagDivorce = family.tag.children.findOne("DIV");
                 if (tagDivorce != null)
                 {
-                    html.Append("They ");
+                    pageContent.html.Append("They ");
                     if (tagMarriage != null)
                     {
-                        html.Append("divorced");
+                        pageContent.html.Append("divorced");
                     }
                     else
                     {
-                        html.Append("separated");
+                        pageContent.html.Append("separated");
                     }
 
                     // Show the divorce sources.
-                    html.Append(addSourceReferences(tagDivorce, htmlSources));
+                    pageContent.html.Append(addSourceReferences(tagDivorce, htmlSources));
 
                     Tag tagDate = tagDivorce.children.findOne("DATE");
                     if (tagDate != null)
                     {
-                        html.Append(" " + getTagLongDate(tagDate, htmlSources));
+                        pageContent.html.Append(" " + getTagLongDate(tagDate, htmlSources));
                     }
 
-                    html.Append(". ");
+                    pageContent.html.Append(". ");
                 }
 
                 // Show the remaining tags.
                 dealtWith.Add("CHAN");
-                addRemainingTags(html, family.tag.children, dealtWith);
+                addRemainingTags(pageContent.html, family.tag.children, dealtWith);
 
                 // Deal with the sources.
                 dealtWith.Add("SOUR");
@@ -751,17 +753,19 @@ namespace gedcom.viewer
                 }
 
                 // Show the source references.
-                html.Append(htmlSources.toHtml());
+                pageContent.html.Append(htmlSources.toHtml());
 
                 // Show the last changed information.
-                html.Append("<p>Last Changed " + family.lastChanged.ToString() + "</p>");
+                pageContent.html.Append("<p>Last Changed " + family.lastChanged.ToString() + "</p>");
 
                 // Show the original gedcom.
-                html.Append("<pre>" + family.tag.display(0) + "</pre>");
+                pageContent.html.Append("<pre>" + family.tag.display(0) + "</pre>");
             }
 
             // Return the built string as html.
-            return _userOptions.renderHtml(html.ToString());
+            // return _userOptions.renderHtml(html.ToString());
+            // Return the page content.
+            return pageContent;
         }
 
         #endregion
@@ -771,10 +775,11 @@ namespace gedcom.viewer
         /// <summary>Render the requested source as html.</summary>
         /// <param name="query">Specifies the request query for this source.</param>
         /// <returns>The requested source as html.</returns>
-        private string getSource(string query)
+        private PageContent getSource(string query)
         {
-            StringBuilder html = new StringBuilder();
-            html.Append("<p><a href=\"app://home\">Home</a></p>");
+            PageContent pageContent = new PageContent();
+            // StringBuilder html = new StringBuilder();
+            pageContent.html.Append("<p><a href=\"app://home\">Home</a></p>");
 
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
@@ -782,10 +787,10 @@ namespace gedcom.viewer
             Source source = _gedcom.sources.find(idx);
             if (source == null)
             {
-                html.Append("<h1>Source</h1>");
-                html.Append("<p>query is '" + query + "'</p>");
-                html.Append("<p>Can't find '" + idx + "'.</p>");
-                html.Append(idx + " not found!");
+                pageContent.html.Append("<h1>Source</h1>");
+                pageContent.html.Append("<p>query is '" + query + "'</p>");
+                pageContent.html.Append("<p>Can't find '" + idx + "'.</p>");
+                pageContent.html.Append(idx + " not found!");
             }
             else
             {
@@ -793,7 +798,7 @@ namespace gedcom.viewer
                 List<String> dealtWith = new List<String>();
 
                 // Title for the source.
-                html.Append("<h1>" + source.fullName + " (" + source.idx + ")</h1>");
+                pageContent.html.Append("<h1>" + source.fullName + " (" + source.idx + ")</h1>");
                 dealtWith.Add("TITL");
 
                 // Initialise the sources referenced in this source.  Really expect this to be empty.
@@ -807,61 +812,61 @@ namespace gedcom.viewer
                     if (tagNote.value.StartsWith("GRID:"))
                     {
                         // Grid value.
-                        html.Append("<table style=\"border: 2px solid black;\">");
+                        pageContent.html.Append("<table style=\"border: 2px solid black;\">");
                         string[][] grid = tagNote.getGridValue();
                         foreach (string[] row in grid)
                         {
-                            html.Append("<tr>");
+                            pageContent.html.Append("<tr>");
                             foreach (string cell in row)
                             {
-                                html.Append("<td>");
-                                html.Append(cell);
-                                html.Append("</td>");
+                                pageContent.html.Append("<td>");
+                                pageContent.html.Append(cell);
+                                pageContent.html.Append("</td>");
                             }
-                            html.Append("</tr>");
+                            pageContent.html.Append("</tr>");
                         }
-                        html.Append("</table>");
+                        pageContent.html.Append("</table>");
                     }
                     else
                     {
                         // Standard value.
-                        html.Append("<p>");
+                        pageContent.html.Append("<p>");
                         string[] lines = tagNote.getMultiLineValue();
                         bool isFirst = true;
                         foreach (string line in lines)
                         {
                             if (!isFirst)
                             {
-                                html.Append("<br/>");
-
+                                pageContent.html.Append("<br/>");
                             }
                             else
                             {
                                 isFirst = false;
                             }
-                            html.Append(line);
+                            pageContent.html.Append(line);
                         }
-                        html.Append("</p>");
+                        pageContent.html.Append("</p>");
                     }
                 }
                 
                 // Show the remaining tags.
                 dealtWith.Add("CHAN");
-                addRemainingTags(html, source.tag.children, dealtWith);
+                addRemainingTags(pageContent.html, source.tag.children, dealtWith);
 
                 // Show the source references.
-                html.Append(htmlSources.toHtml());
+                pageContent.html.Append(htmlSources.toHtml());
 
                 // Show the last changed information.
-                html.Append("<p>Last Changed " + source.lastChanged.ToString() + "</p>");
-
+                pageContent.html.Append("<p>Last Changed " + source.lastChanged.ToString() + "</p>");
 
                 // Show the original gedcom.
-                html.Append("<pre>" + source.tag.display(0) + "</pre>");
+                pageContent.html.Append("<pre>" + source.tag.display(0) + "</pre>");
             }
 
             // Return the built string as html.
-            return _userOptions.renderHtml(html.ToString());
+            // return _userOptions.renderHtml(html.ToString());
+            // Return the page content.
+            return pageContent;
         }
 
 

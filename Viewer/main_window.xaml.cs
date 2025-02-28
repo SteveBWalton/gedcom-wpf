@@ -26,6 +26,8 @@ namespace gedcom.viewer
         private readonly gedcom.Gedcom _gedcom;
         /// <summary>The class to render the gedom to html.</summary>
         private readonly Render _render;
+        /// <summary>The object to hold the page contents.</summary>
+        private PageContent _pageContent;
         //private DispatcherTimer _dispatcherTimer;
         //private string _newUrl;
         /// <summary>The user preferences.</summary>
@@ -65,14 +67,49 @@ namespace gedcom.viewer
         {
             //string html = _render.getContent(host, query);
             //_webBrowser.NavigateToString(html);
-            PageContent pageContent = _render.getContent(host, query);
-            _webBrowser.NavigateToString(_userOptions.renderHtml(pageContent.html.ToString()));
+            _pageContent = _render.getContent(host, query);
+            _webBrowser.NavigateToString(_userOptions.renderHtml(_pageContent.html.ToString()));
+
+            if(_pageContent.editForm=="")
+            {
+                _menuEditEdit.IsEnabled = false;
+                _toolbarEdit.IsEnabled = false;
+            }
+            else
+            {
+                _menuEditEdit.IsEnabled = true;
+                _toolbarEdit.IsEnabled = true;
+            }
+            if (_pageContent.editGedomDirectly == "")
+            {
+                _menuEditEditGedcom.IsEnabled = false;
+                _toolbarEditGedom.IsEnabled = false;
+            }
+            else
+            {
+                _menuEditEditGedcom.IsEnabled = true;
+                _toolbarEditGedom.IsEnabled = true;
+            }
 
             // Return success.
             return true;
         }
 
 
+
+        private void processDialogScheme(string host, string query)
+        {
+            switch (host)
+            {
+            case "individual":
+                DialogIndividual dialogIndividual = new DialogIndividual(_gedcom, query);
+                dialogIndividual.ShowDialog();
+                break;
+            }
+
+            // Build the content within the application.
+            populateWindow(host, query);
+        }
 
         #region Signal Handlers
 
@@ -126,16 +163,7 @@ namespace gedcom.viewer
                 e.Cancel = true;
 
                 // Show the dialog and allow the user to edit it.
-                switch (e.Uri.Host)
-                {
-                case "individual":
-                    DialogIndividual dialogIndividual = new DialogIndividual(_gedcom, e.Uri.Query);
-                    dialogIndividual.ShowDialog();
-                    break;
-                }
-                
-                // Build the content within the application.
-                populateWindow(e.Uri.Host, e.Uri.Query);
+                processDialogScheme(e.Uri.Host, e.Uri.Query);
 
                 // Close this navigation.
                 return;
@@ -196,7 +224,27 @@ namespace gedcom.viewer
             populateWindow("home", "");
         }
 
-        #endregion
 
+
+        /// <summary>Signal handler for the 'Edit' -> 'Edit' menu point click.</summary>
+        private void menuEditEditClick(object sender, RoutedEventArgs e)
+        {
+            string[] splitUri = _pageContent.editForm.Split('?');
+            string host = splitUri[0];
+            string query = splitUri[1];
+
+            // Show the dialog.
+            processDialogScheme(host, query);
+        }
+
+
+
+        /// <summary>Signal handler for the 'Edit' -> 'Edit Gedcom' menu point click.</summary>
+        private void menuEditEditGedcomClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        #endregion
     }
 }
