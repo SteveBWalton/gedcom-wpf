@@ -393,6 +393,7 @@ namespace gedcom.viewer
             pageContent.html.Append("<p><a href=\"app://home\">Home</a>&nbsp;|&nbsp;<a href=\"dialog://individual?id=" + idx + "\">Edit</a></p>");
             // pageContent.editForm = "dialog://individual?id=" + idx;
             pageContent.editForm = "individual?id=" + idx;
+            pageContent.editGedomDirectly = "individual?id=" + idx;
 
             // Find the specified individual.
             Individual individual = _gedcom.individuals.find(idx);

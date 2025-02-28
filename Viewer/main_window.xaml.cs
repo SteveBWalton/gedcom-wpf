@@ -70,7 +70,7 @@ namespace gedcom.viewer
             _pageContent = _render.getContent(host, query);
             _webBrowser.NavigateToString(_userOptions.renderHtml(_pageContent.html.ToString()));
 
-            if(_pageContent.editForm=="")
+            if (_pageContent.editForm == "")
             {
                 _menuEditEdit.IsEnabled = false;
                 _toolbarEdit.IsEnabled = false;
@@ -242,7 +242,21 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'Edit' -> 'Edit Gedcom' menu point click.</summary>
         private void menuEditEditGedcomClick(object sender, RoutedEventArgs e)
         {
+            // This a just to get it going.
 
+            string[] splitUri = _pageContent.editGedomDirectly.Split('?');
+            string host = splitUri[0];
+            string query = splitUri[1];
+
+
+            System.Collections.Specialized.NameValueCollection queryParams = System.Web.HttpUtility.ParseQueryString(query);
+            string idx = queryParams.Get("id");
+
+            Individual individual = _gedcom.individuals.find(idx);
+            individual.tag.display(0);
+
+            DialogEditGedcom dialogEditGedcom = new DialogEditGedcom(individual.tag.display(0));
+            dialogEditGedcom.ShowDialog();
         }
 
         #endregion

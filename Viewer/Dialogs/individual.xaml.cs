@@ -67,6 +67,8 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Signal Handlers
+
         private void buttonCancelClick(object sender, RoutedEventArgs e)
         {
             
@@ -77,5 +79,7 @@ namespace gedcom.viewer
         {
             this.DialogResult = true;
         }
+
+        #endregion
     }
 }
