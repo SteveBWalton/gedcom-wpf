@@ -9,10 +9,10 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True">Cancel</Button>
-            <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick">OK</Button>
+            <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="False" Click="buttonOkClick">OK</Button>
         </StackPanel>
         <ScrollViewer Grid.Column="3" Grid.Row="4" Grid.RowSpan="8" BorderBrush="Black">
-            <TextBlock HorizontalAlignment="Stretch" x:Name="_statusTextBox" VerticalAlignment="Stretch" Background="#FFF1F3F8" IsEnabled="False" OverridesDefaultStyle="True" />
+            <TextBox HorizontalAlignment="Stretch" x:Name="_statusTextBox" VerticalAlignment="Stretch" FontFamily="Courier New" AcceptsReturn="True" />
         </ScrollViewer>
     </DockPanel>
 </Window>

@@ -63,6 +63,12 @@ namespace gedcom.viewer
         }
         */
 
+
+
+        /// <summary>Populate the main window with the content from the specified host and query.</summary>
+        /// <param name="host">Specifies the page host.</param>
+        /// <param name="query">Specifies the page query.</param>
+        /// <returns>True for success, false otherwise.</returns>
         private bool populateWindow(string host, string query)
         {
             //string html = _render.getContent(host, query);
@@ -242,21 +248,38 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'Edit' -> 'Edit Gedcom' menu point click.</summary>
         private void menuEditEditGedcomClick(object sender, RoutedEventArgs e)
         {
-            // This a just to get it going.
-
+            // Split the edit gedcom string into host and query.
             string[] splitUri = _pageContent.editGedomDirectly.Split('?');
             string host = splitUri[0];
             string query = splitUri[1];
 
-
+            // Get the index from the query.
             System.Collections.Specialized.NameValueCollection queryParams = System.Web.HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
 
-            Individual individual = _gedcom.individuals.find(idx);
-            individual.tag.display(0);
+            // Get the top level tag.
+            TopLevel topLevel = null;
+            switch (host)
+            {
+            case "individual":
+                topLevel = _gedcom.individuals.find(idx);
+                break;
 
-            DialogEditGedcom dialogEditGedcom = new DialogEditGedcom(individual.tag.display(0));
-            dialogEditGedcom.ShowDialog();
+            case "source":
+                topLevel = _gedcom.sources.find(idx);
+                break;
+            }
+
+            // Let the user edit the top level tag.
+            if (topLevel != null)
+            {
+                DialogEditGedcom dialogEditGedcom = new DialogEditGedcom(topLevel.tag);
+                if (dialogEditGedcom.ShowDialog() == true)
+                {
+                    // Show the actual page.
+                    populateWindow(host, query);
+                }
+            }
         }
 
         #endregion

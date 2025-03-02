@@ -38,6 +38,46 @@ namespace gedcom
 
         #endregion
 
+        #region Properties
+
+
+
+        /// <summary>The whole (original?) line that created this tag.</summary>
+        public string line
+        {
+            get { return _line; }
+        }
+
+
+
+        /// <summary>The type or key of the gedcom tag.</summary>
+        public string key
+        {
+            get { return _key; }
+        }
+
+
+
+        /// <summary>The value of the gedcom tag.</summary>
+        public string value
+        {
+            get { return _value; }
+            set { _value = value; }
+        }
+
+
+
+        /// <summary>The child tags of this gedcom tag.</summary>
+        public Tags children
+        {
+            get { return _children; }
+        }
+
+
+
+        #endregion
+
+
         /// <summary>Returns the specified key as an index string.</summary>
         /// <param name="key">Specifies the key to convert to an index string.</param>
         public static string toIdx(string key)
@@ -78,7 +118,7 @@ namespace gedcom
                 _level = level;
                 // Find the second space.
                 int secondSpace = firstSpace + 1;
-                while(line[secondSpace]!=' ')
+                while (line[secondSpace] != ' ')
                 {
                     secondSpace++;
                     if (secondSpace >= line.Length)
@@ -95,7 +135,7 @@ namespace gedcom
                 }
                 else
                 {
-                    _key = _line.Substring(firstSpace + 1, secondSpace - firstSpace-1);
+                    _key = _line.Substring(firstSpace + 1, secondSpace - firstSpace - 1);
                     _value = _line.Substring(secondSpace + 1);
                 }
                 return true;
@@ -121,13 +161,32 @@ namespace gedcom
             StringBuilder output = new StringBuilder();
             output.Append("".PadRight(indent));
             output.Append(_line);
-            output.Append("\r\n");
+            // output.Append("\r\n");
+            output.Append("\n");
             foreach (Tag child in children)
             {
                 output.Append(child.display(indent + 2));
             }
             return output.ToString();
         }
+
+
+
+        /// <summary>Return the tag for writing to file and editing.</summary>
+        public string toText()
+        {
+            StringBuilder output = new StringBuilder();
+            output.Append(_line);
+            // output.Append("\r\n");
+            output.Append("\n");
+            foreach (Tag child in children)
+            {
+                output.Append(child.toText());
+            }
+            return output.ToString();
+        }
+
+
 
         #region Functions
 
@@ -178,45 +237,6 @@ namespace gedcom
 
             // Return the calculated list.
             return grid.ToArray();
-        }
-
-
-
-        #endregion
-
-        #region Properties
-
-
-
-        /// <summary>The whole (original?) line that created this tag.</summary>
-        public string line
-        {
-            get { return _line; }
-        }
-
-
-
-        /// <summary>The type or key of the gedcom tag.</summary>
-        public string key
-        {
-            get { return _key; }
-        }
-
-
-
-        /// <summary>The value of the gedcom tag.</summary>
-        public string value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
-
-
-
-        /// <summary>The child tags of this gedcom tag.</summary>
-        public Tags children
-        {
-            get { return _children; }
         }
 
 

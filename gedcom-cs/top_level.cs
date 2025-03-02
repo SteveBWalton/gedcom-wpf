@@ -32,7 +32,7 @@ namespace gedcom
         /// <summary>Create a top level element from the specified tag.</summary>
         /// <param name="tag">Specifies the top level tag that defines this top level element.</param>
         /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
-        public TopLevel(Tag tag,Gedcom gedcom)
+        public TopLevel(Tag tag, Gedcom gedcom)
         {
             _tag = tag;
             _gedcom = gedcom;

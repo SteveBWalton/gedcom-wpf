@@ -389,9 +389,7 @@ namespace gedcom.viewer
             // StringBuilder html = new StringBuilder();
             PageContent pageContent = new PageContent();
 
-            // Build a really poor menu bar (for now!).
-            pageContent.html.Append("<p><a href=\"app://home\">Home</a>&nbsp;|&nbsp;<a href=\"dialog://individual?id=" + idx + "\">Edit</a></p>");
-            // pageContent.editForm = "dialog://individual?id=" + idx;
+            // Setup the edit options.
             pageContent.editForm = "individual?id=" + idx;
             pageContent.editGedomDirectly = "individual?id=" + idx;
 
@@ -779,11 +777,13 @@ namespace gedcom.viewer
         private PageContent getSource(string query)
         {
             PageContent pageContent = new PageContent();
-            // StringBuilder html = new StringBuilder();
-            pageContent.html.Append("<p><a href=\"app://home\">Home</a></p>");
 
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
+
+            // Setup the edit options.
+            pageContent.editForm = "source?id=" + idx;
+            pageContent.editGedomDirectly = "source?id=" + idx;
 
             Source source = _gedcom.sources.find(idx);
             if (source == null)

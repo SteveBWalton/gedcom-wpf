@@ -18,27 +18,55 @@ namespace gedcom.viewer
     /// <remarks>This can be a fall back editor when a specific editor is not available.</remarks>
     public partial class DialogEditGedcom : Window
     {
-        private string _text;
+        /// <summary>The tag to edit.</summary>
+        private Tag _tag;
 
 
         /// <summary>Class constructor for the edit gedcom dialog.</summary>
-        public DialogEditGedcom(string text)
+        public DialogEditGedcom(Tag tag)
         {
             InitializeComponent();
-            _text = text;
-            _statusTextBox.Text = text;
+            _tag = tag;
+            _statusTextBox.Text = tag.toText();
         }
 
         #region Signal Handlers
 
+        /// <summary>Signal handler for the cancel button.</summary>
         private void buttonCancelClick(object sender, RoutedEventArgs e)
         {
-
-
+            // Close the dialog with cancel.
+            this.DialogResult = false;
         }
 
+
+
+        /// <summary>Signal handler for the okay button.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Remove the existing tags.
+            _tag.children.clear();
+
+            // Add the tags from the gedcom text.
+            bool isFirst = true;
+            using (System.IO.StringReader stringReader = new System.IO.StringReader(_statusTextBox.Text))
+            {
+                string line;
+                while((line=stringReader.ReadLine())!=null)
+                {
+                    if (isFirst)
+                    {
+                        // Ignore the first line.
+                        isFirst = false;
+                    }
+                    else if (line != "")
+                    {
+                        _tag.add(line);
+                    }
+                }
+            }
+
+            // Close the dialog with okay.
             this.DialogResult = true;
         }
 
