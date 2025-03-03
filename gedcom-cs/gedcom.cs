@@ -23,7 +23,8 @@ namespace gedcom
         public Families families;
         /// <summary>The sources in this gedcom.</summary>
         public Sources sources;
-
+        /// <summary>True if the gedcom has changed since the last change.</summary>
+        private bool _isDirty;
         #endregion
 
         #region Constructors
@@ -31,6 +32,7 @@ namespace gedcom
         public Gedcom()
         {
             clear();
+            _isDirty = false;
         }
 
 
@@ -42,6 +44,7 @@ namespace gedcom
             individuals = new Individuals();
             families = new Families();
             sources = new Sources();
+            _isDirty = false;
         }
 
         #endregion
@@ -52,6 +55,25 @@ namespace gedcom
         public string fileName
         {
             get { return _fileName; }
+        }
+
+
+
+        /// <summary>True if the gedcom has changed since the last change.</summary>
+        public bool isDirty
+        {
+            get => _isDirty;
+            set
+            {
+                if (value)
+                {
+                    _isDirty = true;
+                }
+                else
+                {
+                    throw (new Exception("Can't clear the dirty status here, sorry."));
+                }
+            }
         }
 
         #endregion
@@ -111,6 +133,9 @@ namespace gedcom
             {
                 // Deal with final block.
             }
+
+            // Mark as no save required.
+            _isDirty = false;
 
             // Return success.
             return true;

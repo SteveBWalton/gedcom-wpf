@@ -63,7 +63,32 @@ namespace gedcom.viewer
         }
         */
 
+        /// <summary>Returns true if the current document is saved or okay to delete.</summary>
+        /// <returns>True if the current document is saved or okay to delete.</returns>
+        private bool isDocumentSaved()
+        {
+            while (_gedcom.isDirty)
+            {
+                MessageBoxResult messageBoxResult = MessageBox.Show("The current gedcom has changed.\n\nDo you want to save the current changes?", "Gedcom Viewer", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (messageBoxResult == MessageBoxResult.Yes)
+                {
+                    menuFileSaveClick(null, null);
+                }
+                else if (messageBoxResult == MessageBoxResult.No)
+                {
+                    // Don't save the file, but okay to continue.
+                    return true;
+                }
+                else if (messageBoxResult == MessageBoxResult.Cancel)
+                {
+                    // Don't save the file but abort the current operation.
+                    return false;
+                }
+            }
 
+            // Document is not dirty, OK to continue.
+            return true;
+        }
 
         /// <summary>Populate the main window with the content from the specified host and query.</summary>
         /// <param name="host">Specifies the page host.</param>
@@ -97,6 +122,14 @@ namespace gedcom.viewer
                 _toolbarEditGedom.IsEnabled = true;
             }
 
+            // Set window title.
+            string fileName = System.IO.Path.GetFileName(_gedcom.fileName);
+            if (fileName == "")
+            {
+                fileName = "New Document";
+            }
+            Title = fileName + (_gedcom.isDirty ? "*" : "") + " - Gedom Viewer WPF";
+
             // Return success.
             return true;
         }
@@ -119,23 +152,15 @@ namespace gedcom.viewer
 
         #region Signal Handlers
 
-        private void appExitClick(object sender, RoutedEventArgs e)
-        {
-            // Close the main window and exit the program.
-            Close();
-        }
-
-
-
+        /// <summary>Signal handler for the main window loaded signal.</summary>
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
-            // _gedcom.open("walton.ged");
-
             populateWindow("home", "");
         }
 
 
 
+        /// <summary>Signal handler for the web browser control requesting a new page.</summary>
         private void webBrowserNavigating(object sender, NavigatingCancelEventArgs e)
         {
             if (e.Uri == null)
@@ -175,50 +200,64 @@ namespace gedcom.viewer
                 return;
             }
 
-
             // Allow the web browser control to deal with the uri.
             return;
         }
 
 
 
-        /// <summary>Signal handler for the File -> Open menu point click.</summary>
-        private void menuFileOpenClick(object sender, RoutedEventArgs e)
+        /// <summary>Signal handler for the 'File' -> 'Exit' menu point click.</summary>
+        private void menuFileExitClick(object sender, RoutedEventArgs e)
         {
-            // Check that the current gedcom does not need saving.
-
-
-            // Get a gedcom file from the user.
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            if (isDocumentSaved())
             {
-                Title = "Select Gedcom File",
-                Filter = "Gedcom Files (*.ged)|*.ged|All Files (*.*)|*.*"
-            };
-            bool? result = openFileDialog.ShowDialog();
-
-            // Open the selected gedcom file.
-            if (result == true)
-            {
-                // Open the specified file.
-                _gedcom.open(openFileDialog.FileName);
-
-                // Display the home page.
-                populateWindow("home", "");
+                // Close the main window and exit the program.
+                Close();
             }
         }
 
 
 
-        /// <summary>Signal handler for the File -> New menu point click.</summary>        
+        /// <summary>Signal handler for the 'File' -> 'Open' menu point click.</summary>
+        private void menuFileOpenClick(object sender, RoutedEventArgs e)
+        {
+            // Check that the current gedcom does not need saving.
+            if (isDocumentSaved())
+            {
+                // Get a gedcom file from the user.
+                Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog()
+                {
+                    Title = "Select Gedcom File",
+                    Filter = "Gedcom Files (*.ged)|*.ged|All Files (*.*)|*.*"
+                };
+                bool? result = openFileDialog.ShowDialog();
+
+                // Open the selected gedcom file.
+                if (result == true)
+                {
+                    // Open the specified file.
+                    _gedcom.open(openFileDialog.FileName);
+
+                    // Display the home page.
+                    populateWindow("home", "");
+                }
+            }
+        }
+
+
+
+        /// <summary>Signal handler for the 'File' -> 'New' menu point click.</summary>        
         private void menuFileNewClick(object sender, RoutedEventArgs e)
         {
             // Check that the current gedcom does not need saving.
+            if (isDocumentSaved())
+            {
+                // Creata a new empty document.
+                _gedcom.clear();
 
-            // Creata a new empty document.
-            _gedcom.clear();
-
-            // Display the home page.
-            populateWindow("home", "");
+                // Display the home page.
+                populateWindow("home", "");
+            }
         }
 
 
@@ -276,12 +315,27 @@ namespace gedcom.viewer
                 DialogEditGedcom dialogEditGedcom = new DialogEditGedcom(topLevel.tag);
                 if (dialogEditGedcom.ShowDialog() == true)
                 {
+                    // Mark the gedcom as dirty.
+                    topLevel.gedcom.isDirty = true;
+
                     // Show the actual page.
                     populateWindow(host, query);
                 }
             }
         }
 
+
+        private void menuFileSaveClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void menuFileSaveAsClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         #endregion
+
     }
 }

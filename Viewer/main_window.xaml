@@ -22,7 +22,10 @@
                             <Image Source="/Resources/file_open.png" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="appExitClick" >
+                    <MenuItem Header="Save" Click="menuFileSaveClick"/>
+                    <MenuItem Header="Save As..." Click="menuFileSaveAsClick"/>
+                    <Separator />
+                    <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="menuFileExitClick" >
                         <MenuItem.Icon>
                             <Image Source="/Resources/file_exit.png" />
                         </MenuItem.Icon>
