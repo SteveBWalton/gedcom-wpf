@@ -41,6 +41,8 @@ namespace gedcom.viewer
             StringBuilder html = new StringBuilder();
             html.AppendLine("<html>");
             html.AppendLine("<head>");
+            // Allow the browser control to render svg graphics.
+            html.AppendLine("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=9\"/>");
             html.Append(htmlStyle());
             html.AppendLine("</head>");
             html.AppendLine("<body>");

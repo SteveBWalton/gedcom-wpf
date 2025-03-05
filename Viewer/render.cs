@@ -52,7 +52,7 @@ namespace gedcom.viewer
                 if (!dealtWith.Contains(tag.key))
                 {
                     // Show this key because it has not been dealt with.
-                    html.Append("<p>'" + tag.key + "' = '" + tag.value + "'</p>");
+                    html.AppendLine("<p>'" + tag.key + "' = '" + tag.value + "'</p>");
                     count++;
                 }
             }
@@ -397,9 +397,9 @@ namespace gedcom.viewer
             Individual individual = _gedcom.individuals.find(idx);
             if (individual == null)
             {
-                pageContent.html.Append("<h1>Individual</h1>");
-                pageContent.html.Append("<p>query is '" + query + "'.</p>");
-                pageContent.html.Append("<p>Can not find '" + idx + "'.</p>");
+                pageContent.html.AppendLine("<h1>Individual</h1>");
+                pageContent.html.AppendLine("<p>query is '" + query + "'.</p>");
+                pageContent.html.AppendLine("<p>Can not find '" + idx + "'.</p>");
             }
             else
             {
@@ -410,10 +410,15 @@ namespace gedcom.viewer
                 string fullName = individual.fullName;
                 dealtWith.Add("NAME");
                 dealtWith.Add("SEX");
-                pageContent.html.Append("<h1>" + fullName + " (" + individual.idx + ")</h1>");
+                pageContent.html.AppendLine("<h1>" + fullName + " (" + individual.idx + ")</h1>");
+
+                // Little family tree control.
+                pageContent.html.Append(getIndividualTree(individual));
 
                 // Initialise the sources referenced in this individual.
                 HtmlSources htmlSources = new HtmlSources();
+
+                pageContent.html.AppendLine("<p>");
                 dealtWith.Add("BIRT");
                 Tag tag = individual.tag.children.findOne("BIRT");
                 if (tag != null)
@@ -461,6 +466,8 @@ namespace gedcom.viewer
                     pageContent.html.Append(getTagLongHtml(tag, individual.isMale ? "he" : "she", "died", htmlSources));
                 }
 
+                pageContent.html.AppendLine("</p>");
+
                 // Deal with the sources.
                 dealtWith.Add("SOUR");
                 tags = individual.tag.children.findAll("SOUR");
@@ -491,6 +498,73 @@ namespace gedcom.viewer
         }
 
 
+
+        /// <summary>Returns a little tree for the specified individual as a svg graphic.</summary>
+        /// <param name="individual">Specifies the individual to draw the tree for.</param>
+        /// <returns>A little tree for the specified individual as a svg graphic.</returns>
+        private string getIndividualTree(Individual individual)
+        {
+            // Build a grid of individuals to show.
+            // Even column positions 0,2,4 are individuals.
+            // Odd column positions 1,3,5 are the families.
+            // Rows 0 Grandparents, 1 parents, 2 individual, 3 children, 4 grand-children
+            List<string>[] grid = new List<string>[5];
+            for (int i = 0; i < 5; i++)
+            {
+                grid[i] = new List<string>();
+            }
+            grid[2].Add(individual.idx);
+
+            grid[2].Add("");
+            grid[2].Add("I0001");
+
+            return getTree(grid);
+        }
+
+
+
+        private string getTree(List<string>[] grid)
+        {
+            const int INDIVIDUAL_WIDTH = 150;
+            const int INDIVIDUAL_HEIGHT = 80;
+            const int FAMILY_WIDTH = 10;
+            const int ROW_HEIGHT = 84;
+
+            StringBuilder html = new StringBuilder();
+
+            // Calculate the height and width.
+            int height = ROW_HEIGHT * 5;
+            int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * 4;
+
+            html.AppendLine("<svg width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
+
+            int y = 0;
+
+            for (int row = 0; row < 5; row++)
+            {
+                int x = 0;
+                for (int col = 0; col < grid[row].Count; col++)
+                {
+                    if (col % 2 == 0)
+                    {
+                        // Individual.
+                        html.AppendLine("<rect width=\"" + INDIVIDUAL_WIDTH.ToString() + "\" height=\"" + INDIVIDUAL_HEIGHT.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\" rx=\"6\" ry=\"6\" fill=\"blue\" />");
+                        x += INDIVIDUAL_WIDTH;
+                    }
+                    else
+                    {
+                        // Family.
+                        x += FAMILY_WIDTH;
+                    }
+                }
+                y += ROW_HEIGHT;
+            }
+            
+            html.AppendLine("</svg>");
+
+            // Return the built string.
+            return html.ToString();
+        }
 
         /// <summary>Returns the full name of the individual in html with a link.</summary>
         /// <param name="individual">Specifies the individual to display.</param>
