@@ -15,7 +15,17 @@ namespace gedcom.viewer
     public class Render
     {
         #region Member Variables
-     
+
+        #region Constants
+
+        /// <summary>The background colour for boys.</summary>
+        private const string BOY_COLOUR = "LightSkyBlue";
+
+        /// <summary>The background colour for girls.</summary>
+        private const string GIRL_COLOUR = "LightPink";
+
+        #endregion
+
         /// <summary>The gedcom to render.</summary>
         private Gedcom _gedcom;
         /// <summary>The user options.</summary>
@@ -68,57 +78,11 @@ namespace gedcom.viewer
         /// <returns></returns>
         private string getTagLongDate(Tag tag, HtmlSources htmlSources)
         {
-            // Build a long description of the date tag.
+            TagDate tagDate = new TagDate(tag);
+
             StringBuilder html = new StringBuilder();
 
-            // Examine the date value.
-            string dateValue = tag.value;
-
-            if (dateValue.Contains("BEF"))
-            {
-                // Before date.
-                dateValue = dateValue.Replace("BEF", "");
-                html.Append("before ");
-            }
-            else if (dateValue.Contains("BET"))
-            {
-                // Between date.
-                dateValue = dateValue.Replace("BET", "");
-                html.Append("between ");
-            }
-            else if (dateValue.Contains("FROM"))
-            {
-                // Between date.
-                dateValue = dateValue.Replace("FROM", "");
-                html.Append("from ");
-            }
-            else
-            {
-                // Default date.
-                html.Append("on ");
-            }
-
-            // Add the unformated date information.
-            html.Append(dateValue);
-
-            // Dealt with about, and.
-            html.Replace("ABT", "about");
-            html.Replace("AND", "and");
-            html.Replace("TO", "to");
-
-            // Dealt with months.
-            html.Replace("JAN", "January");
-            html.Replace("FEB", "February");
-            html.Replace("MAR", "March");
-            html.Replace("APR", "April");
-            html.Replace("MAY", "May");
-            html.Replace("JUN", "June");
-            html.Replace("JUL", "July");
-            html.Replace("AUG", "August");
-            html.Replace("SEP", "September");
-            html.Replace("OCT", "October");
-            html.Replace("NOV", "November");
-            html.Replace("DEC", "December");
+            html.Append(tagDate.getLongDate());
 
             // Show the sources.
             html.Append(addSourceReferences(tag, htmlSources));
@@ -516,7 +480,7 @@ namespace gedcom.viewer
             grid[2].Add(individual.idx);
 
             grid[2].Add("");
-            grid[2].Add("I0001");
+            grid[2].Add("I0002");
 
             return getTree(grid);
         }
@@ -548,7 +512,7 @@ namespace gedcom.viewer
                     if (col % 2 == 0)
                     {
                         // Individual.
-                        html.AppendLine("<rect width=\"" + INDIVIDUAL_WIDTH.ToString() + "\" height=\"" + INDIVIDUAL_HEIGHT.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\" rx=\"6\" ry=\"6\" fill=\"blue\" />");
+                        html.AppendLine(drawIndividual(grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT));                        
                         x += INDIVIDUAL_WIDTH;
                     }
                     else
@@ -565,6 +529,49 @@ namespace gedcom.viewer
             // Return the built string.
             return html.ToString();
         }
+
+
+
+        /// <summary>Return the svg code to draw the specified individual.</summary>
+        /// <param name="idx">Specifies the index of the individal.</param>
+        /// <param name="x">Specifies the x position of the individual.</param>
+        /// <param name="y">Specifies the y position of the individual.</param>
+        /// <param name="width">Specifies the width of the individual.</param>
+        /// <param name="height">Specifies the height of the individual.</param>
+        /// <returns></returns>
+        private string drawIndividual(string idx, int x, int y, int width, int height)
+        {
+            Individual individual = _gedcom.individuals.find(idx);
+
+            StringBuilder svg = new StringBuilder();
+            
+            // Show a box for the individual.
+            svg.Append("<rect width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\"");
+            if (individual.isMale)
+            {
+                svg.Append(" fill=\"" + BOY_COLOUR + "\" />");
+            }
+            else
+            {
+                svg.Append(" rx=\"6\" ry=\"6\" fill=\"" + GIRL_COLOUR + "\" />");
+            }
+
+            // Show the individual name.
+            svg.Append("<text x=\"" + (x + width / 2).ToString() + "\" y=\"" + (y + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+            svg.Append(individual.fullName);
+            svg.Append("</text>");
+
+            // Show the date of birth.
+            svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + 26).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+            svg.Append("b. ");
+            svg.Append(individual.dob.getShortDate());
+            svg.Append("</text>");
+
+            // Return the svg
+            return svg.ToString();
+        }
+
+
 
         /// <summary>Returns the full name of the individual in html with a link.</summary>
         /// <param name="individual">Specifies the individual to display.</param>

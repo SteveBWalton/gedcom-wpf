@@ -37,22 +37,6 @@ namespace gedcom
 
         #endregion
 
-        #region IComparable<Individual>
-
-
-
-        /// <summary>Impliment a compare function for sorting.</summary>
-        /// <param name="otherIndividual">Specifies the individual to compare with.</param>
-        /// <returns>The comparison of the last edit date of the two individuals.</returns>
-        public int CompareTo(Individual otherIndividual)
-        {
-            return otherIndividual.lastChanged.CompareTo(lastChanged);
-        }
-
-
-
-        #endregion
-
         #region Properties
 
 
@@ -86,7 +70,7 @@ namespace gedcom
             get
             {
                 Tag tagSex = _tag.children.findOne("SEX");
-                if (tagSex==null)
+                if (tagSex == null)
                 {
                     return true;
                 }
@@ -102,8 +86,46 @@ namespace gedcom
             get { return !isMale; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public TagDate dob
+        {
+            get
+            {
+                Tag tagBirth = _tag.children.findOne("BIRT");
+                if (tagBirth != null)
+                {
+                    Tag tag = tagBirth.children.findOne("DATE");
+                    if (tag != null)
+                    {
+                        TagDate tagDate = new TagDate(tag);
+                        return tagDate;
+                    }
+                }
+                // Return an empty TagDate object.
+                return new TagDate();
+            }
+        }
+
+        #endregion
+
+
+        #region IComparable<Individual>
+
+
+
+        /// <summary>Impliment a compare function for sorting.</summary>
+        /// <param name="otherIndividual">Specifies the individual to compare with.</param>
+        /// <returns>The comparison of the last edit date of the two individuals.</returns>
+        public int CompareTo(Individual otherIndividual)
+        {
+            return otherIndividual.lastChanged.CompareTo(lastChanged);
+        }
+
 
 
         #endregion
+
     }
 }
