@@ -86,9 +86,11 @@ namespace gedcom
             get { return !isMale; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+
+
+        /// <summary>The date of birth for the individual.</summary>
+        /// <remarks>This will be an empty TagData object if the date of birth is unknown.
+        /// Should this be null instead?</remarks>
         public TagDate dob
         {
             get
@@ -105,6 +107,28 @@ namespace gedcom
                 }
                 // Return an empty TagDate object.
                 return new TagDate();
+            }
+        }
+
+        /// <summary>The location of the the individual birth.</summary>
+        /// <remarks>This will be null if the place of birth is unknown.
+        /// Should this be an empty TagPlace object instead?</remarks>
+        public TagPlace birthPlace
+        {
+            get
+            {
+                Tag tagBirth = _tag.children.findOne("BIRT");
+                if (tagBirth != null)
+                {
+                    Tag tag = tagBirth.children.findOne("PLAC");
+                    if (tag != null)
+                    {
+                        TagPlace tagPlace = new TagPlace(tag);
+                        return tagPlace;
+                    }
+                }
+                // Return missing place.
+                return null;
             }
         }
 

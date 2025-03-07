@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gedcom
 {
-    /// <summary>Class to supply extra functionality of data tags.</summary>
+    /// <summary>Class to supply extra functionality for 'DATE' tags.</summary>
     public class TagDate
     {
         #region Member Variables

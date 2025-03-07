@@ -52,6 +52,7 @@
     <Compile Include="tag.cs" />
     <Compile Include="tags.cs" />
     <Compile Include="tag_date.cs" />
+    <Compile Include="tag_place.cs" />
     <Compile Include="top_level.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

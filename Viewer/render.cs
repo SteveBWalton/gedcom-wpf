@@ -567,6 +567,15 @@ namespace gedcom.viewer
             svg.Append(individual.dob.getShortDate());
             svg.Append("</text>");
 
+            // Show the location of birth.
+            svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + 38).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+            svg.Append("b. ");
+            if (individual.birthPlace != null)
+            {
+                svg.Append(individual.birthPlace.shortPlace);
+            }
+            svg.Append("</text>");
+
             // Return the svg
             return svg.ToString();
         }
