@@ -25,14 +25,6 @@ namespace gedcom
             _tag = tag;
         }
 
-
-
-        /// <summary>Create an empty TagDate object which represents missing date information.</summary>
-        public TagDate()
-        {
-            _tag = null;
-        }
-
         #endregion
 
         /// <summary>A long description of the specified date.  This will usually start 'on'.</summary>

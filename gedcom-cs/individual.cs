@@ -89,8 +89,7 @@ namespace gedcom
 
 
         /// <summary>The date of birth for the individual.</summary>
-        /// <remarks>This will be an empty TagData object if the date of birth is unknown.
-        /// Should this be null instead?</remarks>
+        /// <remarks>This will be null if the date of birth is unknown.</remarks>
         public TagDate dob
         {
             get
@@ -106,13 +105,14 @@ namespace gedcom
                     }
                 }
                 // Return an empty TagDate object.
-                return new TagDate();
+                return null;
             }
         }
 
+
+
         /// <summary>The location of the the individual birth.</summary>
-        /// <remarks>This will be null if the place of birth is unknown.
-        /// Should this be an empty TagPlace object instead?</remarks>
+        /// <remarks>This will be null if the place of birth is unknown.</remarks>
         public TagPlace birthPlace
         {
             get
@@ -129,6 +129,94 @@ namespace gedcom
                 }
                 // Return missing place.
                 return null;
+            }
+        }
+
+
+
+        /// <summary>The parent family for this individual.</summary>
+        /// <remarks>This will be null if the family is not known.</remarks>
+        public Family parentsFamily
+        {
+            get
+            {
+                Tag tagFamily = _tag.children.findOne("FAMC");
+                if (tagFamily != null)
+                {
+                    string familyIdx = Tag.toIdx(tagFamily.value);
+                    Family family = _gedcom.families.find(familyIdx);
+                    return family;
+                }
+                // Return family unknown.
+                return null;
+            }
+        }
+
+
+
+        /// <summary>The father for this individual or null if unknown.</summary>
+        public Individual father
+        {
+            get
+            {
+                Family family = parentsFamily;
+                if (family != null)
+                {
+                    return family.husband;
+                }
+                // Father unknown.
+                return null;
+            }
+        }
+
+
+
+        /// <summary>The mother for this individual or null if unknown.</summary>
+        public Individual mother
+        {
+            get
+            {
+                Family family = parentsFamily;
+                if (family != null)
+                {
+                    return family.wife;
+                }
+                // Mother unknown.
+                return null;
+            }
+        }
+
+
+
+        /// <summary>The father for this individual or empty string if unknown.</summary>
+        public string fatherIdx
+        {
+            get
+            {
+                Family family = parentsFamily;
+                if (family != null)
+                {
+                    return family.husbandIdx;
+                }
+                // Father unknown.
+                return "";
+            }
+        }
+
+
+
+        /// <summary>The mother for this individual or null if unknown.</summary>
+        public string motherIdx
+        {
+            get
+            {
+                Family family = parentsFamily;
+                if (family != null)
+                {
+                    return family.wifeIdx;
+                }
+                // Mother unknown.
+                return "";
             }
         }
 
@@ -151,5 +239,34 @@ namespace gedcom
 
         #endregion
 
+        /// <summary>Get an array of indexes for families that this individual has created.</summary>
+        /// <returns>An array of families that this person created.</returns>
+        public string[] getFamilyIdxes()
+        {
+            Tag [] families = _tag.children.findAll("FAMS");
+            List<string> familyIdxes = new List<string>();
+            foreach (Tag tag in families)
+            {
+                familyIdxes.Add(Tag.toIdx(tag.value));
+            }
+            return familyIdxes.ToArray();
+        }
+
+
+
+        /// <summary>Get an array of indexes for siblings for this individual.</summary>
+        /// <returns>An array of indexes of siblings for this individual.</returns>
+        public string[] getSiblingsIdxes()
+        {
+            List<string> siblingIdxes = new List<string>();
+            foreach(Individual individual in _gedcom.individuals)
+            {
+                if ((individual.fatherIdx == fatherIdx || individual.motherIdx == motherIdx) && individual.idx != idx)
+                {
+                    siblingIdxes.Add(individual.idx);
+                }
+            }
+            return siblingIdxes.ToArray();
+        }
     }
 }

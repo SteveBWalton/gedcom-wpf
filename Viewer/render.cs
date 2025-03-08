@@ -477,16 +477,68 @@ namespace gedcom.viewer
             {
                 grid[i] = new List<string>();
             }
+
+            // Find the individual's siblings.
+            string[] siblingIdxes = individual.getSiblingsIdxes();
+            
+            // Add the older siblings.
+            foreach(string siblingIdx in siblingIdxes)
+            {
+                Individual sibling = _gedcom.individuals.find(siblingIdx);
+                grid[2].Add(siblingIdx);
+                grid[2].Add("");
+            }
+
+            // Add the individual's husband.
+            if (individual.isFemale)
+            {
+                string[] familyIdxes = individual.getFamilyIdxes();
+                foreach (string familyIdx in familyIdxes)
+                {
+                    Family family = _gedcom.families.find(familyIdx);
+                    grid[2].Add(family.husbandIdx);
+                    grid[2].Add("");
+                }
+            }
+
+            // Add the actual individual.
             grid[2].Add(individual.idx);
 
-            grid[2].Add("");
-            grid[2].Add("I0002");
+            // Add the individual's wife.
+            if (individual.isMale)
+            {
+                string[] familyIdxes = individual.getFamilyIdxes();
+                foreach (string familyIdx in familyIdxes)
+                {
+                    Family family = _gedcom.families.find(familyIdx);
+                    grid[2].Add("");
+                    grid[2].Add(family.wifeIdx);
+                }
+            }
 
+            // Add the person's parents.
+            if (individual.fatherIdx != "")
+            {
+                grid[1].Add(individual.fatherIdx);
+            }
+            if (individual.motherIdx != "")
+            {
+                if (grid[1].Count!=0)
+                {
+                    grid[1].Add("");
+                }
+                grid[1].Add(individual.motherIdx);
+            }
+
+            // Return the tree in svg format.
             return getTree(grid);
         }
 
 
 
+        /// <summary>Converts the specified grid into a tree in svg format.</summary>
+        /// <param name="grid">Specifies the individuals and families in the tree.</param>
+        /// <returns>A tree in svg format.</returns>
         private string getTree(List<string>[] grid)
         {
             const int INDIVIDUAL_WIDTH = 150;
@@ -496,9 +548,19 @@ namespace gedcom.viewer
 
             StringBuilder html = new StringBuilder();
 
+            int maxPeople = 1;
+            for (int row = 0; row < 5; row++)
+            {
+                int people = (1 + grid[row].Count) / 2;
+                if (people > maxPeople)
+                {
+                    maxPeople = people;
+                }
+            }
+
             // Calculate the height and width.
             int height = ROW_HEIGHT * 5;
-            int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * 4;
+            int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * maxPeople;
 
             html.AppendLine("<svg width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
 
@@ -564,7 +626,10 @@ namespace gedcom.viewer
             // Show the date of birth.
             svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + 26).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
             svg.Append("b. ");
-            svg.Append(individual.dob.getShortDate());
+            if (individual.dob != null)
+            {
+                svg.Append(individual.dob.getShortDate());
+            }
             svg.Append("</text>");
 
             // Show the location of birth.
