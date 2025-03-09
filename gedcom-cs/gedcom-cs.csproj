@@ -55,5 +55,8 @@
     <Compile Include="tag_place.cs" />
     <Compile Include="top_level.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
