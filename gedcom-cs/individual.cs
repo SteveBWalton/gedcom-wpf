@@ -222,7 +222,6 @@ namespace gedcom
 
         #endregion
 
-
         #region IComparable<Individual>
 
 

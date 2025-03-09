@@ -136,6 +136,9 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Launch the dialog specified in the host.</summary>
+        /// <param name="host">Specifies a host which specifies an edit dialog.</param>
+        /// <param name="query">Specifies the extra parameters for the edit dialog.</param>
         private void processDialogScheme(string host, string query)
         {
             switch (host)

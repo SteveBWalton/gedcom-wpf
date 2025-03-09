@@ -562,7 +562,7 @@ namespace gedcom.viewer
             int height = ROW_HEIGHT * 5;
             int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * maxPeople;
 
-            html.AppendLine("<svg width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
+            html.AppendLine("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"  width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
 
             int y = 0;
 
@@ -574,7 +574,7 @@ namespace gedcom.viewer
                     if (col % 2 == 0)
                     {
                         // Individual.
-                        html.AppendLine(drawIndividual(grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT));                        
+                        html.Append(drawIndividual(grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT));                        
                         x += INDIVIDUAL_WIDTH;
                     }
                     else
@@ -600,13 +600,18 @@ namespace gedcom.viewer
         /// <param name="y">Specifies the y position of the individual.</param>
         /// <param name="width">Specifies the width of the individual.</param>
         /// <param name="height">Specifies the height of the individual.</param>
-        /// <returns></returns>
+        /// <returns>The svg code the draw the specified individual including a final line feed.</returns>
         private string drawIndividual(string idx, int x, int y, int width, int height)
         {
+            // Find the specified individual.
             Individual individual = _gedcom.individuals.find(idx);
 
+            // Create a string (builder) to hold the svg code.
             StringBuilder svg = new StringBuilder();
-            
+
+            // Add a link for the individual.
+            svg.AppendLine("<a xlink:href=\"app://individual?id=" + individual.idx + "\">");
+
             // Show a box for the individual.
             svg.Append("<rect width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\"");
             if (individual.isMale)
@@ -639,7 +644,10 @@ namespace gedcom.viewer
             {
                 svg.Append(individual.birthPlace.shortPlace);
             }
-            svg.Append("</text>");
+            svg.AppendLine("</text>");
+            
+            // Close the link.
+            svg.AppendLine("</a>");
 
             // Return the svg
             return svg.ToString();
