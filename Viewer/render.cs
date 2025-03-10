@@ -552,8 +552,8 @@ namespace gedcom.viewer
         {
             const int INDIVIDUAL_WIDTH = 150;
             const int INDIVIDUAL_HEIGHT = 80;
-            const int FAMILY_WIDTH = 30;
-            const int ROW_HEIGHT = 84;
+            const int FAMILY_WIDTH = 10;
+            const int ROW_HEIGHT = 110;
 
             StringBuilder html = new StringBuilder();
 
@@ -589,7 +589,7 @@ namespace gedcom.viewer
                     else
                     {
                         // Family.
-                        html.Append(drawFamily(grid[row][col], x, y, FAMILY_WIDTH, INDIVIDUAL_HEIGHT));                        
+                        html.Append(drawFamily(grid[row][col], x, y, FAMILY_WIDTH, INDIVIDUAL_HEIGHT, INDIVIDUAL_WIDTH));
                         x += FAMILY_WIDTH;
                     }
                 }
@@ -672,8 +672,10 @@ namespace gedcom.viewer
         /// <param name="width">Specifies the width of the family.</param>
         /// <param name="height">Specifies the height of the family.</param>
         /// <returns>The svg code to draw the family without the individuals in the family.</returns>
-        private string drawFamily(string idx, int x, int y, int width, int height)
+        private string drawFamily(string idx, int x, int y, int width, int height, int individualWidth)
         {
+            const int BAR_POSITION = 15;
+
             // Check if a family is specified.
             if (idx == "")
             {
@@ -686,16 +688,34 @@ namespace gedcom.viewer
             // Create a string (builder) to hold the svg code.
             StringBuilder svg = new StringBuilder();
 
+            string strokeDashArray = "";
+            if (!family.isMarriage)
+            {
+                strokeDashArray = "stroke-dasharray=\"5,2\" ";
+            }
+
             // Draw a relationship symbol.
-            svg.Append("<line x1=\"" + (x + 5).ToString() + "\" y1=\"" + (y + 30).ToString() + "\" x2=\"" + (x + width - 5).ToString() + "\" y2=\"" + (y + 30).ToString() + "\" stroke=\"black\" />");
-            svg.Append("<line x1=\"" + (x + 5).ToString() + "\" y1=\"" + (y + 35).ToString() + "\" x2=\"" + (x + width - 5).ToString() + "\" y2=\"" + (y + 35).ToString() + "\" stroke=\"black\" />");
+            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x - individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+            svg.Append("<line x1=\"" + (x + width + individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
 
             // Show marriage year.
             if (family.marriageDate != null)
             {
-                svg.Append("<text x=\"" + (x + width / 2).ToString() + "\" y=\"" + (y + 20).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+                int horizontalOffset = 0;
+                if (family.isDivorce)
+                {
+                    horizontalOffset = -25;
+                }
+                svg.Append("<text x=\"" + (x + width / 2+ horizontalOffset).ToString() + "\" y=\"" + (y + height + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
                 svg.Append(family.marriageDate.yearDisplay);
                 svg.Append("</text>");
+            }
+
+            if (family.isDivorce)
+            {
+                svg.Append("<line x1=\"" + (x + width - 5-2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5-2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
+                svg.Append("<line x1=\"" + (x + width - 5+2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5+2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
             }
 
             // Return the svg.

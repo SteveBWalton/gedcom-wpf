@@ -125,6 +125,22 @@ namespace gedcom
 
 
 
+        /// <summary>True if the relationship is a marriage.</summary>
+        public bool isMarriage
+        {
+            get
+            {
+                Tag tagMarriage = _tag.children.findOne("MARR");
+                if (tagMarriage != null)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+
+
         /// <summary>The date of the marriage.</summary>
         public TagDate marriageDate
         {
@@ -143,6 +159,20 @@ namespace gedcom
                 // Return an empty TagDate object.
                 return null;
 
+            }
+        }
+
+        /// <summary>True if the relationship has a divorce.</summary>
+        public bool isDivorce
+        {
+            get
+            {
+                Tag tagDivorce = _tag.children.findOne("DIV");
+                if (tagDivorce != null)
+                {
+                    return true;
+                }
+                return false;
             }
         }
 
