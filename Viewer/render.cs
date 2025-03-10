@@ -498,6 +498,7 @@ namespace gedcom.viewer
                     Family family = _gedcom.families.find(familyIdx);
                     grid[2].Add(family.husbandIdx);
                     grid[2].Add(family.idx);
+                    addChildrenTreeGrid(3, family, grid);
                 }
             }
 
@@ -513,6 +514,7 @@ namespace gedcom.viewer
                     Family family = _gedcom.families.find(familyIdx);
                     grid[2].Add(family.idx);
                     grid[2].Add(family.wifeIdx);
+                    addChildrenTreeGrid(3, family, grid);
                 }
             }
 
@@ -545,181 +547,46 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>Converts the specified grid into a tree in svg format.</summary>
-        /// <param name="grid">Specifies the individuals and families in the tree.</param>
-        /// <returns>A tree in svg format.</returns>
-        private string getTree(List<string>[] grid)
+        private void addChildrenTreeGrid(int level, Family family, List<string>[] grid)
         {
-            const int INDIVIDUAL_WIDTH = 150;
-            const int INDIVIDUAL_HEIGHT = 80;
-            const int FAMILY_WIDTH = 10;
-            const int ROW_HEIGHT = 110;
+            Individual[] children = family.getChildren();
 
-            StringBuilder html = new StringBuilder();
-
-            int maxPeople = 1;
-            for (int row = 0; row < 5; row++)
+            foreach (Individual child in children)
             {
-                int people = (1 + grid[row].Count) / 2;
-                if (people > maxPeople)
+                if (child.isFemale)
                 {
-                    maxPeople = people;
-                }
-            }
-
-            // Calculate the height and width.
-            int height = ROW_HEIGHT * 5;
-            int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * maxPeople;
-
-            html.AppendLine("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"  width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
-
-            int y = 0;
-
-            for (int row = 0; row < 5; row++)
-            {
-                int x = 0;
-                for (int col = 0; col < grid[row].Count; col++)
-                {
-                    if (col % 2 == 0)
+                    string[] familyIdxes = child.getFamilyIdxes();
+                    foreach (string familyIdx in familyIdxes)
                     {
-                        // Individual.
-                        html.Append(drawIndividual(grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT));
-                        x += INDIVIDUAL_WIDTH;
-                    }
-                    else
-                    {
-                        // Family.
-                        html.Append(drawFamily(grid[row][col], x, y, FAMILY_WIDTH, INDIVIDUAL_HEIGHT, INDIVIDUAL_WIDTH));
-                        x += FAMILY_WIDTH;
+                        Family childFamily = _gedcom.families.find(familyIdx);
+                        grid[level].Add(childFamily.husbandIdx);
+                        grid[level].Add(childFamily.idx);
+                        if (level == 3)
+                        {
+                            addChildrenTreeGrid(4, childFamily, grid);
+                        }
                     }
                 }
-                y += ROW_HEIGHT;
-            }
-            
-            html.AppendLine("</svg>");
 
-            // Return the built string.
-            return html.ToString();
-        }
+                grid[level].Add(child.idx);
 
-
-
-        /// <summary>Return the svg code to draw the specified individual.</summary>
-        /// <param name="idx">Specifies the index of the individal.</param>
-        /// <param name="x">Specifies the x position of the individual.</param>
-        /// <param name="y">Specifies the y position of the individual.</param>
-        /// <param name="width">Specifies the width of the individual.</param>
-        /// <param name="height">Specifies the height of the individual.</param>
-        /// <returns>The svg code to draw the specified individual including a final line feed.</returns>
-        private string drawIndividual(string idx, int x, int y, int width, int height)
-        {
-            // Find the specified individual.
-            Individual individual = _gedcom.individuals.find(idx);
-
-            // Create a string (builder) to hold the svg code.
-            StringBuilder svg = new StringBuilder();
-
-            // Add a link for the individual.
-            svg.AppendLine("<a xlink:href=\"app://individual?id=" + individual.idx + "\">");
-
-            // Show a box for the individual.
-            svg.Append("<rect width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\"");
-            if (individual.isMale)
-            {
-                svg.Append(" fill=\"" + BOY_COLOUR + "\" />");
-            }
-            else
-            {
-                svg.Append(" rx=\"6\" ry=\"6\" fill=\"" + GIRL_COLOUR + "\" />");
-            }
-
-            // Show the individual name.
-            svg.Append("<text x=\"" + (x + width / 2).ToString() + "\" y=\"" + (y + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
-            svg.Append(individual.fullName);
-            svg.Append("</text>");
-
-            // Show the date of birth.
-            svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + 26).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
-            svg.Append("b. ");
-            if (individual.dob != null)
-            {
-                svg.Append(individual.dob.getShortDate());
-            }
-            svg.Append("</text>");
-
-            // Show the location of birth.
-            svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + 38).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
-            svg.Append("b. ");
-            if (individual.birthPlace != null)
-            {
-                svg.Append(individual.birthPlace.shortPlace);
-            }
-            svg.AppendLine("</text>");
-            
-            // Close the link.
-            svg.AppendLine("</a>");
-
-            // Return the svg.
-            return svg.ToString();
-        }
-
-
-
-        /// <summary>Return the svg code to draw the speicifed family without the individuals in the family.</summary>
-        /// <param name="idx">Specifies the index of the family.</param>
-        /// <param name="x">Specifies the x position of the family.</param>
-        /// <param name="y">Specifies the y position of the family.</param>
-        /// <param name="width">Specifies the width of the family.</param>
-        /// <param name="height">Specifies the height of the family.</param>
-        /// <returns>The svg code to draw the family without the individuals in the family.</returns>
-        private string drawFamily(string idx, int x, int y, int width, int height, int individualWidth)
-        {
-            const int BAR_POSITION = 15;
-
-            // Check if a family is specified.
-            if (idx == "")
-            {
-                return "";
-            }
-
-            // Find the family.
-            Family family = _gedcom.families.find(idx);
-
-            // Create a string (builder) to hold the svg code.
-            StringBuilder svg = new StringBuilder();
-
-            string strokeDashArray = "";
-            if (!family.isMarriage)
-            {
-                strokeDashArray = "stroke-dasharray=\"5,2\" ";
-            }
-
-            // Draw a relationship symbol.
-            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x - individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
-            svg.Append("<line x1=\"" + (x + width + individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
-            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
-
-            // Show marriage year.
-            if (family.marriageDate != null)
-            {
-                int horizontalOffset = 0;
-                if (family.isDivorce)
+                if (child.isMale)
                 {
-                    horizontalOffset = -25;
+                    string[] familyIdxes = child.getFamilyIdxes();
+                    foreach (string familyIdx in familyIdxes)
+                    {
+                        Family childFamily = _gedcom.families.find(familyIdx);
+                        grid[level].Add(childFamily.idx);
+                        grid[level].Add(childFamily.wifeIdx);
+                        if (level == 3)
+                        {
+                            addChildrenTreeGrid(4, childFamily, grid);
+                        }
+                    }
                 }
-                svg.Append("<text x=\"" + (x + width / 2+ horizontalOffset).ToString() + "\" y=\"" + (y + height + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
-                svg.Append(family.marriageDate.yearDisplay);
-                svg.Append("</text>");
-            }
 
-            if (family.isDivorce)
-            {
-                svg.Append("<line x1=\"" + (x + width - 5-2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5-2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
-                svg.Append("<line x1=\"" + (x + width - 5+2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5+2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
+                grid[level].Add("");
             }
-
-            // Return the svg.
-            return svg.ToString();
         }
 
 
@@ -1113,6 +980,194 @@ namespace gedcom.viewer
         }
 
         #endregion
+
+        #region Tree
+
+
+
+        /// <summary>Converts the specified grid into a tree in svg format.</summary>
+        /// <param name="grid">Specifies the individuals and families in the tree.</param>
+        /// <returns>A tree in svg format.</returns>
+        private string getTree(List<string>[] grid)
+        {
+            const int INDIVIDUAL_WIDTH = 150;
+            const int INDIVIDUAL_HEIGHT = 80;
+            const int FAMILY_WIDTH = 10;
+            const int ROW_HEIGHT = 110;
+
+            StringBuilder html = new StringBuilder();
+
+            int maxPeople = 1;
+            for (int row = 0; row < 5; row++)
+            {
+                int people = (1 + grid[row].Count) / 2;
+                if (people > maxPeople)
+                {
+                    maxPeople = people;
+                }
+            }
+
+            // Calculate the height and width.
+            int height = ROW_HEIGHT * 5;
+            int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * maxPeople;
+
+            html.AppendLine("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"  width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
+
+            int y = 0;
+
+            for (int row = 0; row < 5; row++)
+            {
+                int x = 0;
+                for (int col = 0; col < grid[row].Count; col++)
+                {
+                    if (col % 2 == 0)
+                    {
+                        // Individual.
+                        html.Append(drawIndividual(grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT));
+                        x += INDIVIDUAL_WIDTH;
+                    }
+                    else
+                    {
+                        // Family.
+                        html.Append(drawFamily(grid[row][col], x, y, FAMILY_WIDTH, INDIVIDUAL_HEIGHT, INDIVIDUAL_WIDTH));
+                        x += FAMILY_WIDTH;
+                    }
+                }
+                y += ROW_HEIGHT;
+            }
+
+            html.AppendLine("</svg>");
+
+            // Return the built string.
+            return html.ToString();
+        }
+
+
+
+        /// <summary>Return the svg code to draw the specified individual.</summary>
+        /// <param name="idx">Specifies the index of the individal.</param>
+        /// <param name="x">Specifies the x position of the individual.</param>
+        /// <param name="y">Specifies the y position of the individual.</param>
+        /// <param name="width">Specifies the width of the individual.</param>
+        /// <param name="height">Specifies the height of the individual.</param>
+        /// <returns>The svg code to draw the specified individual including a final line feed.</returns>
+        private string drawIndividual(string idx, int x, int y, int width, int height)
+        {
+            if (idx == null || idx == "")
+            {
+                return "";
+            }
+            
+            // Find the specified individual.
+            Individual individual = _gedcom.individuals.find(idx);
+
+            // Create a string (builder) to hold the svg code.
+            StringBuilder svg = new StringBuilder();
+
+            // Add a link for the individual.
+            svg.AppendLine("<a xlink:href=\"app://individual?id=" + individual.idx + "\">");
+
+            // Show a box for the individual.
+            svg.Append("<rect width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\"");
+            if (individual.isMale)
+            {
+                svg.Append(" fill=\"" + BOY_COLOUR + "\" />");
+            }
+            else
+            {
+                svg.Append(" rx=\"6\" ry=\"6\" fill=\"" + GIRL_COLOUR + "\" />");
+            }
+
+            // Show the individual name.
+            svg.Append("<text x=\"" + (x + width / 2).ToString() + "\" y=\"" + (y + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+            svg.Append(individual.fullName);
+            svg.Append("</text>");
+
+            // Show the date of birth.
+            svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + 26).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+            svg.Append("b. ");
+            if (individual.dob != null)
+            {
+                svg.Append(individual.dob.getShortDate());
+            }
+            svg.Append("</text>");
+
+            // Show the location of birth.
+            svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + 38).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+            svg.Append("b. ");
+            if (individual.birthPlace != null)
+            {
+                svg.Append(individual.birthPlace.shortPlace);
+            }
+            svg.AppendLine("</text>");
+
+            // Close the link.
+            svg.AppendLine("</a>");
+
+            // Return the svg.
+            return svg.ToString();
+        }
+
+
+
+        /// <summary>Return the svg code to draw the speicifed family without the individuals in the family.</summary>
+        /// <param name="idx">Specifies the index of the family.</param>
+        /// <param name="x">Specifies the x position of the family.</param>
+        /// <param name="y">Specifies the y position of the family.</param>
+        /// <param name="width">Specifies the width of the family.</param>
+        /// <param name="height">Specifies the height of the family.</param>
+        /// <returns>The svg code to draw the family without the individuals in the family.</returns>
+        private string drawFamily(string idx, int x, int y, int width, int height, int individualWidth)
+        {
+            const int BAR_POSITION = 15;
+
+            // Check if a family is specified.
+            if (idx == "")
+            {
+                return "";
+            }
+
+            // Find the family.
+            Family family = _gedcom.families.find(idx);
+
+            // Create a string (builder) to hold the svg code.
+            StringBuilder svg = new StringBuilder();
+
+            string strokeDashArray = "";
+            if (!family.isMarriage)
+            {
+                strokeDashArray = "stroke-dasharray=\"5,2\" ";
+            }
+
+            // Draw a relationship symbol.
+            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x - individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+            svg.Append("<line x1=\"" + (x + width + individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+
+            // Show marriage year.
+            if (family.marriageDate != null)
+            {
+                int horizontalOffset = 0;
+                if (family.isDivorce)
+                {
+                    horizontalOffset = -25;
+                }
+                svg.Append("<text x=\"" + (x + width / 2 + horizontalOffset).ToString() + "\" y=\"" + (y + height + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
+                svg.Append(family.marriageDate.yearDisplay);
+                svg.Append("</text>");
+            }
+
+            if (family.isDivorce)
+            {
+                svg.Append("<line x1=\"" + (x + width - 5 - 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5 - 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
+                svg.Append("<line x1=\"" + (x + width - 5 + 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5 + 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
+            }
+
+            // Return the svg.
+            return svg.ToString();
+        }
+
+        #endregion 
 
     }
 }
