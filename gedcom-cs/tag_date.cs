@@ -66,6 +66,23 @@ namespace gedcom
 
         #endregion
 
+        #region Properties
+
+        /// <summary>Returns the year in the date.</summary>
+        public string yearDisplay
+        {
+            get
+            {
+                if (_dateTime == null)
+                {
+                    return null;
+                }
+                return _dateTime.Year.ToString();
+            }
+        }
+
+        #endregion
+
         #region Generate DateTime object.
 
         /// <summary>Returns a value to use for the month and the position of this month information in the tag.</summary>

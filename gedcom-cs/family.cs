@@ -123,6 +123,30 @@ namespace gedcom
             }
         }
 
+
+
+        /// <summary>The date of the marriage.</summary>
+        public TagDate marriageDate
+        {
+            get
+            {
+                Tag tagMarriage = _tag.children.findOne("MARR");
+                if (tagMarriage != null)
+                {
+                    Tag tag = tagMarriage.children.findOne("DATE");
+                    if (tag != null)
+                    {
+                        TagDate tagDate = new TagDate(tag);
+                        return tagDate;
+                    }
+                }
+                // Return an empty TagDate object.
+                return null;
+
+            }
+        }
+
+
         #endregion
 
         #region IComparable<Family>

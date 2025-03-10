@@ -497,7 +497,7 @@ namespace gedcom.viewer
                 {
                     Family family = _gedcom.families.find(familyIdx);
                     grid[2].Add(family.husbandIdx);
-                    grid[2].Add("");
+                    grid[2].Add(family.idx);
                 }
             }
 
@@ -511,7 +511,7 @@ namespace gedcom.viewer
                 foreach (string familyIdx in familyIdxes)
                 {
                     Family family = _gedcom.families.find(familyIdx);
-                    grid[2].Add("");
+                    grid[2].Add(family.idx);
                     grid[2].Add(family.wifeIdx);
                 }
             }
@@ -521,12 +521,21 @@ namespace gedcom.viewer
             {
                 grid[1].Add(individual.fatherIdx);
             }
-            if (individual.motherIdx != "")
+            if (grid[1].Count != 0)
             {
-                if (grid[1].Count!=0)
+                Family family = individual.parentsFamily;
+                if (family == null)
                 {
                     grid[1].Add("");
                 }
+                else
+                {
+                    grid[1].Add(family.idx);
+                }
+            }
+
+            if (individual.motherIdx != "")
+            {
                 grid[1].Add(individual.motherIdx);
             }
 
@@ -543,7 +552,7 @@ namespace gedcom.viewer
         {
             const int INDIVIDUAL_WIDTH = 150;
             const int INDIVIDUAL_HEIGHT = 80;
-            const int FAMILY_WIDTH = 10;
+            const int FAMILY_WIDTH = 30;
             const int ROW_HEIGHT = 84;
 
             StringBuilder html = new StringBuilder();
@@ -574,12 +583,13 @@ namespace gedcom.viewer
                     if (col % 2 == 0)
                     {
                         // Individual.
-                        html.Append(drawIndividual(grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT));                        
+                        html.Append(drawIndividual(grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT));
                         x += INDIVIDUAL_WIDTH;
                     }
                     else
                     {
                         // Family.
+                        html.Append(drawFamily(grid[row][col], x, y, FAMILY_WIDTH, INDIVIDUAL_HEIGHT));                        
                         x += FAMILY_WIDTH;
                     }
                 }
@@ -600,7 +610,7 @@ namespace gedcom.viewer
         /// <param name="y">Specifies the y position of the individual.</param>
         /// <param name="width">Specifies the width of the individual.</param>
         /// <param name="height">Specifies the height of the individual.</param>
-        /// <returns>The svg code the draw the specified individual including a final line feed.</returns>
+        /// <returns>The svg code to draw the specified individual including a final line feed.</returns>
         private string drawIndividual(string idx, int x, int y, int width, int height)
         {
             // Find the specified individual.
@@ -649,7 +659,46 @@ namespace gedcom.viewer
             // Close the link.
             svg.AppendLine("</a>");
 
-            // Return the svg
+            // Return the svg.
+            return svg.ToString();
+        }
+
+
+
+        /// <summary>Return the svg code to draw the speicifed family without the individuals in the family.</summary>
+        /// <param name="idx">Specifies the index of the family.</param>
+        /// <param name="x">Specifies the x position of the family.</param>
+        /// <param name="y">Specifies the y position of the family.</param>
+        /// <param name="width">Specifies the width of the family.</param>
+        /// <param name="height">Specifies the height of the family.</param>
+        /// <returns>The svg code to draw the family without the individuals in the family.</returns>
+        private string drawFamily(string idx, int x, int y, int width, int height)
+        {
+            // Check if a family is specified.
+            if (idx == "")
+            {
+                return "";
+            }
+
+            // Find the family.
+            Family family = _gedcom.families.find(idx);
+
+            // Create a string (builder) to hold the svg code.
+            StringBuilder svg = new StringBuilder();
+
+            // Draw a relationship symbol.
+            svg.Append("<line x1=\"" + (x + 5).ToString() + "\" y1=\"" + (y + 30).ToString() + "\" x2=\"" + (x + width - 5).ToString() + "\" y2=\"" + (y + 30).ToString() + "\" stroke=\"black\" />");
+            svg.Append("<line x1=\"" + (x + 5).ToString() + "\" y1=\"" + (y + 35).ToString() + "\" x2=\"" + (x + width - 5).ToString() + "\" y2=\"" + (y + 35).ToString() + "\" stroke=\"black\" />");
+
+            // Show marriage year.
+            if (family.marriageDate != null)
+            {
+                svg.Append("<text x=\"" + (x + width / 2).ToString() + "\" y=\"" + (y + 20).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+                svg.Append(family.marriageDate.yearDisplay);
+                svg.Append("</text>");
+            }
+
+            // Return the svg.
             return svg.ToString();
         }
 
