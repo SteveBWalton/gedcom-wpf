@@ -220,6 +220,30 @@ namespace gedcom
             }
         }
 
+
+
+        /// <summary>The date of birth for the individual.</summary>
+        /// <remarks>This will be null if the date of birth is unknown.</remarks>
+        public TagDate dod
+        {
+            get
+            {
+                Tag tagDeath = _tag.children.findOne("DEAT");
+                if (tagDeath != null)
+                {
+                    Tag tag = tagDeath.children.findOne("DATE");
+                    if (tag != null)
+                    {
+                        TagDate tagDate = new TagDate(tag);
+                        return tagDate;
+                    }
+                }
+                // Return an empty TagDate object.
+                return null;
+            }
+        }
+
+
         #endregion
 
         #region IComparable<Individual>
@@ -258,9 +282,19 @@ namespace gedcom
         public string[] getSiblingsIdxes()
         {
             List<string> siblingIdxes = new List<string>();
+            string sharedFatherIdx = fatherIdx;
+            if (sharedFatherIdx == "")
+            {
+                sharedFatherIdx = "NoMatch";
+            }
+            string sharedMotherIdx = motherIdx;
+            if (sharedMotherIdx == "")
+            {
+                sharedMotherIdx = "NoMatch";
+            }
             foreach(Individual individual in _gedcom.individuals)
             {
-                if ((individual.fatherIdx == fatherIdx || individual.motherIdx == motherIdx) && individual.idx != idx)
+                if ((individual.fatherIdx == sharedFatherIdx || individual.motherIdx == sharedMotherIdx) && individual.idx != idx)
                 {
                     siblingIdxes.Add(individual.idx);
                 }

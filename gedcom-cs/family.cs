@@ -31,7 +31,7 @@ namespace gedcom
 
         #region Properties
 
-        /// <summary>The index of the husband in this family or null.</summary>
+        /// <summary>The index of the husband in this family or empty string.</summary>
         public string husbandIdx
         {
             get
@@ -39,7 +39,7 @@ namespace gedcom
                 Tag tagHusband = _tag.children.findOne("HUSB");
                 if (tagHusband == null)
                 {
-                    return null;
+                    return "";
                 }
                 return Tag.toIdx(tagHusband.value);
             }
@@ -47,7 +47,7 @@ namespace gedcom
 
 
 
-        /// <summary>The index of the wife in this family or null.</summary>
+        /// <summary>The index of the wife in this family or empty string.</summary>
         public string wifeIdx
         {
             get
@@ -55,7 +55,7 @@ namespace gedcom
                 Tag tagWife = _tag.children.findOne("WIFE");
                 if (tagWife == null)
                 {
-                    return null;
+                    return "";
                 }
                 return Tag.toIdx(tagWife.value);
             }
@@ -173,6 +173,26 @@ namespace gedcom
                     return true;
                 }
                 return false;
+            }
+        }
+
+
+        public TagDate divorceDate
+        {
+            get
+            {
+                Tag tagDivorce = _tag.children.findOne("DIV");
+                if (tagDivorce != null)
+                {
+                    Tag tag = tagDivorce.children.findOne("DATE");
+                    if (tag != null)
+                    {
+                        TagDate tagDate = new TagDate(tag);
+                        return tagDate;
+                    }
+                }
+                // Return an empty TagDate object.
+                return null;
             }
         }
 

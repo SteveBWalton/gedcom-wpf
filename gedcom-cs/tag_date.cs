@@ -68,6 +68,14 @@ namespace gedcom
 
         #region Properties
 
+        /// <summary>The approximate DateTime for this TagDate.</summary>
+        public DateTime approxDate
+        {
+            get { return _dateTime; }
+        }
+
+
+
         /// <summary>Returns the year in the date.</summary>
         public string yearDisplay
         {
