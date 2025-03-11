@@ -141,7 +141,7 @@ namespace gedcom
 
 
 
-        /// <summary>The date of the marriage.</summary>
+        /// <summary>The date of the marriage or null.</summary>
         public TagDate marriageDate
         {
             get
@@ -162,6 +162,8 @@ namespace gedcom
             }
         }
 
+
+
         /// <summary>True if the relationship has a divorce.</summary>
         public bool isDivorce
         {
@@ -177,6 +179,8 @@ namespace gedcom
         }
 
 
+
+        /// <summary>The date of the divorce or null.</summary>
         public TagDate divorceDate
         {
             get

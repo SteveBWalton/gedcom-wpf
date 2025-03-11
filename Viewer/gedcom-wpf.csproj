@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="page_content.cs" />
     <Compile Include="render.cs" />
+    <Compile Include="render_tree.cs" />
     <Compile Include="tag_control.xaml.cs">
       <DependentUpon>tag_control.xaml</DependentUpon>
     </Compile>
