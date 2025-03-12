@@ -12,19 +12,9 @@ using System.Collections.Specialized;
 namespace gedcom.viewer
 {
     /// <summary>Class to render content.</summary>
-    public partial class Render
+    public class Render
     {
         #region Member Variables
-
-        #region Constants
-
-        /// <summary>The background colour for boys.</summary>
-        private const string BOY_COLOUR = "LightSkyBlue";
-
-        /// <summary>The background colour for girls.</summary>
-        private const string GIRL_COLOUR = "LightPink";
-
-        #endregion
 
         /// <summary>The gedcom to render.</summary>
         private Gedcom _gedcom;
@@ -42,6 +32,10 @@ namespace gedcom.viewer
             _gedcom = gedcom;        
             _userOptions = userOptions;
         }
+
+        #endregion
+
+        #region Properties
 
         #endregion
 
@@ -377,7 +371,8 @@ namespace gedcom.viewer
                 pageContent.html.AppendLine("<h1>" + fullName + " (" + individual.idx + ")</h1>");
 
                 // Little family tree control.
-                pageContent.html.Append(getIndividualTree(individual));
+                RenderTree renderTree = new RenderTree(individual, _gedcom);
+                pageContent.html.Append(renderTree.getTree());
 
                 // Initialise the sources referenced in this individual.
                 HtmlSources htmlSources = new HtmlSources();
