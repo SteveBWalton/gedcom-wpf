@@ -143,5 +143,38 @@ namespace gedcom
 
         #endregion
 
+        #region Sorting Functions
+        public int sortIndividualsByBirth(string index1, string index2)
+        {
+            Individual person1 = individuals.find(index1);
+            Individual person2 = individuals.find(index2);
+
+            if (person1==null)
+            {
+                return -1;
+            }
+            if (person2==null)
+            {
+                return +1;
+            }
+
+            TagDate person1DoB = person1.dob;
+            TagDate person2DoB = person2.dob;
+
+            if (person1DoB==null)
+            {
+                return -1;
+            }
+            if(person2DoB==null)
+            {
+                return +1;
+            }
+
+            // Compare the dates of birth.
+            return person1.dob.approxDate.CompareTo(person2.dob.approxDate);
+        }
+
+        #endregion
+
     }
 }

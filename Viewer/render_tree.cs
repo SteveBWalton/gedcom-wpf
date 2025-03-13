@@ -324,7 +324,7 @@ namespace gedcom.viewer
             }
 
             // Add the actual individual.
-            addIndividualAndPartners(2, individual, true);
+            addIndividualAndPartners(2, individual, true,false);
 
             // Add the siblings.
             string[] siblingIdxes = individual.getSiblingsIdxes();
@@ -334,13 +334,14 @@ namespace gedcom.viewer
                 if (sibling.dob.approxDate >= individual.dob.approxDate)
                 {
                     // Younger siblings.
-                    addIndividualAndPartners(2, sibling, false);
+                    addIndividualAndPartners(2, sibling, false, false);
                 }
                 else
                 {
                     // Older siblings.
-                    _grid[2].Insert(0, "");
-                    _grid[2].Insert(0, siblingIdx);
+                    addIndividualAndPartners(2, sibling, false, true);
+                    // _grid[2].Insert(0, "");
+                    // _grid[2].Insert(0, siblingIdx);
                 }
             }
 
@@ -353,8 +354,13 @@ namespace gedcom.viewer
         /// <summary>Adds the individual and all their partners to the tree.</summary>
         /// <param name="level">Specifies the level to add the individual and partners.</param>
         /// <param name="individual">Specifies the individual to add.</param>
-        private void addIndividualAndPartners(int level, Individual individual, bool isAddChildren)
+        /// <param name="isAddChildren">Specifies true to add children of this individual.</param>
+        /// <param name="isInsert">Specifies true to insert the individuals at the start of the line.</param>
+        private void addIndividualAndPartners(int level, Individual individual, bool isAddChildren, bool isInsert)
         {
+            // The position to use for inserts.
+            int insertPos = 0;
+
             // Add the individual's husband.
             if (individual.isFemale)
             {
@@ -364,8 +370,17 @@ namespace gedcom.viewer
                     Family family = _gedcom.families.find(familyIdx);
                     if (family.husbandIdx != "")
                     {
-                        _grid[level].Add(family.husbandIdx);
-                        _grid[level].Add(family.idx);
+                        if (isInsert)
+                        {
+                            _grid[level].Insert(insertPos, family.idx);
+                            _grid[level].Insert(insertPos, family.husbandIdx);
+                            insertPos += 2;
+                        }
+                        {
+                            // Add the husband.
+                            _grid[level].Add(family.husbandIdx);
+                            _grid[level].Add(family.idx);
+                        }
                     }
                     if (isAddChildren)
                     {
@@ -375,7 +390,15 @@ namespace gedcom.viewer
             }
 
             // Add the actual individual.
-            _grid[level].Add(individual.idx);
+            if (isInsert)
+            {
+                _grid[level].Insert(insertPos, individual.idx);
+                insertPos += 1;
+            }
+            else
+            {
+                _grid[level].Add(individual.idx);
+            }
 
             // Add the individual's wife.
             if (individual.isMale)
@@ -386,8 +409,17 @@ namespace gedcom.viewer
                     Family family = _gedcom.families.find(familyIdx);
                     if (family.wifeIdx != "")
                     {
-                        _grid[level].Add(family.idx);
-                        _grid[level].Add(family.wifeIdx);
+                        if (isInsert)
+                        {
+                            _grid[level].Insert(insertPos, family.wifeIdx);
+                            _grid[level].Insert(insertPos, family.idx);
+                            insertPos += 2;
+                        }
+                        else
+                        {
+                            _grid[level].Add(family.idx);
+                            _grid[level].Add(family.wifeIdx);
+                        }
                     }
                     if (isAddChildren)
                     {
@@ -395,7 +427,15 @@ namespace gedcom.viewer
                     }
                 }
             }
-            _grid[level].Add("");
+
+            if (isInsert)
+            {
+                _grid[level].Insert(insertPos, "");
+            }
+            else
+            {
+                _grid[level].Add("");
+            }
         }
 
 

@@ -299,7 +299,15 @@ namespace gedcom
                     siblingIdxes.Add(individual.idx);
                 }
             }
-            return siblingIdxes.ToArray();
+
+            // Convert into an array.
+            string[] siblings = siblingIdxes.ToArray();
+
+            // Sort the siblings into birth order.
+            Array.Sort(siblings,  _gedcom.sortIndividualsByBirth); // (IComparer<string>)
+
+            // Return the array of siblings.
+            return siblings;
         }
     }
 }
