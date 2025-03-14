@@ -66,20 +66,27 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>Returns the long description of a date tag in html.</summary>
+        /// <summary>Returns the long description of a date tag in html and adds the sources.</summary>
         /// <param name="tag">Specifies the date tag to return.</param>
         /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
         /// <returns></returns>
         private string getTagLongDate(Tag tag, HtmlSources htmlSources)
         {
             TagDate tagDate = new TagDate(tag);
-
+            return getTagLongDate(tagDate, htmlSources);
+        }
+        /// <summary>Returns the long description of a date tag in html and adds the sources.</summary>
+        /// <param name="tagDate">Specifies the date tag to return.</param>
+        /// <param name="htmlSources">Specifies the current source references.  Returns with the additonal sources refereneces used in the description.</param>
+        /// <returns>The long description of the date tag in html with the sources referenced.</returns>
+        private string getTagLongDate(TagDate tagDate, HtmlSources htmlSources)
+        {
             StringBuilder html = new StringBuilder();
 
             html.Append(tagDate.getLongDate());
 
             // Show the sources.
-            html.Append(addSourceReferences(tag, htmlSources));
+            html.Append(addSourceReferences(tagDate.tag, htmlSources));
 
             // Return the long date description.
             return html.ToString();
@@ -395,15 +402,18 @@ namespace gedcom.viewer
 
                 // Deal with partners.
                 dealtWith.Add("FAMS");
-                Tag[] tags = individual.tag.children.findAll("FAMS");
-                foreach (Tag marriageTag in tags)
+                string[] relationships = individual.getFamilyIdxes();
+                // Tag[] tags = individual.tag.children.findAll("FAMS");
+                // foreach (Tag marriageTag in tags)
+                foreach(string relationship in relationships)
                 {
-                    pageContent.html.Append(getTagLongPartner(individual, marriageTag, htmlSources));
+                    // pageContent.html.Append(getTagLongPartner(individual, marriageTag, htmlSources));
+                    pageContent.html.Append(getTagLongPartner(individual, relationship, htmlSources));
                 }
 
                 // Deal with education.
                 dealtWith.Add("EDUC");
-                tags = individual.tag.children.findAll("EDUC");
+                Tag[] tags = individual.tag.children.findAll("EDUC");
                 foreach (Tag educationTag in tags)
                 {
                     pageContent.html.Append(getTagLongHtml(educationTag, individual.isMale ? "he" : "she", "was educated at", htmlSources));
@@ -519,10 +529,11 @@ namespace gedcom.viewer
         /// <param name="proNoun"></param>
         /// <param name="htmlSources">Specifies and returns the source references.</param>
         /// <returns>A long description of the family for the specified individual.</returns>
-        private string getTagLongPartner(Individual individual, Tag familyTag, HtmlSources htmlSources)
+        // private string getTagLongPartner(Individual individual, Tag familyTag, HtmlSources htmlSources)
+        private string getTagLongPartner(Individual individual, string familyIdx, HtmlSources htmlSources)
         {
             // Find the family tag.
-            string familyIdx = Tag.toIdx(familyTag.value);
+            // string familyIdx = Tag.toIdx(familyTag.value);
             Family family = _gedcom.families.find(familyIdx);
             Tag tag = family.tag;
 
@@ -546,7 +557,16 @@ namespace gedcom.viewer
             }
             else
             {
-                html.Append((individual.isMale ? "He" : "She") + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+                TagDate relationshipDate = family.relationshipDate;
+                if (relationshipDate == null)
+                {
+                    html.Append((individual.isMale ? "He" : "She") + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+                }
+                else
+                {
+                    html.Append(firstCaps(getTagLongDate(relationshipDate, htmlSources)));
+                    html.Append(" " + (individual.isMale ? "he" : "she") + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+                }
             }
 
             if (individual.idx == family.husbandIdx)

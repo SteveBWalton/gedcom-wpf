@@ -190,8 +190,8 @@ namespace gedcom
                 return +1;
             }
 
-            TagDate family1date = family1.marriageDate;
-            TagDate family2date = family2.marriageDate;
+            TagDate family1date = family1.relationshipDate;
+            TagDate family2date = family2.relationshipDate;
             if (family1date==null)
             {
                 return -1;

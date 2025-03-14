@@ -192,13 +192,24 @@ namespace gedcom.viewer
             svg.Append("</text>");
 
             // Show the date of death.
+            svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + LINE4).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
             if (individual.dod != null)
             {
-                svg.Append("<text x=\"" + (x + 2).ToString() + "\" y=\"" + (y + LINE4).ToString() + "\" text-anchor=\"left\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
                 svg.Append("d. ");
                 svg.Append(individual.dod.getShortDate());
-                svg.Append("</text>");
+                string age = individual.age;
+                if (age != "")
+                {
+                    svg.Append(" (");
+                    svg.Append(individual.age);
+                    svg.Append(")");
+                }
             }
+            else
+            {
+                svg.Append(individual.age);
+            }
+            svg.Append("</text>");
 
             // Close the link.
             svg.AppendLine();
@@ -324,22 +335,23 @@ namespace gedcom.viewer
             }
 
             // Add the actual individual.
-            addIndividualAndPartners(2, individual, true,false);
+            addIndividualAndPartners(2, individual, true);
 
             // Add the siblings.
             string[] siblingIdxes = individual.getSiblingsIdxes();
+            int insertPoint = 0;
             foreach (string siblingIdx in siblingIdxes)
             {
                 Individual sibling = _gedcom.individuals.find(siblingIdx);
                 if (sibling.dob.approxDate >= individual.dob.approxDate)
                 {
                     // Younger siblings.
-                    addIndividualAndPartners(2, sibling, false, false);
+                    addIndividualAndPartners(2, sibling, false);
                 }
                 else
                 {
                     // Older siblings.
-                    addIndividualAndPartners(2, sibling, false, true);
+                    addIndividualAndPartners(2, sibling, false, true, ref insertPoint);                    
                     // _grid[2].Insert(0, "");
                     // _grid[2].Insert(0, siblingIdx);
                 }
@@ -350,17 +362,18 @@ namespace gedcom.viewer
         }
 
 
-
+        private void addIndividualAndPartners(int level, Individual individual, bool isAddChildren)
+        {
+            int ignore = 0;
+            addIndividualAndPartners(level, individual, isAddChildren, false, ref ignore);
+        }
         /// <summary>Adds the individual and all their partners to the tree.</summary>
         /// <param name="level">Specifies the level to add the individual and partners.</param>
         /// <param name="individual">Specifies the individual to add.</param>
         /// <param name="isAddChildren">Specifies true to add children of this individual.</param>
         /// <param name="isInsert">Specifies true to insert the individuals at the start of the line.</param>
-        private void addIndividualAndPartners(int level, Individual individual, bool isAddChildren, bool isInsert)
+        private void addIndividualAndPartners(int level, Individual individual, bool isAddChildren, bool isInsert, ref int insertPos)
         {
-            // The position to use for inserts.
-            int insertPos = 0;
-
             // Add the individual's husband.
             if (individual.isFemale)
             {
@@ -376,6 +389,7 @@ namespace gedcom.viewer
                             _grid[level].Insert(insertPos, family.husbandIdx);
                             insertPos += 2;
                         }
+                        else
                         {
                             // Add the husband.
                             _grid[level].Add(family.husbandIdx);
@@ -403,8 +417,8 @@ namespace gedcom.viewer
             // Add the individual's wife.
             if (individual.isMale)
             {
-                string[] familyIdxes = individual.getFamilyIdxes();
-                foreach (string familyIdx in familyIdxes)
+                string[] familyIdxes = individual.getFamilyIdxes();                
+                foreach (string familyIdx in familyIdxes.Reverse())
                 {
                     Family family = _gedcom.families.find(familyIdx);
                     if (family.wifeIdx != "")
@@ -431,6 +445,7 @@ namespace gedcom.viewer
             if (isInsert)
             {
                 _grid[level].Insert(insertPos, "");
+                insertPos += 1;
             }
             else
             {

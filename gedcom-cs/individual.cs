@@ -111,6 +111,46 @@ namespace gedcom
 
 
 
+        /// <summary>The age of individual at death or now.</summary>
+        public string age
+        {
+            get
+            {
+                TagDate birthDate = dob;
+                if (birthDate == null)
+                {
+                    return "";
+                }
+                TagDate deathDate = dod;
+                DateTime endDate = ((deathDate == null) ? DateTime.Now : deathDate.approxDate);
+                TimeSpan timeSpan = endDate - birthDate.approxDate;
+                if (timeSpan < TimeSpan.FromDays(365))
+                {
+                    return timeSpan.TotalDays.ToString() + " days";
+                }
+                // Calculate the age in years.
+                int years = endDate.Year - dob.approxDate.Year - 1;
+                if (years > 110 && deathDate == null)
+                {
+                    // Not likely.
+                    return "";
+                }
+                if (endDate.Month > birthDate.approxDate.Month)
+                {
+                    // Birthday in final year.
+                    years++;
+                }
+                else if (endDate.Month == birthDate.approxDate.Month && DateTime.Now.Day >= birthDate.approxDate.Month)
+                {
+                    // Birthday in final month.
+                    years++;
+                }
+                return years.ToString("##0");
+            }
+        }
+
+
+
         /// <summary>The location of the the individual birth.</summary>
         /// <remarks>This will be null if the place of birth is unknown.</remarks>
         public TagPlace birthPlace

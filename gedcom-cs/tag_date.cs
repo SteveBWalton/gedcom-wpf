@@ -68,6 +68,14 @@ namespace gedcom
 
         #region Properties
 
+        /// <summary>The actual tag that created the TagDate object.</summary>
+        public Tag tag
+        {
+            get { return _tag; }
+        }
+
+
+
         /// <summary>The approximate DateTime for this TagDate.</summary>
         public DateTime approxDate
         {
@@ -214,6 +222,12 @@ namespace gedcom
                 dateValue = dateValue.Replace("BEF", "");
                 html.Append("before ");
             }
+            if (dateValue.Contains("AFT"))
+            {
+                // After date.
+                dateValue = dateValue.Replace("AFT", "");
+                html.Append("after ");
+            }
             else if (dateValue.Contains("BET"))
             {
                 // Between date.
@@ -280,6 +294,12 @@ namespace gedcom
                 // Before date.
                 dateValue = dateValue.Replace("BEF", "");
                 html.Append("< ");
+            }
+            if (dateValue.Contains("AFT"))
+            {
+                // After date.
+                dateValue = dateValue.Replace("AFT", "");
+                html.Append("> ");
             }
             else if (dateValue.Contains("BET"))
             {

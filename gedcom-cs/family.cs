@@ -158,10 +158,33 @@ namespace gedcom
                 }
                 // Return an empty TagDate object.
                 return null;
-
             }
         }
 
+
+
+        /// <summary>The date of the relationship or null.</summary>
+        /// <remarks>This will be the marriage date if available.  Otherwise the date on the family tag, if available.</remarks>
+        public TagDate relationshipDate
+        {
+            get
+            {
+                TagDate tagDate = marriageDate;
+                if (tagDate != null)
+                {
+                    return marriageDate;
+                }
+                Tag tag = _tag.children.findOne("DATE");
+                if (tag != null)
+                {
+                    tagDate = new TagDate(tag);
+                    return tagDate;
+                }
+                // Return an empty TagDate object.
+                return null;
+            }
+        }
+    
 
 
         /// <summary>True if the relationship has a divorce.</summary>
