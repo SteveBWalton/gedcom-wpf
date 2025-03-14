@@ -171,7 +171,39 @@ namespace gedcom
             }
 
             // Compare the dates of birth.
-            return person1.dob.approxDate.CompareTo(person2.dob.approxDate);
+            return person1DoB.approxDate.CompareTo(person2DoB.approxDate);
+        }
+
+
+
+        public int sortFamilesByDate(string index1, string index2)
+        {
+            Family family1 = families.find(index1);
+            Family family2 = families.find(index2);
+
+            if(family1==null)
+            {
+                return -1;
+            }
+            if (family2==null)
+            {
+                return +1;
+            }
+
+            TagDate family1date = family1.marriageDate;
+            TagDate family2date = family2.marriageDate;
+            if (family1date==null)
+            {
+                return -1;
+            }
+            if(family2date==null)
+            {
+                return +1;
+            }
+
+            // Compare the marriage dates.
+            return family1date.approxDate.CompareTo(family2date.approxDate);
+
         }
 
         #endregion

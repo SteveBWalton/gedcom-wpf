@@ -85,6 +85,10 @@ namespace gedcom
                 {
                     return null;
                 }
+                if (_tag.value.Contains("ABT"))
+                {
+                    return "(" + _dateTime.Year.ToString() + ")";
+                }
                 return _dateTime.Year.ToString();
             }
         }
@@ -275,7 +279,7 @@ namespace gedcom
             {
                 // Before date.
                 dateValue = dateValue.Replace("BEF", "");
-                html.Append("before ");
+                html.Append("< ");
             }
             else if (dateValue.Contains("BET"))
             {
@@ -299,7 +303,13 @@ namespace gedcom
             html.Append(dateValue);
 
             // Dealt with about, and.
-            html.Replace("ABT", "about");
+            bool isAboutBracket = false;
+            if (dateValue.Contains("ABT"))
+            {
+                html.Replace("ABT ", "(");
+                html.Replace("ABT", "(");
+                isAboutBracket = true;
+            }
             html.Replace("AND", "and");
             html.Replace("TO", "to");
 
@@ -316,6 +326,11 @@ namespace gedcom
             html.Replace("OCT", "Oct");
             html.Replace("NOV", "Nov");
             html.Replace("DEC", "Dec");
+
+            if(isAboutBracket)
+            {
+                html.Append(")");
+            }
 
             return html.ToString();
         }

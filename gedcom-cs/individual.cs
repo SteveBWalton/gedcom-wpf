@@ -266,13 +266,21 @@ namespace gedcom
         /// <returns>An array of families that this person created.</returns>
         public string[] getFamilyIdxes()
         {
-            Tag [] families = _tag.children.findAll("FAMS");
+            Tag [] tagFamilies = _tag.children.findAll("FAMS");
             List<string> familyIdxes = new List<string>();
-            foreach (Tag tag in families)
+            foreach (Tag tag in tagFamilies)
             {
                 familyIdxes.Add(Tag.toIdx(tag.value));
             }
-            return familyIdxes.ToArray();
+
+            // Convert into an array.
+            string[] families = familyIdxes.ToArray();
+
+            // Sort the siblings into birth order.
+            Array.Sort(families, _gedcom.sortFamilesByDate);
+
+            // Return the array of siblings.
+            return families;
         }
 
 
@@ -304,7 +312,7 @@ namespace gedcom
             string[] siblings = siblingIdxes.ToArray();
 
             // Sort the siblings into birth order.
-            Array.Sort(siblings,  _gedcom.sortIndividualsByBirth); // (IComparer<string>)
+            Array.Sort(siblings, _gedcom.sortIndividualsByBirth); // (IComparer<string>)
 
             // Return the array of siblings.
             return siblings;
