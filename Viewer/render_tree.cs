@@ -233,8 +233,7 @@ namespace gedcom.viewer
                     {
                         svg.Append("<line x1=\"" + (x + width / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + width / 2).ToString() + "\" y2=\"" + (y - 5).ToString() + "\" stroke=\"black\" />");
 
-                        // The 10 here is FAMILY_WIDTH.
-                        int connectionX = ((familyColumn + 1) / 2) * width + ((familyColumn - 1) / 2) * 10 - 5;
+                        int connectionX = ((familyColumn + 1) / 2) * width + ((familyColumn - 1) / 2) * FAMILY_WIDTH - 5;
 
                         svg.Append("<line x1=\"" + (x + width / 2).ToString() + "\" y1=\"" + (y - 5).ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - 5).ToString() + "\" stroke=\"black\" />");
                         svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + (y - 5).ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - 15).ToString() + "\" stroke=\"black\" />");
@@ -286,8 +285,8 @@ namespace gedcom.viewer
             svg.Append("<line x1=\"" + (x + width + individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
             svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
 
-            // Show marriage year.
-            if (family.marriageDate != null)
+            // Show marriage year or relationship start.
+            if (family.relationshipDate != null)
             {
                 int horizontalOffset = 0;
                 if (family.isDivorce)
@@ -295,7 +294,7 @@ namespace gedcom.viewer
                     horizontalOffset = -25;
                 }
                 svg.Append("<text x=\"" + (x + width / 2 + horizontalOffset).ToString() + "\" y=\"" + (y + height + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
-                svg.Append(family.marriageDate.yearDisplay);
+                svg.Append(family.relationshipDate.yearDisplay);
                 svg.Append("</text>");
             }
 

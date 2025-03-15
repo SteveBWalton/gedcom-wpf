@@ -533,68 +533,145 @@ namespace gedcom.viewer
         private string getTagLongPartner(Individual individual, string familyIdx, HtmlSources htmlSources)
         {
             // Find the family tag.
-            // string familyIdx = Tag.toIdx(familyTag.value);
             Family family = _gedcom.families.find(familyIdx);
             Tag tag = family.tag;
+
+            bool isBothPartnersKnown = true;
+            if (family.wifeIdx == "" || family.husbandIdx == "")
+            {
+                isBothPartnersKnown = false;
+            }
 
             // Build a long description of the tag.
             StringBuilder html = new StringBuilder();
 
-            // Marriage
+            // Marriage or relationship.
             Tag tagMarriage = tag.children.findOne("MARR");
-            if (tagMarriage != null)
+            if (isBothPartnersKnown)
             {
-                Tag tagDate = tagMarriage.children.findOne("DATE");
-                if (tagDate != null)
+                if (tagMarriage != null)
                 {
-                    html.Append(firstCaps(getTagLongDate(tagDate, htmlSources)));
-                    html.Append(" " + (individual.isMale ? "he" : "she") + " <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                    Tag tagDate = tagMarriage.children.findOne("DATE");
+                    if (tagDate != null)
+                    {
+                        html.Append(firstCaps(getTagLongDate(tagDate, htmlSources)));
+                        html.Append(" " + (individual.isMale ? "he" : "she") + " <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                    }
+                    else
+                    {
+                        html.Append((individual.isMale ? "He" : "She") + " <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                    }
                 }
                 else
                 {
-                    html.Append((individual.isMale ? "He" : "She") + " <a href=\"app://family?id=" + familyIdx + "\">married</a> ");
+                    TagDate relationshipDate = family.relationshipDate;
+                    if (relationshipDate == null)
+                    {
+                        html.Append((individual.isMale ? "He" : "She") + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+                    }
+                    else
+                    {
+                        html.Append(firstCaps(getTagLongDate(relationshipDate, htmlSources)));
+                        html.Append(" " + (individual.isMale ? "he" : "she") + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+                    }
                 }
+
+                if (individual.idx == family.husbandIdx)
+                {
+                    html.Append(htmlIndividual(family.wife));
+                }
+                if (individual.idx == family.wifeIdx)
+                {
+                    html.Append(htmlIndividual(family.husband));
+                }
+
+                // Show the sources.
+                html.Append(addSourceReferences(tag, htmlSources));
+
+                // Show any place information.
+                if (tagMarriage != null)
+                {
+                    Tag tagPlace = tagMarriage.children.findOne("PLAC");
+                    if (tagPlace != null)
+                    {
+                        html.Append(" ");
+                        html.Append(getTagLongPlace(tagPlace, htmlSources));
+                    }
+                }
+
+                // Finish the long description.
+                html.Append(". ");
+            }
+
+            // Describe any children.
+            Individual[] children = family.getChildren();
+            if (isBothPartnersKnown)
+            {
+                html.Append("They");
             }
             else
             {
-                TagDate relationshipDate = family.relationshipDate;
-                if (relationshipDate == null)
+                if (family.husbandIdx == "")
                 {
-                    html.Append((individual.isMale ? "He" : "She") + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+                    html.Append("She");
                 }
                 else
                 {
-                    html.Append(firstCaps(getTagLongDate(relationshipDate, htmlSources)));
-                    html.Append(" " + (individual.isMale ? "he" : "she") + " had a <a href=\"app://family?id=" + familyIdx + "\">relationship with</a> ");
+                    html.Append("He");
                 }
             }
-
-            if (individual.idx == family.husbandIdx)
+            if (children.Length == 0)
             {
-                
-                html.Append(htmlIndividual(family.wife));
+                html.Append(" had no children");
             }
-            if (individual.idx == family.wifeIdx)
+            else if (children.Length == 1)
             {
-                html.Append(htmlIndividual(family.husband));
+                html.Append(" had 1 child");
             }
-
-            // Show the sources.
-            html.Append(addSourceReferences(tag, htmlSources));
-
-            // Show any place information.
-            if (tagMarriage != null)
+            else
             {
-                Tag tagPlace = tagMarriage.children.findOne("PLAC");
-                if (tagPlace != null)
+                html.Append(" had " + children.Length.ToString() + " children");
+            }
+            int count = 1;
+            foreach(Individual child in children)
+            {
+                if (count == children.Length && children.Length != 1)
                 {
-                    html.Append(" ");
-                    html.Append(getTagLongPlace(tagPlace, htmlSources));
+                    html.Append(" and ");
                 }
+                else
+                {
+                    html.Append(", ");
+                }
+                html.Append(htmlIndividual(child));
+                count++;
             }
 
-            // Finish the long description.
+            // Finish the children description.
             html.Append(". ");
+
+            // Divorce or relationship end.
+            if (isBothPartnersKnown)
+            {
+                if (family.isDivorce)
+                {
+                    if (family.isMarriage)
+                    {
+                        html.Append("They divorced");
+                    }
+                    else
+                    {
+                        html.Append("They separated");
+                    }
+                    TagDate endDate = family.divorceDate;
+                    if (endDate != null)
+                    {
+                        html.Append(" ");
+                        html.Append(endDate.getLongDate());
+                    }
+                    html.Append(". ");
+                }
+            }
 
             // Return the long description.
             return html.ToString();
