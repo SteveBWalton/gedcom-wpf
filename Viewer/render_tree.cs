@@ -18,14 +18,20 @@ namespace gedcom.viewer
         private const int INDIVIDUAL_WIDTH = 150;
 
         /// <summary>The height of individuals.</summary>
-        private const int INDIVIDUAL_HEIGHT = 80;
+        private const int INDIVIDUAL_HEIGHT = 66;
 
         /// <summary>The horizontal space between individuals.</summary>
         /// <remarks>This was previously the horizontal space for family markers.  Please rename.</remarks>
         private const int FAMILY_WIDTH = 10;
 
+        /// <summary>The position of the relationship (marriage) bar below individuals.</summary>
+        const int BAR_POSITION = 14;
+
+        /// <summary>The position of the relationship year between individuals.</summary>
+        const int RELATIONSHIP_YEAR = 11;
+
         /// <summary>The vertical space between individuals.</summary>
-        private const int VERTICAL_SPACE = 30;
+        private const int VERTICAL_SPACE = 40;
 
         /// <summary>The height of of a row of individuals.</summary>
         private const int ROW_HEIGHT = INDIVIDUAL_HEIGHT + VERTICAL_SPACE;
@@ -48,6 +54,10 @@ namespace gedcom.viewer
         /// Rows 0 Grandparents, 1 parents, 2 individual, 3 children, 4 grand-children
         ///</remarks>
         private List<string>[] _grid;
+
+        /// <summary>The height of lines to the familes on each row.</summary>
+        /// <remarks>Do something better than an encoded string!</remarks>
+        private List<string>[] _lines;
 
         #endregion
 
@@ -104,13 +114,13 @@ namespace gedcom.viewer
                     if (col % 2 == 0)
                     {
                         // Individual.
-                        html.Append(drawIndividual(_grid[row][col], x, y, INDIVIDUAL_WIDTH, INDIVIDUAL_HEIGHT, row - 1));
+                        html.Append(drawIndividual(_grid[row][col], x, y, row - 1));
                         x += INDIVIDUAL_WIDTH;
                     }
                     else
                     {
                         // Family.
-                        html.Append(drawFamily(_grid[row][col], x, y, FAMILY_WIDTH, INDIVIDUAL_HEIGHT, INDIVIDUAL_WIDTH));
+                        html.Append(drawFamily(_grid[row][col], x, y));
                         x += FAMILY_WIDTH;
                     }
                 }
@@ -129,10 +139,9 @@ namespace gedcom.viewer
         /// <param name="idx">Specifies the index of the individal.</param>
         /// <param name="x">Specifies the x position of the individual.</param>
         /// <param name="y">Specifies the y position of the individual.</param>
-        /// <param name="width">Specifies the width of the individual.</param>
-        /// <param name="height">Specifies the height of the individual.</param>
+        /// <param name="parentsLevel">Specifies the row of the grid to search for parents for a joint line.</param>
         /// <returns>The svg code to draw the specified individual including a final line feed.</returns>
-        private string drawIndividual(string idx, int x, int y, int width, int height, int parentsLevel)
+        private string drawIndividual(string idx, int x, int y, int parentsLevel)
         {
             const int LINE1 = 14;
             const int LINE2 = 32;
@@ -158,7 +167,7 @@ namespace gedcom.viewer
             svg.AppendLine("<a xlink:href=\"app://individual?id=" + individual.idx + "\">");
 
             // Show a box for the individual.
-            svg.Append("<rect width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\"");
+            svg.Append("<rect width=\"" + INDIVIDUAL_WIDTH.ToString() + "\" height=\"" + INDIVIDUAL_HEIGHT.ToString() + "\" x=\"" + x.ToString() + "\" y=\"" + y.ToString() + "\"");
             if (individual.isMale)
             {
                 svg.Append(" fill=\"" + BOY_COLOUR + "\" />");
@@ -169,7 +178,7 @@ namespace gedcom.viewer
             }
 
             // Show the individual name.
-            svg.Append("<text x=\"" + (x + width / 2).ToString() + "\" y=\"" + (y + LINE1).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
+            svg.Append("<text x=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y=\"" + (y + LINE1).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"9pt\">");
             svg.Append(individual.fullName);
             svg.Append("</text>");
 
@@ -231,12 +240,17 @@ namespace gedcom.viewer
                     }
                     if (familyColumn > 0)
                     {
-                        svg.Append("<line x1=\"" + (x + width / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + width / 2).ToString() + "\" y2=\"" + (y - 5).ToString() + "\" stroke=\"black\" />");
+                        int connectionX = ((familyColumn + 1) / 2) * INDIVIDUAL_WIDTH + ((familyColumn - 1) / 2) * FAMILY_WIDTH - 5;
+                        int connectionY = getFamilyBarHeight(parentsLevel, y, familyColumn);
 
-                        int connectionX = ((familyColumn + 1) / 2) * width + ((familyColumn - 1) / 2) * FAMILY_WIDTH - 5;
+                        // Draw line up from the person.
+                        svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
-                        svg.Append("<line x1=\"" + (x + width / 2).ToString() + "\" y1=\"" + (y - 5).ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - 5).ToString() + "\" stroke=\"black\" />");
-                        svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + (y - 5).ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - 15).ToString() + "\" stroke=\"black\" />");
+                        // Draw line across to the family.
+                        svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+
+                        // Draw line up to the family.
+                        svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y + BAR_POSITION + INDIVIDUAL_HEIGHT - ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
                     }
                 }
             }
@@ -251,13 +265,9 @@ namespace gedcom.viewer
         /// <param name="idx">Specifies the index of the family.</param>
         /// <param name="x">Specifies the x position of the family.</param>
         /// <param name="y">Specifies the y position of the family.</param>
-        /// <param name="width">Specifies the width of the family.</param>
-        /// <param name="height">Specifies the height of the family.</param>
         /// <returns>The svg code to draw the family without the individuals in the family.</returns>
-        private string drawFamily(string idx, int x, int y, int width, int height, int individualWidth)
+        private string drawFamily(string idx, int x, int y)
         {
-            const int BAR_POSITION = 15;
-
             // Check if a family is specified.
             if (idx == "")
             {
@@ -281,9 +291,9 @@ namespace gedcom.viewer
             }
 
             // Draw a relationship symbol.
-            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x - individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
-            svg.Append("<line x1=\"" + (x + width + individualWidth / 2).ToString() + "\" y1=\"" + (y + height).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
-            svg.Append("<line x1=\"" + (x - individualWidth / 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION).ToString() + "\" x2=\"" + (x + width + individualWidth / 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+            svg.Append("<line x1=\"" + (x - INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + (y + INDIVIDUAL_HEIGHT).ToString() + "\" x2=\"" + (x - INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+            svg.Append("<line x1=\"" + (x + FAMILY_WIDTH + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + (y + INDIVIDUAL_HEIGHT).ToString() + "\" x2=\"" + (x + FAMILY_WIDTH + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
+            svg.Append("<line x1=\"" + (x - INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION).ToString() + "\" x2=\"" + (x + FAMILY_WIDTH + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION).ToString() + "\" stroke=\"black\" " + strokeDashArray + "/>");
 
             // Show marriage year or relationship start.
             if (family.relationshipDate != null)
@@ -293,7 +303,7 @@ namespace gedcom.viewer
                 {
                     horizontalOffset = -25;
                 }
-                svg.Append("<text x=\"" + (x + width / 2 + horizontalOffset).ToString() + "\" y=\"" + (y + height + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
+                svg.Append("<text x=\"" + (x + FAMILY_WIDTH / 2 + horizontalOffset).ToString() + "\" y=\"" + (y + INDIVIDUAL_HEIGHT + RELATIONSHIP_YEAR).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
                 svg.Append(family.relationshipDate.yearDisplay);
                 svg.Append("</text>");
             }
@@ -301,13 +311,13 @@ namespace gedcom.viewer
             if (family.isDivorce)
             {
                 // Show divorce symbol.
-                svg.Append("<line x1=\"" + (x + width - 5 - 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5 - 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
-                svg.Append("<line x1=\"" + (x + width - 5 + 2).ToString() + "\" y1=\"" + (y + height + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + width + 5 + 2).ToString() + "\" y2=\"" + (y + height + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
+                svg.Append("<line x1=\"" + (x + FAMILY_WIDTH - 5 - 2).ToString() + "\" y1=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + FAMILY_WIDTH + 5 - 2).ToString() + "\" y2=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
+                svg.Append("<line x1=\"" + (x + FAMILY_WIDTH - 5 + 2).ToString() + "\" y1=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION + 5).ToString() + "\" x2=\"" + (x + FAMILY_WIDTH + 5 + 2).ToString() + "\" y2=\"" + (y + INDIVIDUAL_HEIGHT + BAR_POSITION - 5).ToString() + "\" stroke=\"black\" />");
 
                 // Show divorce year.
                 if (family.divorceDate != null)
                 {
-                    svg.Append("<text x=\"" + (x + width / 2 + 30).ToString() + "\" y=\"" + (y + height + 12).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
+                    svg.Append("<text x=\"" + (x + FAMILY_WIDTH / 2 + 30).ToString() + "\" y=\"" + (y + INDIVIDUAL_HEIGHT + RELATIONSHIP_YEAR).ToString() + "\" text-anchor=\"middle\" font-family=\"Arial, Helvetica\" font-size=\"8pt\">");
                     svg.Append(family.divorceDate.yearDisplay);
                     svg.Append("</text>");
                 }
@@ -316,6 +326,47 @@ namespace gedcom.viewer
             // Return the svg.
             return svg.ToString();
         }
+
+
+
+        /// <summary>Get the line height for this family position.</summary>
+        /// <param name="level">The level of the parents.</param>
+        /// <param name="y">The y position of the child.</param>
+        /// <param name="familyColumn">The position of the family in the grid.</param>
+        /// <returns></returns>
+        private int getFamilyBarHeight(int level, int y, int familyColumn)
+        {
+            foreach(string line in _lines[level])
+            {
+                string[] data = line.Split(';');
+                int dataColumn = int.Parse(data[0]);
+                if (dataColumn == familyColumn)
+                {
+                    // Return the existing line height.
+                    int dataValue = int.Parse(data[1]);
+                    return dataValue;
+                }
+            }
+
+            // Allocate a new line height.
+            int newDataValue = y - VERTICAL_SPACE + BAR_POSITION;
+            if (_lines[level].Count == 0)
+            {
+                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2;
+            }
+            else
+            {
+                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2 - 3 * _lines[level].Count;
+            }
+
+
+            
+            // Save for next time.
+            _lines[level].Add(familyColumn.ToString() + ";" + newDataValue.ToString());
+            // Return the line height.
+            return newDataValue;
+        }
+
 
         #endregion
 
@@ -328,9 +379,11 @@ namespace gedcom.viewer
         {
             // Build a grid of individuals to show.
             _grid = new List<string>[5];
+            _lines = new List<string>[5];
             for (int i = 0; i < 5; i++)
             {
                 _grid[i] = new List<string>();
+                _lines[i] = new List<string>();
             }
 
             // Add the actual individual.
@@ -357,10 +410,15 @@ namespace gedcom.viewer
             }
 
             // Add the person's parents.
-            addParentsTreeGrid(1, individual);
+            addParentsTreeGrid(1, individual, true);
         }
 
 
+
+        /// <summary>Add the specified individual and their partners to the tree at the specified level.</summary>
+        /// <param name="level">Specifies the level to add the individual on.</param>
+        /// <param name="individual">Specifies the individual to add.</param>
+        /// <param name="isAddChildren">Specifies true to add the children of the specified individual.</param>
         private void addIndividualAndPartners(int level, Individual individual, bool isAddChildren)
         {
             int ignore = 0;
@@ -371,6 +429,7 @@ namespace gedcom.viewer
         /// <param name="individual">Specifies the individual to add.</param>
         /// <param name="isAddChildren">Specifies true to add children of this individual.</param>
         /// <param name="isInsert">Specifies true to insert the individuals at the start of the line.</param>
+        /// <param name="insertPos">Specifies the position to insert the individual.</param>
         private void addIndividualAndPartners(int level, Individual individual, bool isAddChildren, bool isInsert, ref int insertPos)
         {
             // Add the individual's husband.
@@ -397,7 +456,7 @@ namespace gedcom.viewer
                     }
                     if (isAddChildren)
                     {
-                        addChildrenTreeGrid(level+1, family);
+                        addChildrenTreeGrid(level + 1, family);
                     }
                 }
             }
@@ -416,7 +475,7 @@ namespace gedcom.viewer
             // Add the individual's wife.
             if (individual.isMale)
             {
-                string[] familyIdxes = individual.getFamilyIdxes();                
+                string[] familyIdxes = individual.getFamilyIdxes();
                 foreach (string familyIdx in familyIdxes.Reverse())
                 {
                     Family family = _gedcom.families.find(familyIdx);
@@ -457,7 +516,8 @@ namespace gedcom.viewer
         /// <summary>Add the parents of the specified individual to the tree grid at the specified level.</summary>
         /// <param name="level">Specifies the level to add the parents to the grid.</param>
         /// <param name="individual">Specifies the individual to add the parents of.</param>
-        private void addParentsTreeGrid(int level, Individual individual)
+        /// <param name="isShowSiblings">Specifies true to add the sliblings of the inidividual.</param>
+        private void addParentsTreeGrid(int level, Individual individual, bool isShowSiblings)
         {
             if (individual == null)
             {
@@ -467,10 +527,25 @@ namespace gedcom.viewer
             // Add the father to the grid.
             if (individual.fatherIdx != "")
             {
+                // Add the father to the grid.
                 _grid[level].Add(individual.fatherIdx);
+
+                // Add the parents of the father to the grid.
                 if (level == 1)
                 {
-                    addParentsTreeGrid(0, individual.father);
+                    addParentsTreeGrid(0, individual.father, false);
+                }
+
+                // Add the siblings of the father to the grid.
+                if (isShowSiblings)
+                {
+                    Individual father = _gedcom.individuals.find(individual.fatherIdx);
+                    string[] siblings = father.getSiblingsIdxes();
+                    foreach (string sibling in siblings.Reverse())
+                    {
+                        _grid[level].Insert(0, "");
+                        _grid[level].Insert(0, sibling);
+                    }
                 }
             }
 
@@ -492,12 +567,23 @@ namespace gedcom.viewer
             if (individual.motherIdx != "")
             {
                 _grid[level].Add(individual.motherIdx);
+                _grid[level].Add("");
                 if (level == 1)
                 {
-                    addParentsTreeGrid(0, individual.mother);
+                    addParentsTreeGrid(0, individual.mother, false);
+                }
+                // Add the siblings of the mother to the grid.
+                if (isShowSiblings)
+                {
+                    Individual mother = _gedcom.individuals.find(individual.motherIdx);
+                    string[] siblings = mother.getSiblingsIdxes();
+                    foreach (string sibling in siblings)
+                    {
+                        _grid[level].Add(sibling);
+                        _grid[level].Add("");                        
+                    }
                 }
             }
-            _grid[level].Add("");
         }
 
 
