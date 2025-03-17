@@ -42,6 +42,14 @@ namespace gedcom.viewer
         /// <summary>The background colour for girls.</summary>
         private const string GIRL_COLOUR = "LightPink";
 
+        /// <summary>The posible alternative line positions.</summary>
+        private enum LinePosition
+        {
+            HIGHER,
+            LOWER,
+        }
+
+
         #endregion
 
         /// <summary>The gedcom to render.</summary>
@@ -58,6 +66,11 @@ namespace gedcom.viewer
         /// <summary>The height of lines to the familes on each row.</summary>
         /// <remarks>Do something better than an encoded string!</remarks>
         private List<string>[] _lines;
+
+        /// <summary>The number of lower lines that are taken.</summary>
+        private int [] _lowerLines;
+        /// <summary>The number of higher lines that are taken.</summary>
+        private int [] _higherLines;
 
         #endregion
 
@@ -229,6 +242,9 @@ namespace gedcom.viewer
             {
                 if (individual.parentsFamily != null)
                 {
+                    bool isLinked = false;
+
+                    // Search for a family.
                     int familyColumn = -1;
                     for (int i = 1; i < _grid[parentsLevel].Count; i += 2)
                     {
@@ -240,8 +256,10 @@ namespace gedcom.viewer
                     }
                     if (familyColumn > 0)
                     {
+                        isLinked = true;
+
                         int connectionX = ((familyColumn + 1) / 2) * INDIVIDUAL_WIDTH + ((familyColumn - 1) / 2) * FAMILY_WIDTH - 5;
-                        int connectionY = getFamilyBarHeight(parentsLevel, y, familyColumn);
+                        int connectionY = getFamilyBarHeight(parentsLevel, y, familyColumn, LinePosition.LOWER);
 
                         // Draw line up from the person.
                         svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
@@ -251,6 +269,44 @@ namespace gedcom.viewer
 
                         // Draw line up to the family.
                         svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y + BAR_POSITION + INDIVIDUAL_HEIGHT - ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
+                    }
+
+                    // Check for a father, if no family.
+                    if (!isLinked)
+                    {
+                        // Search for a father.    
+                        string fatherIdx = individual.fatherIdx;
+                        if (fatherIdx != "")
+                        {
+                            int fatherColumn = -1;
+                            for (int i = 0; i < _grid[parentsLevel].Count; i += 2)
+                            {
+                                if (_grid[parentsLevel][i] == fatherIdx)
+                                {
+                                    fatherColumn = i;
+                                    break;
+                                }
+                            }
+
+                            if (fatherColumn >= 0)
+                            {
+                                isLinked = true;
+
+                                int connectionX = (fatherColumn / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2;
+                                int connectionY = getFamilyBarHeight(parentsLevel, y, fatherColumn, LinePosition.LOWER);
+
+                                // Draw line up from the person.
+                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+
+                                // Draw line across to the parent.
+                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+
+                                // Draw line up to the parent.
+                                svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y + BAR_POSITION + INDIVIDUAL_HEIGHT - ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
+                            }
+
+                        }
+
                     }
                 }
             }
@@ -334,7 +390,7 @@ namespace gedcom.viewer
         /// <param name="y">The y position of the child.</param>
         /// <param name="familyColumn">The position of the family in the grid.</param>
         /// <returns></returns>
-        private int getFamilyBarHeight(int level, int y, int familyColumn)
+        private int getFamilyBarHeight(int level, int y, int familyColumn, LinePosition linePosition)
         {
             foreach(string line in _lines[level])
             {
@@ -349,18 +405,23 @@ namespace gedcom.viewer
             }
 
             // Allocate a new line height.
-            int newDataValue = y - VERTICAL_SPACE + BAR_POSITION;
+            // Move up to the parents level.
+            int newDataValue = y - ROW_HEIGHT + INDIVIDUAL_HEIGHT + BAR_POSITION;
             if (_lines[level].Count == 0)
             {
                 newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2;
             }
-            else
+            else if (linePosition == LinePosition.LOWER)
             {
-                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2 - 3 * _lines[level].Count;
+                _lowerLines[level]++;
+                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2 - 3 * _lowerLines[level];
+            }
+            else if(linePosition == LinePosition.HIGHER)
+            {
+                _higherLines[level]++;
+                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2 + 3 * _higherLines[level];
             }
 
-
-            
             // Save for next time.
             _lines[level].Add(familyColumn.ToString() + ";" + newDataValue.ToString());
             // Return the line height.
@@ -380,10 +441,14 @@ namespace gedcom.viewer
             // Build a grid of individuals to show.
             _grid = new List<string>[5];
             _lines = new List<string>[5];
+            _lowerLines = new int[5];
+            _higherLines = new int[5];
             for (int i = 0; i < 5; i++)
             {
                 _grid[i] = new List<string>();
                 _lines[i] = new List<string>();
+                _lowerLines[i] = 0;
+                _higherLines[i] = 0;
             }
 
             // Add the actual individual.
