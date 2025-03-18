@@ -292,7 +292,7 @@ namespace gedcom.viewer
                             {
                                 isLinked = true;
 
-                                int connectionX = (fatherColumn / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2;
+                                int connectionX = (fatherColumn / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2-4;
                                 int connectionY = getFamilyBarHeight(parentsLevel, y, fatherColumn, LinePosition.LOWER);
 
                                 // Draw line up from the person.
@@ -302,11 +302,44 @@ namespace gedcom.viewer
                                 svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
                                 // Draw line up to the parent.
-                                svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y + BAR_POSITION + INDIVIDUAL_HEIGHT - ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
+                                svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
+                            }
+                        }
+                    }
+                    // Check for a mother, if no family.
+                    if (!isLinked)
+                    {
+                        // Search for a father.    
+                        string motherIdx = individual.motherIdx;
+                        if (motherIdx != "")
+                        {
+                            int motherColumn = -1;
+                            for (int i = 0; i < _grid[parentsLevel].Count; i += 2)
+                            {
+                                if (_grid[parentsLevel][i] == motherIdx)
+                                {
+                                    motherColumn = i;
+                                    break;
+                                }
                             }
 
-                        }
+                            if (motherColumn >= 0)
+                            {
+                                isLinked = true;
 
+                                int connectionX = (motherColumn / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2+4;
+                                int connectionY = getFamilyBarHeight(parentsLevel, y, motherColumn, LinePosition.LOWER);
+
+                                // Draw line up from the person.
+                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+
+                                // Draw line across to the parent.
+                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+
+                                // Draw line up to the parent.
+                                svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
+                            }
+                        }
                     }
                 }
             }
