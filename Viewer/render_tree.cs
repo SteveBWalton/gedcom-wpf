@@ -65,7 +65,7 @@ namespace gedcom.viewer
 
         /// <summary>The height of lines to the familes on each row.</summary>
         /// <remarks>Do something better than an encoded string!</remarks>
-        private List<string>[] _lines;
+        private List<FamilyLine>[] _familyLines;
 
         /// <summary>The number of lower lines that are taken.</summary>
         private int [] _lowerLines;
@@ -425,22 +425,24 @@ namespace gedcom.viewer
         /// <returns></returns>
         private int getFamilyBarHeight(int level, int y, int familyColumn, LinePosition linePosition)
         {
-            foreach(string line in _lines[level])
+            foreach(FamilyLine familyLine in _familyLines[level])
             {
-                string[] data = line.Split(';');
-                int dataColumn = int.Parse(data[0]);
-                if (dataColumn == familyColumn)
+                //string[] data = line.Split(';');
+                //int dataColumn = int.Parse(data[0]);
+                //if (dataColumn == familyColumn)
+                if (familyLine.parentJoinPosition == familyColumn)
                 {
                     // Return the existing line height.
-                    int dataValue = int.Parse(data[1]);
-                    return dataValue;
+                    // int dataValue = int.Parse(data[1]);
+                    //return dataValue;
+                    return familyLine.lineHeight;
                 }
             }
 
             // Allocate a new line height.
             // Move up to the parents level.
             int newDataValue = y - ROW_HEIGHT + INDIVIDUAL_HEIGHT + BAR_POSITION;
-            if (_lines[level].Count == 0)
+            if (_familyLines[level].Count == 0)
             {
                 newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2;
             }
@@ -456,7 +458,9 @@ namespace gedcom.viewer
             }
 
             // Save for next time.
-            _lines[level].Add(familyColumn.ToString() + ";" + newDataValue.ToString());
+            FamilyLine newFamilyLine = new FamilyLine(familyColumn);
+            newFamilyLine.lineHeight = newDataValue;
+            _familyLines[level].Add(newFamilyLine);
             // Return the line height.
             return newDataValue;
         }
@@ -473,13 +477,13 @@ namespace gedcom.viewer
         {
             // Build a grid of individuals to show.
             _grid = new List<string>[5];
-            _lines = new List<string>[5];
+            _familyLines = new List<FamilyLine>[5];
             _lowerLines = new int[5];
             _higherLines = new int[5];
             for (int i = 0; i < 5; i++)
             {
                 _grid[i] = new List<string>();
-                _lines[i] = new List<string>();
+                _familyLines[i] = new List<FamilyLine>();
                 _lowerLines[i] = 0;
                 _higherLines[i] = 0;
             }
@@ -745,5 +749,64 @@ namespace gedcom.viewer
         #endregion
 
 
+    }
+
+
+    /// <summary>
+    /// Class to represent a line from an individual to their parent family.
+    /// </summary>
+    public class FamilyLine
+    {
+        #region Member Variables
+
+        /// <summary>The position of the family / parent that this line connects to.</summary>
+        private int _parentJoinPosition;
+
+        /// <summary>The height of the connection bar for this family.</summary>
+        private int _lineHeight;
+
+        /// <summary>
+        /// The positions of the children that connect to this family.
+        /// </summary>
+        private readonly List<int> _children;
+
+        #endregion
+
+        #region Class Constructors
+
+        public FamilyLine(int parentJoinPosition)
+        {
+            _parentJoinPosition = parentJoinPosition;
+            _lineHeight = 0;
+            _children = new List<int>();
+        }
+
+        #endregion
+
+        #region Properties.
+
+        /// <summary>The position of the family / parent that this line connects to.</summary>
+        public int parentJoinPosition
+        {
+            get { return _parentJoinPosition; }
+        }
+
+        /// <summary>The height of the connection bar for this family.</summary>
+        public int lineHeight
+        {
+            get { return _lineHeight; }
+            set { _lineHeight = value; }
+        }
+
+        /// <summary>
+        /// The positions of the children that connect to this family.
+        /// </summary>
+        public List<int> children
+        {
+            get { return _children; }
+        }
+
+
+        #endregion
     }
 }
