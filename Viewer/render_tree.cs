@@ -118,10 +118,11 @@ namespace gedcom.viewer
             html.AppendLine("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"  width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
 
             int y = 0;
+            int x = 0;
 
             for (int row = 0; row < 5; row++)
             {
-                int x = 0;
+                x = 0;
                 for (int col = 0; col < _grid[row].Count; col++)
                 {
                     if (col % 2 == 0)
@@ -137,6 +138,43 @@ namespace gedcom.viewer
                         x += FAMILY_WIDTH;
                     }
                 }
+                y += ROW_HEIGHT;
+            }
+
+            // Calculate the connecting lines.
+
+            // Draw the connecting lines.
+            y = INDIVIDUAL_HEIGHT;
+            for (int row = 0; row < 5; row++)
+            {
+                foreach(FamilyLine familyTree in _familyLines[row])
+                {
+                    // Draw line down from family / person.
+                    int connectionY = y + BAR_POSITION + (VERTICAL_SPACE - BAR_POSITION) / 2; // + familyTree.lineHeight;
+                    if (familyTree.parentJoinPosition % 2 == 0)
+                    {
+                        // Individual.
+                        x = (familyTree.parentJoinPosition / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2 + 4;
+
+                        html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                    }
+                    else
+                    {
+                        // Family.
+                        x = ((familyTree.parentJoinPosition - 1) / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH + FAMILY_WIDTH / 2;
+                        html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + (y + BAR_POSITION).ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                    }
+
+                    // Draw a horizontal connecting line.
+
+                    // Draw a line up from each individual in the family.
+                    foreach (int individualPos in familyTree.children)
+                    {
+                        x = (familyTree.parentJoinPosition / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2;
+                        html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + (y+ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
+                    }
+                }
+
                 y += ROW_HEIGHT;
             }
 
@@ -262,13 +300,13 @@ namespace gedcom.viewer
                         int connectionY = getFamilyBarHeight(parentsLevel, y, familyColumn, LinePosition.LOWER);
 
                         // Draw line up from the person.
-                        svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                        // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
                         // Draw line across to the family.
-                        svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                        // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
                         // Draw line up to the family.
-                        svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y + BAR_POSITION + INDIVIDUAL_HEIGHT - ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
+                        // svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y + BAR_POSITION + INDIVIDUAL_HEIGHT - ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
                     }
 
                     // Check for a father, if no family.
@@ -296,13 +334,13 @@ namespace gedcom.viewer
                                 int connectionY = getFamilyBarHeight(parentsLevel, y, fatherColumn, LinePosition.LOWER);
 
                                 // Draw line up from the person.
-                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
                                 // Draw line across to the parent.
-                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
                                 // Draw line up to the parent.
-                                svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
+                                // svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
                             }
                         }
                     }
@@ -331,13 +369,13 @@ namespace gedcom.viewer
                                 int connectionY = getFamilyBarHeight(parentsLevel, y, motherColumn, LinePosition.LOWER);
 
                                 // Draw line up from the person.
-                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
                                 // Draw line across to the parent.
-                                svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
+                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
 
                                 // Draw line up to the parent.
-                                svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
+                                // svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
                             }
                         }
                     }
