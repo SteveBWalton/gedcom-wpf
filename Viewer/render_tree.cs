@@ -128,7 +128,7 @@ namespace gedcom.viewer
                     if (col % 2 == 0)
                     {
                         // Individual.
-                        html.Append(drawIndividual(_grid[row][col], x, y, row - 1));
+                        html.Append(drawIndividual(_grid[row][col], x, y));
                         x += INDIVIDUAL_WIDTH;
                     }
                     else
@@ -142,6 +142,88 @@ namespace gedcom.viewer
             }
 
             // Calculate the connecting lines.
+            for (int row = 1; row < 5; row++)
+            {
+                x = 0;
+                for (int col = 0; col < _grid[row].Count; col += 2)
+                {
+                    if (_grid[row][col] != null && _grid[row][col] != "")
+                    {
+                        Individual individual = _gedcom.individuals.find(_grid[row][col]);
+
+                        // Try and connect the individual with their parents.
+                        if (individual.parentsFamily != null)
+                        {
+                            bool isLinked = false;
+
+                            // Search for a family.
+                            int familyColumn = -1;
+                            for (int i = 1; i < _grid[row - 1].Count; i += 2)
+                            {
+                                if (_grid[row - 1][i] == individual.parentsFamily.idx)
+                                {
+                                    familyColumn = i;
+                                    break;
+                                }
+                            }
+                            if (familyColumn > 0)
+                            {
+                                isLinked = true;
+                                getFamilyBarHeight(row - 1, col, familyColumn);
+                            }
+
+                            // Check for a father, if no family.
+                            if (!isLinked)
+                            {
+                                // Search for a father.    
+                                string fatherIdx = individual.fatherIdx;
+                                if (fatherIdx != "")
+                                {
+                                    int fatherColumn = -1;
+                                    for (int i = 0; i < _grid[row - 1].Count; i += 2)
+                                    {
+                                        if (_grid[row - 1][i] == fatherIdx)
+                                        {
+                                            fatherColumn = i;
+                                            break;
+                                        }
+                                    }
+
+                                    if (fatherColumn >= 0)
+                                    {
+                                        isLinked = true;
+                                        getFamilyBarHeight(row - 1, col, fatherColumn);
+                                    }
+                                }
+                            }
+                            // Check for a mother, if no family.
+                            if (!isLinked)
+                            {
+                                // Search for a father.    
+                                string motherIdx = individual.motherIdx;
+                                if (motherIdx != "")
+                                {
+                                    int motherColumn = -1;
+                                    for (int i = 0; i < _grid[row - 1].Count; i += 2)
+                                    {
+                                        if (_grid[row - 1][i] == motherIdx)
+                                        {
+                                            motherColumn = i;
+                                            break;
+                                        }
+                                    }
+
+                                    if (motherColumn >= 0)
+                                    {
+                                        isLinked = true;
+                                        getFamilyBarHeight(row - 1, col, motherColumn);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             // Draw the connecting lines.
             y = INDIVIDUAL_HEIGHT;
@@ -150,7 +232,7 @@ namespace gedcom.viewer
                 foreach(FamilyLine familyTree in _familyLines[row])
                 {
                     // Draw line down from family / person.
-                    int connectionY = y + BAR_POSITION + (VERTICAL_SPACE - BAR_POSITION) / 2; // + familyTree.lineHeight;
+                    int connectionY = y + BAR_POSITION + familyTree.lineHeight;
                     if (familyTree.parentJoinPosition % 2 == 0)
                     {
                         // Individual.
@@ -170,8 +252,8 @@ namespace gedcom.viewer
                     // Draw a line up from each individual in the family.
                     foreach (int individualPos in familyTree.children)
                     {
-                        x = (familyTree.parentJoinPosition / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2;
-                        html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + (y+ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
+                        x = (individualPos / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2;
+                        html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + (y+VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
                     }
                 }
 
@@ -192,7 +274,7 @@ namespace gedcom.viewer
         /// <param name="y">Specifies the y position of the individual.</param>
         /// <param name="parentsLevel">Specifies the row of the grid to search for parents for a joint line.</param>
         /// <returns>The svg code to draw the specified individual including a final line feed.</returns>
-        private string drawIndividual(string idx, int x, int y, int parentsLevel)
+        private string drawIndividual(string idx, int x, int y) //, int parentsLevel)
         {
             const int LINE1 = 14;
             const int LINE2 = 32;
@@ -275,113 +357,6 @@ namespace gedcom.viewer
             svg.AppendLine();
             svg.AppendLine("</a>");
 
-            // Try and connect the individual with their parents.
-            if (parentsLevel >= 0)
-            {
-                if (individual.parentsFamily != null)
-                {
-                    bool isLinked = false;
-
-                    // Search for a family.
-                    int familyColumn = -1;
-                    for (int i = 1; i < _grid[parentsLevel].Count; i += 2)
-                    {
-                        if (_grid[parentsLevel][i] == individual.parentsFamily.idx)
-                        {
-                            familyColumn = i;
-                            break;
-                        }
-                    }
-                    if (familyColumn > 0)
-                    {
-                        isLinked = true;
-
-                        int connectionX = ((familyColumn + 1) / 2) * INDIVIDUAL_WIDTH + ((familyColumn - 1) / 2) * FAMILY_WIDTH - 5;
-                        int connectionY = getFamilyBarHeight(parentsLevel, y, familyColumn, LinePosition.LOWER);
-
-                        // Draw line up from the person.
-                        // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
-
-                        // Draw line across to the family.
-                        // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
-
-                        // Draw line up to the family.
-                        // svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y + BAR_POSITION + INDIVIDUAL_HEIGHT - ROW_HEIGHT).ToString() + "\" stroke=\"black\" />");
-                    }
-
-                    // Check for a father, if no family.
-                    if (!isLinked)
-                    {
-                        // Search for a father.    
-                        string fatherIdx = individual.fatherIdx;
-                        if (fatherIdx != "")
-                        {
-                            int fatherColumn = -1;
-                            for (int i = 0; i < _grid[parentsLevel].Count; i += 2)
-                            {
-                                if (_grid[parentsLevel][i] == fatherIdx)
-                                {
-                                    fatherColumn = i;
-                                    break;
-                                }
-                            }
-
-                            if (fatherColumn >= 0)
-                            {
-                                isLinked = true;
-
-                                int connectionX = (fatherColumn / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2-4;
-                                int connectionY = getFamilyBarHeight(parentsLevel, y, fatherColumn, LinePosition.LOWER);
-
-                                // Draw line up from the person.
-                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
-
-                                // Draw line across to the parent.
-                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
-
-                                // Draw line up to the parent.
-                                // svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
-                            }
-                        }
-                    }
-                    // Check for a mother, if no family.
-                    if (!isLinked)
-                    {
-                        // Search for a father.    
-                        string motherIdx = individual.motherIdx;
-                        if (motherIdx != "")
-                        {
-                            int motherColumn = -1;
-                            for (int i = 0; i < _grid[parentsLevel].Count; i += 2)
-                            {
-                                if (_grid[parentsLevel][i] == motherIdx)
-                                {
-                                    motherColumn = i;
-                                    break;
-                                }
-                            }
-
-                            if (motherColumn >= 0)
-                            {
-                                isLinked = true;
-
-                                int connectionX = (motherColumn / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2+4;
-                                int connectionY = getFamilyBarHeight(parentsLevel, y, motherColumn, LinePosition.LOWER);
-
-                                // Draw line up from the person.
-                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + y.ToString() + "\" x2=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
-
-                                // Draw line across to the parent.
-                                // svg.Append("<line x1=\"" + (x + INDIVIDUAL_WIDTH / 2).ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
-
-                                // Draw line up to the parent.
-                                // svg.AppendLine("<line x1=\"" + connectionX.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + connectionX.ToString() + "\" y2=\"" + (y - VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
-                            }
-                        }
-                    }
-                }
-            }
-
             // Return the svg.
             return svg.ToString();
         }
@@ -458,51 +433,34 @@ namespace gedcom.viewer
 
         /// <summary>Get the line height for this family position.</summary>
         /// <param name="level">The level of the parents.</param>
-        /// <param name="y">The y position of the child.</param>
+        /// <param name="indvidualColumn">The position of the individual.</param>
         /// <param name="familyColumn">The position of the family in the grid.</param>
         /// <returns></returns>
-        private int getFamilyBarHeight(int level, int y, int familyColumn, LinePosition linePosition)
+        private int getFamilyBarHeight(int level, int indvidualColumn, int familyColumn)
         {
-            foreach(FamilyLine familyLine in _familyLines[level])
+            foreach (FamilyLine familyLine in _familyLines[level])
             {
                 //string[] data = line.Split(';');
                 //int dataColumn = int.Parse(data[0]);
                 //if (dataColumn == familyColumn)
                 if (familyLine.parentJoinPosition == familyColumn)
                 {
+                    // Add the individual to this family.
+                    familyLine.children.Add(indvidualColumn);
+                    
                     // Return the existing line height.
-                    // int dataValue = int.Parse(data[1]);
-                    //return dataValue;
                     return familyLine.lineHeight;
                 }
             }
 
-            // Allocate a new line height.
-            // Move up to the parents level.
-            int newDataValue = y - ROW_HEIGHT + INDIVIDUAL_HEIGHT + BAR_POSITION;
-            if (_familyLines[level].Count == 0)
-            {
-                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2;
-            }
-            else if (linePosition == LinePosition.LOWER)
-            {
-                _lowerLines[level]++;
-                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2 - 3 * _lowerLines[level];
-            }
-            else if(linePosition == LinePosition.HIGHER)
-            {
-                _higherLines[level]++;
-                newDataValue += (VERTICAL_SPACE - BAR_POSITION) / 2 + 3 * _higherLines[level];
-            }
-
             // Save for next time.
             FamilyLine newFamilyLine = new FamilyLine(familyColumn);
-            newFamilyLine.lineHeight = newDataValue;
+            newFamilyLine.lineHeight = (VERTICAL_SPACE - BAR_POSITION) / 2;
+            newFamilyLine.children.Add(indvidualColumn);
             _familyLines[level].Add(newFamilyLine);
             // Return the line height.
-            return newDataValue;
+            return newFamilyLine.lineHeight;
         }
-
 
         #endregion
 
