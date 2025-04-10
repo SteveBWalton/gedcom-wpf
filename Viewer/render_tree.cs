@@ -225,6 +225,27 @@ namespace gedcom.viewer
                 }
             }
 
+            // Adjust overlapping connecting lines
+            for (int row = 0; row < 5; row++)
+            {
+                for(int family1Index = 0; family1Index < _familyLines[row].Count; family1Index++)
+                {
+                    for (int family2Index= family1Index+1; family2Index < _familyLines[row].Count; family2Index++)
+                    {
+                        FamilyLine family1 = _familyLines[row][family1Index];
+                        FamilyLine family2 = _familyLines[row][family2Index];
+                        if (family2.leftChildPos < family1.rightChildPos && family2.lineHeight == family1.lineHeight)
+                        {
+                            family2.lineHeight -= 4;
+                        }
+                        else if (family2.rightChildPos > family1.leftChildPos && family2.lineHeight == family1.lineHeight)
+                        {
+                            family2.lineHeight -= 4;
+                        }
+                    }
+                }
+            }
+
             // Draw the connecting lines.
             y = INDIVIDUAL_HEIGHT;
             for (int row = 0; row < 5; row++)
@@ -247,14 +268,27 @@ namespace gedcom.viewer
                         html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + (y + BAR_POSITION).ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
                     }
 
-                    // Draw a horizontal connecting line.
+                    // The width of the horizontal connecting line.
+                    int xMin = x;
+                    int xMax = x;
 
                     // Draw a line up from each individual in the family.
                     foreach (int individualPos in familyTree.children)
                     {
                         x = (individualPos / 2) * (INDIVIDUAL_WIDTH + FAMILY_WIDTH) + INDIVIDUAL_WIDTH / 2;
-                        html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + (y+VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
+                        html.AppendLine("<line x1=\"" + x.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + x.ToString() + "\" y2=\"" + (y + VERTICAL_SPACE).ToString() + "\" stroke=\"black\" />");
+                        if (x < xMin)
+                        {
+                            xMin = x;
+                        }
+                        if (x > xMax)
+                        {
+                            xMax = x;
+                        }
                     }
+
+                    // Draw a horizontal connecting line.
+                    html.AppendLine("<line x1=\"" + xMin.ToString() + "\" y1=\"" + connectionY.ToString() + "\" x2=\"" + xMax.ToString() + "\" y2=\"" + connectionY.ToString() + "\" stroke=\"black\" />");
                 }
 
                 y += ROW_HEIGHT;
@@ -276,9 +310,13 @@ namespace gedcom.viewer
         /// <returns>The svg code to draw the specified individual including a final line feed.</returns>
         private string drawIndividual(string idx, int x, int y) //, int parentsLevel)
         {
+            // The height of text line 1.
             const int LINE1 = 14;
+            // The height of text line 2.
             const int LINE2 = 32;
+            // The height of text line 3.
             const int LINE3 = 46;
+            // The height of text line 4.
             const int LINE4 = 60;
 
             if (idx == null || idx == "")
@@ -761,9 +799,7 @@ namespace gedcom.viewer
         /// <summary>The height of the connection bar for this family.</summary>
         private int _lineHeight;
 
-        /// <summary>
-        /// The positions of the children that connect to this family.
-        /// </summary>
+        /// <summary>The positions of the children that connect to this family.</summary>
         private readonly List<int> _children;
 
         #endregion
@@ -800,6 +836,48 @@ namespace gedcom.viewer
         public List<int> children
         {
             get { return _children; }
+        }
+
+        /// <summary>The left most child position or zero.</summary>
+        public int leftChildPos
+        {
+            get
+            {
+                if (_children.Count == 0)
+                {
+                    return 0;
+                }
+                int leftPos = _children[0];
+                foreach (int childPos in _children)
+                {
+                    if (childPos < leftPos)
+                    {
+                        leftPos = childPos;
+                    }
+                }
+                return leftPos;
+            }
+        }
+
+        /// <summary>The right most child position or zero.</summary>
+        public int rightChildPos
+        {
+            get
+            {
+                if (_children.Count == 0)
+                {
+                    return 0;
+                }
+                int rightPos = _children[0];
+                foreach (int childPos in _children)
+                {
+                    if (childPos > rightPos)
+                    {
+                        rightPos = childPos;
+                    }
+                }
+                return rightPos;
+            }
         }
 
 
