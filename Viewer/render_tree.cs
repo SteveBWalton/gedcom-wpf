@@ -225,22 +225,57 @@ namespace gedcom.viewer
                 }
             }
 
-            // Adjust overlapping connecting lines
+            // Adjust overlapping connecting lines.
+            const int DEBUG_ROW = -1;
             for (int row = 0; row < 5; row++)
             {
-                for(int family1Index = 0; family1Index < _familyLines[row].Count; family1Index++)
+                if (row >= DEBUG_ROW)
                 {
-                    for (int family2Index= family1Index+1; family2Index < _familyLines[row].Count; family2Index++)
+                    Console.WriteLine("row " + row.ToString() + " count = " + _familyLines[row].Count.ToString());
+                }
+
+                for (int family1Index = 0; family1Index < _familyLines[row].Count; family1Index++)
+                {
+                    for (int family2Index = family1Index + 1; family2Index < _familyLines[row].Count; family2Index++)
                     {
                         FamilyLine family1 = _familyLines[row][family1Index];
                         FamilyLine family2 = _familyLines[row][family2Index];
-                        if (family2.leftChildPos < family1.rightChildPos && family2.lineHeight == family1.lineHeight)
+                        if (row >= DEBUG_ROW)
                         {
-                            family2.lineHeight -= 4;
+                            Console.WriteLine("family " + family1Index.ToString() + " left = " + family1.leftPos.ToString() + ", right = " + family1.rightPos.ToString() + ", parent = " + family1.parentJoinPosition.ToString() + ", lineHeight = " + family1.lineHeight.ToString());
+                            Console.WriteLine("family " + family2Index.ToString() + " left = " + family2.leftPos.ToString() + ", right = " + family2.rightPos.ToString() + ", parent = " + family2.parentJoinPosition.ToString() + ", lineHeight = " + family1.lineHeight.ToString());
                         }
-                        else if (family2.rightChildPos > family1.leftChildPos && family2.lineHeight == family1.lineHeight)
+
+                        if (family2.lineHeight == family1.lineHeight && family1.children.Count > 0 && family2.children.Count > 0)
                         {
-                            family2.lineHeight -= 4;
+                            // Does the range of children overlap.
+                            if (family2.leftPos > family1.rightPos)
+                            {
+                                // No overlap, family to the right.
+                                if (row >= DEBUG_ROW)
+                                {
+                                    Console.WriteLine("Family " + family2Index.ToString() + " is to right of family " + family1Index.ToString() + ".");
+                                }
+                            }
+                            else if (family2.rightPos < family1.leftPos)
+                            {
+                                // No overlap, family to the left.
+                                if (row >= DEBUG_ROW)
+                                {
+                                    Console.WriteLine("Family" + family2Index.ToString() + " is to left of family " + family1Index.ToString() + ".");
+                                }
+                            }
+                            else
+                            {
+                                // Some kind of overlap.
+                                family2.lineHeight -= 4;
+
+                                if (row >= DEBUG_ROW)
+                                {
+                                    Console.WriteLine("family " + family1Index.ToString() + " left = " + family1.leftPos.ToString() + ", right = " + family1.rightPos.ToString() + ", parent = " + family1.parentJoinPosition.ToString() + ", lineHeight = " + family1.lineHeight.ToString());
+                                    Console.WriteLine("family " + family2Index.ToString() + " left = " + family2.leftPos.ToString() + ", right = " + family2.rightPos.ToString() + ", parent = " + family2.parentJoinPosition.ToString() + ", lineHeight = " + family1.lineHeight.ToString());
+                                }
+                            }
                         }
                     }
                 }
@@ -838,16 +873,16 @@ namespace gedcom.viewer
             get { return _children; }
         }
 
-        /// <summary>The left most child position or zero.</summary>
-        public int leftChildPos
+        /// <summary>The left most position.</summary>
+        public int leftPos
         {
             get
             {
                 if (_children.Count == 0)
                 {
-                    return 0;
+                    return _parentJoinPosition;
                 }
-                int leftPos = _children[0];
+                int leftPos = _parentJoinPosition;
                 foreach (int childPos in _children)
                 {
                     if (childPos < leftPos)
@@ -859,16 +894,16 @@ namespace gedcom.viewer
             }
         }
 
-        /// <summary>The right most child position or zero.</summary>
-        public int rightChildPos
+        /// <summary>The right most position.</summary>
+        public int rightPos
         {
             get
             {
                 if (_children.Count == 0)
                 {
-                    return 0;
+                    return _parentJoinPosition;
                 }
-                int rightPos = _children[0];
+                int rightPos = _parentJoinPosition;
                 foreach (int childPos in _children)
                 {
                     if (childPos > rightPos)

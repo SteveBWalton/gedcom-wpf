@@ -48,7 +48,7 @@ namespace gedcom
                 // Search forward for year information and backwards for day information.
                 string yearString = getDigits(monthPos, 1);
                 string dayString = getDigits(monthPos, -1);
-                Console.WriteLine("'" + _tag.value + "' => '" + dayString + "', " + month.ToString() + ", '" + yearString + "'");
+                // Console.WriteLine("'" + _tag.value + "' => '" + dayString + "', " + month.ToString() + ", '" + yearString + "'");
                 int year;
                 if (!int.TryParse(yearString,out year))
                 {
@@ -61,7 +61,7 @@ namespace gedcom
                 }
                 _dateTime = new DateTime(year, month, day);
             }
-            Console.WriteLine("'" + _tag.value + "' => " + _dateTime.ToString());
+            // Console.WriteLine("'" + _tag.value + "' => " + _dateTime.ToString());
         }
 
         #endregion
