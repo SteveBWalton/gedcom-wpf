@@ -78,6 +78,7 @@
     <Compile Include="tag_control.xaml.cs">
       <DependentUpon>tag_control.xaml</DependentUpon>
     </Compile>
+    <Compile Include="tree_family_line.cs" />
     <Compile Include="user_options.cs" />
     <Page Include="Dialogs\edit_gedcom.xaml">
       <SubType>Designer</SubType>
