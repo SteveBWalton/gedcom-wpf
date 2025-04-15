@@ -18,7 +18,7 @@ namespace gedcom
         /// <summary>The filename of this gedcom file.</summary>
         private string _fileName;
         /// <summary>The individuals in this gedcom.</summary>
-        public Individuals individuals;
+        private readonly Individuals _individuals;
         /// <summary>The families in this gedcom.</summary>
         public Families families;
         /// <summary>The sources in this gedcom.</summary>
@@ -29,8 +29,10 @@ namespace gedcom
 
         #region Constructors
 
+        /// <summary>Default constructor for empty Gedcom objects.</summary>
         public Gedcom()
         {
+            _individuals = new Individuals();
             clear();
             _isDirty = false;
         }
@@ -41,7 +43,7 @@ namespace gedcom
         public void clear()
         {
             _fileName = "";
-            individuals = new Individuals();
+            _individuals.clear();
             families = new Families();
             sources = new Sources();
             _isDirty = false;
@@ -55,6 +57,14 @@ namespace gedcom
         public string fileName
         {
             get { return _fileName; }
+        }
+
+
+
+        /// <summary>The individuals in this gedcom.</summary>
+        public Individuals individuals
+        {
+            get => _individuals;
         }
 
 
@@ -80,6 +90,9 @@ namespace gedcom
 
         #region File IO
 
+        /// <summary>Load the gedcom from the specified gedcom file.</summary>
+        /// <param name="fileName">Specifies the file name of the gedcom to load.</param>
+        /// <returns>True for success, false otherwise.</returns>
         public bool open(string fileName)
         {
             // Remove any existing data.
@@ -106,7 +119,7 @@ namespace gedcom
                                 if (tag.line.EndsWith("INDI"))
                                 {
                                     Individual individual = new Individual(tag, this);
-                                    individuals.add(individual);
+                                    _individuals.add(individual);
                                 }
                                 else if (tag.line.EndsWith("FAM"))
                                 {
@@ -144,16 +157,21 @@ namespace gedcom
         #endregion
 
         #region Sorting Functions
+
+        /// <summary>Function to sort individuals by date of birth.</summary>
+        /// <param name="index1">Specifies individual 1.</param>
+        /// <param name="index2">Specifies individual 2.</param>
+        /// <returns>+1 if individual 1 should be before individual 2, -1 if individual 2 should be before individual 1 and 0 if they should be in the same position.</returns>
         public int sortIndividualsByBirth(string index1, string index2)
         {
-            Individual person1 = individuals.find(index1);
-            Individual person2 = individuals.find(index2);
+            Individual person1 = _individuals.find(index1);
+            Individual person2 = _individuals.find(index2);
 
-            if (person1==null)
+            if (person1 == null)
             {
                 return -1;
             }
-            if (person2==null)
+            if (person2 == null)
             {
                 return +1;
             }
@@ -161,11 +179,11 @@ namespace gedcom
             TagDate person1DoB = person1.dob;
             TagDate person2DoB = person2.dob;
 
-            if (person1DoB==null)
+            if (person1DoB == null)
             {
                 return -1;
             }
-            if(person2DoB==null)
+            if (person2DoB == null)
             {
                 return +1;
             }
@@ -176,34 +194,37 @@ namespace gedcom
 
 
 
+        /// <summary>Function to sort familys by relationship date.</summary>
+        /// <param name="index1">Specifies family 1.</param>
+        /// <param name="index2">Specifies family 2.</param>
+        /// <returns>+1 if family 1 should be before family 2, -1 if family 2 should be before family 1 and 0 if they should be in the same position.</returns>
         public int sortFamilesByDate(string index1, string index2)
         {
             Family family1 = families.find(index1);
             Family family2 = families.find(index2);
 
-            if(family1==null)
+            if (family1 == null)
             {
                 return -1;
             }
-            if (family2==null)
+            if (family2 == null)
             {
                 return +1;
             }
 
             TagDate family1date = family1.relationshipDate;
             TagDate family2date = family2.relationshipDate;
-            if (family1date==null)
+            if (family1date == null)
             {
                 return -1;
             }
-            if(family2date==null)
+            if (family2date == null)
             {
                 return +1;
             }
 
             // Compare the marriage dates.
             return family1date.approxDate.CompareTo(family2date.approxDate);
-
         }
 
         #endregion

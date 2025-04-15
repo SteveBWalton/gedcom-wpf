@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gedcom.viewer
 {
-    /// <summary>Class to represent a line from an individual to their parent family on a tree.</summary>
+    /// <summary>Class to represent a line from an individual to their parent family or individual on a tree.</summary>
     public class TreeFamilyLine
     {
         #region Member Variables
@@ -22,8 +22,12 @@ namespace gedcom.viewer
 
         #endregion
 
-        #region Class Constructors
+        #region Constructors
 
+        /// <summary>
+        /// Constructor for the TreeFamilyLine class.
+        /// </summary>
+        /// <param name="parentJoinPosition">Specifies the position of the join for the family / individual.</param>
         public TreeFamilyLine(int parentJoinPosition)
         {
             _parentJoinPosition = parentJoinPosition;
@@ -35,7 +39,7 @@ namespace gedcom.viewer
 
         #region Properties.
 
-        /// <summary>The position of the family / parent that this line connects to.</summary>
+        /// <summary>The position of the family / individual that this line connects to.</summary>
         public int parentJoinPosition
         {
             get { return _parentJoinPosition; }

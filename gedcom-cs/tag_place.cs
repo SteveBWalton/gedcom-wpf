@@ -13,7 +13,7 @@ namespace gedcom
     {
         #region Member Variables
 
-        /// <summary>The actual date tag.</summary>
+        /// <summary>The actual place tag.</summary>
         private readonly Tag _tag;
 
         #endregion
