@@ -20,7 +20,7 @@ namespace gedcom
         /// <summary>The individuals in this gedcom.</summary>
         private readonly Individuals _individuals;
         /// <summary>The families in this gedcom.</summary>
-        public Families families;
+        private readonly Families _families;
         /// <summary>The sources in this gedcom.</summary>
         public Sources sources;
         /// <summary>True if the gedcom has changed since the last change.</summary>
@@ -33,6 +33,7 @@ namespace gedcom
         public Gedcom()
         {
             _individuals = new Individuals();
+            _families = new Families();
             clear();
             _isDirty = false;
         }
@@ -44,7 +45,7 @@ namespace gedcom
         {
             _fileName = "";
             _individuals.clear();
-            families = new Families();
+            _families.clear();
             sources = new Sources();
             _isDirty = false;
         }
@@ -65,6 +66,14 @@ namespace gedcom
         public Individuals individuals
         {
             get => _individuals;
+        }
+
+
+
+        /// <summary>The families in this gedcom.</summary>
+        public Families families
+        {
+            get => _families;
         }
 
 
@@ -124,7 +133,7 @@ namespace gedcom
                                 else if (tag.line.EndsWith("FAM"))
                                 {
                                     Family family = new Family(tag, this);
-                                    families.add(family);
+                                    _families.add(family);
                                 }
                                 else if (tag.line.EndsWith("SOUR"))
                                 {
@@ -200,8 +209,8 @@ namespace gedcom
         /// <returns>+1 if family 1 should be before family 2, -1 if family 2 should be before family 1 and 0 if they should be in the same position.</returns>
         public int sortFamilesByDate(string index1, string index2)
         {
-            Family family1 = families.find(index1);
-            Family family2 = families.find(index2);
+            Family family1 = _families.find(index1);
+            Family family2 = _families.find(index2);
 
             if (family1 == null)
             {
