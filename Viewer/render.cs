@@ -473,7 +473,7 @@ namespace gedcom.viewer
         /// <returns>The html for the individual with the full name and a link.</returns>
         private string htmlIndividual(Individual individual)
         {
-            if (individual==null)
+            if (individual == null)
             {
                 return "Error";
             }

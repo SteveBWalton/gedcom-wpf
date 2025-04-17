@@ -226,7 +226,7 @@ namespace gedcom.viewer
             }
 
             // Adjust overlapping connecting lines.
-            const int DEBUG_ROW = -1;
+            const int DEBUG_ROW = 111;
             for (int row = 0; row < 5; row++)
             {
                 if (row >= DEBUG_ROW)

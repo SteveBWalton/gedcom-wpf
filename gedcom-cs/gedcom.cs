@@ -22,7 +22,7 @@ namespace gedcom
         /// <summary>The families in this gedcom.</summary>
         private readonly Families _families;
         /// <summary>The sources in this gedcom.</summary>
-        public Sources sources;
+        private readonly Sources _sources;
         /// <summary>True if the gedcom has changed since the last change.</summary>
         private bool _isDirty;
         #endregion
@@ -34,6 +34,7 @@ namespace gedcom
         {
             _individuals = new Individuals();
             _families = new Families();
+            _sources = new Sources();
             clear();
             _isDirty = false;
         }
@@ -46,7 +47,7 @@ namespace gedcom
             _fileName = "";
             _individuals.clear();
             _families.clear();
-            sources = new Sources();
+            _sources.clear();
             _isDirty = false;
         }
 
@@ -74,6 +75,14 @@ namespace gedcom
         public Families families
         {
             get => _families;
+        }
+
+
+
+        /// <summary>The sources in this gedcom.</summary>
+        public Sources sources
+        {
+            get => _sources;
         }
 
 
@@ -138,7 +147,7 @@ namespace gedcom
                                 else if (tag.line.EndsWith("SOUR"))
                                 {
                                     Source source = new Source(tag, this);
-                                    sources.add(source);
+                                    _sources.add(source);
                                 }
                             }
 
