@@ -53,7 +53,7 @@ namespace gedcom.viewer
         #endregion
 
         /// <summary>The gedcom to render.</summary>
-        private Gedcom _gedcom;
+        private readonly Gedcom _gedcom;
 
         /// <summary>The grid of individuals and families to show on the tree.</summary>
         /// <remarks>
