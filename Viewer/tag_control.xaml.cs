@@ -15,15 +15,26 @@ using System.Windows.Shapes;
 
 namespace gedcom.viewer
 {
-    /// <summary>
-    /// Interaction logic for UserControl1.xaml
-    /// </summary>
+    /// <summary>Class to represent a user control to edit a gedcom tag.</summary>
     public partial class TagControl : UserControl
     {
+        #region Member Variables
+
         /// <summary>The tag to display.</summary>
         private Tag _tag;
+
+        /// <summary>
+        /// True if the child tags are expanded, false otherwise.
+        /// </summary>
         private bool _isExpand;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>Constructor for the edit tag user control.</summary>
+        /// <param name="tag">Specifies the tag to edit.</param>
+        /// <param name="isExpand">Specifies true to show the tag initially expanded.</param>
         public TagControl(Tag tag, bool isExpand)
         {
             InitializeComponent();
@@ -58,7 +69,7 @@ namespace gedcom.viewer
 
             if (_isExpand)
             {
-                // Create rows for the tags.
+                // Create rows for the child tags.
                 for (int i = 0; i < _tag.children.count; i++)
                 {
                     TagControl tagControl = new TagControl(_tag.children[i], true);
@@ -75,6 +86,11 @@ namespace gedcom.viewer
             }
         }
 
-        
+        #endregion
+
+        #region Properties
+
+        #endregion 
+
     }
 }
