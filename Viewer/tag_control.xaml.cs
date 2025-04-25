@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,17 +43,18 @@ namespace gedcom.viewer
             _tag = tag;
             _isExpand = isExpand;
 
-            const int LINE_HEIGHT = 17;
+            const int LINE_HEIGHT = 19;
 
             // Add a master row for the actual tag.
-            RowDefinition rowDefinition = new RowDefinition();
-            rowDefinition.Height = new GridLength(LINE_HEIGHT);
-            _mainGrid.RowDefinitions.Add(rowDefinition);
+            // RowDefinition rowDefinition = new RowDefinition();
+            // rowDefinition.Height = new GridLength(LINE_HEIGHT);
+            // _mainGrid.RowDefinitions.Add(rowDefinition);
 
             TextBlock textblockTag = new TextBlock();
             textblockTag.Text = tag.key;
             textblockTag.TextAlignment = TextAlignment.Right;
             textblockTag.Margin = new Thickness(0, 0, 4, 0);
+            textblockTag.VerticalAlignment = VerticalAlignment.Center;
             _mainGrid.Children.Add(textblockTag);
             Grid.SetRow(textblockTag, 0);
             Grid.SetColumn(textblockTag, 1);
@@ -61,27 +62,39 @@ namespace gedcom.viewer
             TextBox textBoxValue = new TextBox();
             textBoxValue.Text = tag.value;
             textBoxValue.Width = 200;
+            textBoxValue.VerticalAlignment = VerticalAlignment.Center;
             _mainGrid.Children.Add(textBoxValue);
             Grid.SetRow(textBoxValue, 0);
             Grid.SetColumn(textBoxValue, 2);
 
             this.Height = LINE_HEIGHT;
 
-            if (_isExpand)
+            // Show or hide the plus minus image.
+            if (_tag.children.count == 0)
             {
-                // Create rows for the child tags.
-                for (int i = 0; i < _tag.children.count; i++)
+                _imagePlusMinus.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                _imagePlusMinus.Visibility = Visibility.Visible;
+                
+                // Show the children.
+                if (_isExpand)
                 {
-                    TagControl tagControl = new TagControl(_tag.children[i], true);
+                    // Create rows for the child tags.
+                    for (int i = 0; i < _tag.children.count; i++)
+                    {
+                        TagControl tagControl = new TagControl(_tag.children[i], true);
 
-                    rowDefinition = new RowDefinition();
-                    rowDefinition.Height = new GridLength(tagControl.Height);
+                        RowDefinition rowDefinition = new RowDefinition();
+                        rowDefinition.Height = new GridLength(tagControl.Height);
 
-                    _childGrid.RowDefinitions.Add(rowDefinition);
-                    _childGrid.Children.Add(tagControl);
-                    Grid.SetRow(tagControl, i);
+                        _childGrid.RowDefinitions.Add(rowDefinition);
+                        _childGrid.Children.Add(tagControl);
+                        Grid.SetRow(tagControl, i);
 
-                    this.Height += tagControl.Height;
+                        this.Height += tagControl.Height;
+                    }
                 }
             }
         }
@@ -90,7 +103,23 @@ namespace gedcom.viewer
 
         #region Properties
 
-        #endregion 
+        #endregion
 
+        private void buttonPlusMinusClick(object sender, RoutedEventArgs e)
+        {
+            _isExpand = !_isExpand;
+            if (_isExpand)
+            {
+                // Show the children.
+                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/add.png"));
+                _childGrid.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Hide the children.
+                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/minus.png"));
+                _childGrid.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }
