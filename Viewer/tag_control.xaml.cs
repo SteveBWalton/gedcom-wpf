@@ -20,6 +20,12 @@ namespace gedcom.viewer
     {
         #region Member Variables
 
+        /// <summary>The height for a single line of tag control.</summary>
+        private const int LINE_HEIGHT = 19;
+
+        /// <summary>Delegate to a function to request the parent control resizes the space for this control.</summary>
+        public delegate void SetParentHeight();
+
         /// <summary>The tag to display.</summary>
         private Tag _tag;
 
@@ -28,6 +34,9 @@ namespace gedcom.viewer
         /// </summary>
         private bool _isExpand;
 
+        /// <summary>A function to request the parent control to resize the space for this control.</summary>
+        private SetParentHeight _setParentHeight;
+
         #endregion
 
         #region Constructors
@@ -35,21 +44,16 @@ namespace gedcom.viewer
         /// <summary>Constructor for the edit tag user control.</summary>
         /// <param name="tag">Specifies the tag to edit.</param>
         /// <param name="isExpand">Specifies true to show the tag initially expanded.</param>
-        public TagControl(Tag tag, bool isExpand)
+        public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight)
         {
             InitializeComponent();
 
             // Record the parameters.
             _tag = tag;
             _isExpand = isExpand;
+            _setParentHeight = setParentHeight;
 
-            const int LINE_HEIGHT = 19;
-
-            // Add a master row for the actual tag.
-            // RowDefinition rowDefinition = new RowDefinition();
-            // rowDefinition.Height = new GridLength(LINE_HEIGHT);
-            // _mainGrid.RowDefinitions.Add(rowDefinition);
-
+            // Add a label for the tag.
             TextBlock textblockTag = new TextBlock();
             textblockTag.Text = tag.key;
             textblockTag.TextAlignment = TextAlignment.Right;
@@ -59,14 +63,16 @@ namespace gedcom.viewer
             Grid.SetRow(textblockTag, 0);
             Grid.SetColumn(textblockTag, 1);
 
+            // Add a textbox for the tag value.
             TextBox textBoxValue = new TextBox();
             textBoxValue.Text = tag.value;
-            textBoxValue.Width = 200;
+            textBoxValue.Width = 300;
             textBoxValue.VerticalAlignment = VerticalAlignment.Center;
             _mainGrid.Children.Add(textBoxValue);
             Grid.SetRow(textBoxValue, 0);
             Grid.SetColumn(textBoxValue, 2);
 
+            // Set the height of this line.
             this.Height = LINE_HEIGHT;
 
             // Show or hide the plus minus image.
@@ -77,27 +83,51 @@ namespace gedcom.viewer
             else
             {
                 _imagePlusMinus.Visibility = Visibility.Visible;
-                
+
                 // Show the children.
-                if (_isExpand)
+                for (int i = 0; i < _tag.children.count; i++)
                 {
-                    // Create rows for the child tags.
-                    for (int i = 0; i < _tag.children.count; i++)
+                    TagControl tagControl = new TagControl(_tag.children[i], _isExpand, setChildSize);
+                    tagControl.VerticalAlignment = VerticalAlignment.Top;
+
+                    RowDefinition rowDefinition = new RowDefinition();
+                    rowDefinition.Height = new GridLength(tagControl.Height);
+
+                    _childGrid.RowDefinitions.Add(rowDefinition);
+                    _childGrid.Children.Add(tagControl);
+                    Grid.SetRow(tagControl, i);
+                    if (_isExpand)
                     {
-                        TagControl tagControl = new TagControl(_tag.children[i], true);
-
-                        RowDefinition rowDefinition = new RowDefinition();
-                        rowDefinition.Height = new GridLength(tagControl.Height);
-
-                        _childGrid.RowDefinitions.Add(rowDefinition);
-                        _childGrid.Children.Add(tagControl);
-                        Grid.SetRow(tagControl, i);
-
                         this.Height += tagControl.Height;
                     }
                 }
+                // Hide or show the children.
+                if (_isExpand)
+                {
+                    _childGrid.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    _childGrid.Visibility = Visibility.Collapsed;
+                }
+            }
+
+            // Request the parent resize the space for this control.
+            setParentHeight?.Invoke();
+        }
+
+
+
+        /// <summary>Resize the space for each child row.</summary>
+        /// <remarks>This is intended so that the children can inform this control when they change size.</remarks>
+        private void setChildSize()
+        {
+            foreach (RowDefinition rowDefinition in _childGrid.RowDefinitions)
+            {
+                rowDefinition.Height = new GridLength(0, GridUnitType.Auto);
             }
         }
+
 
         #endregion
 
@@ -111,14 +141,17 @@ namespace gedcom.viewer
             if (_isExpand)
             {
                 // Show the children.
-                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/add.png"));
+                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/minus.png"));
                 _childGrid.Visibility = Visibility.Visible;
+                this.Height = LINE_HEIGHT + _childGrid.Height;
             }
             else
             {
                 // Hide the children.
-                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/minus.png"));
+                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/add.png"));
                 _childGrid.Visibility = Visibility.Collapsed;
+                _setParentHeight?.Invoke();
+                this.Height = LINE_HEIGHT;
             }
         }
     }

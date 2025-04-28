@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,7 +54,8 @@ namespace gedcom.viewer
             // Create rows for the tags.
             for (int i = 0; i < individual.tag.children.count; i++)
             {
-                TagControl tagControl = new TagControl(individual.tag.children[i], true);
+                TagControl tagControl = new TagControl(individual.tag.children[i], false, setChildSize);
+                tagControl.VerticalAlignment = VerticalAlignment.Top;
                 
                 RowDefinition rowDefinition = new RowDefinition();
                 rowDefinition.Height = new GridLength(tagControl.Height);
@@ -62,6 +63,18 @@ namespace gedcom.viewer
                 _mainGrid.RowDefinitions.Add(rowDefinition);
                 _mainGrid.Children.Add(tagControl);
                 Grid.SetRow(tagControl, i);
+            }
+        }
+
+
+
+        /// <summary>Resize the space for each child row.</summary>
+        /// <remarks>This is intended so that the children can inform this control when they change size.</remarks>
+        private void setChildSize()
+        {
+            foreach (RowDefinition rowDefinition in _mainGrid.RowDefinitions)
+            {
+                rowDefinition.Height = new GridLength(0, GridUnitType.Auto);
             }
         }
 
