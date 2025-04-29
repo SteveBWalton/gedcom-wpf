@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,6 +43,7 @@ namespace gedcom.viewer
             html.AppendLine("<head>");
             // Allow the browser control to render svg graphics.
             html.AppendLine("<meta http-equiv=\"X-UA-Compatible\" content=\"IE=9\"/>");
+            html.AppendLine("<meta charset=\"UTF-8\"/>");
             html.Append(htmlStyle());
             html.AppendLine("</head>");
             html.AppendLine("<body>");
