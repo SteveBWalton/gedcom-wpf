@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -251,66 +251,76 @@ namespace gedcom.viewer
         /// <returns>The home page in html.</returns>
         private PageContent getHome()
         {
+            // The number of items to show in each category.
+            const int NUM_ITEMS = 15;
+
+            // The width of individual section.
+            const int INDIVIDUAL_WIDTH = 300;
+            // The width of family section.
+            const int FAMILY_WIDTH = 400;
+            // The width of source section.
+            const int SOURCE_WIDTH = 300;
+
             PageContent pageContent = new PageContent();
 
-            pageContent.html.Append("<h1>" + _gedcom.fileName + "</h1>");
+            pageContent.html.AppendLine("<h1>" + _gedcom.fileName + "</h1>");
 
             // Display the individuals.
-            pageContent.html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
-            pageContent.html.Append("<legend>Individuals</legend>");
-            pageContent.html.Append("<table>");
+            pageContent.html.Append("<fieldset style=\"width: " + INDIVIDUAL_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.AppendLine("<legend>Individuals</legend>");
+            pageContent.html.AppendLine("<table>");
             int count = 0;
             Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
             foreach (Individual individual in individualsInDateOrder)
             {
-                pageContent.html.Append("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
+                pageContent.html.AppendLine("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
                 count++;
-                if (count >= 10)
+                if (count >= NUM_ITEMS)
                 {
                     break;
                 }
             }
-            pageContent.html.Append("</table>");
-            pageContent.html.Append("<p>There are " + _gedcom.individuals.count.ToString() + " individuals.");
-            pageContent.html.Append("</fieldset>");
+            pageContent.html.AppendLine("</table>");
+            pageContent.html.AppendLine("<p>There are " + _gedcom.individuals.count.ToString() + " individuals.");
+            pageContent.html.AppendLine("</fieldset>");
 
             // Display the families.
-            pageContent.html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
-            pageContent.html.Append("<legend>Families</legend>");
-            pageContent.html.Append("<table>");
+            pageContent.html.Append("<fieldset style=\"width: " + FAMILY_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.AppendLine("<legend>Families</legend>");
+            pageContent.html.AppendLine("<table>");
             count = 0;
             Family[] familiesInDateOrder = _gedcom.families.inDateOrder();
             foreach (Family family in familiesInDateOrder)
             {
-                pageContent.html.Append("<tr><td><a href=\"app://family?id=" + family.idx + "\">" + family.fullName + "</a></td></tr>");
+                pageContent.html.AppendLine("<tr><td><a href=\"app://family?id=" + family.idx + "\">" + family.fullName + "</a></td></tr>");
                 count++;
-                if (count >= 10)
+                if (count >= NUM_ITEMS)
                 {
                     break;
                 }
             }
-            pageContent.html.Append("</table>");
-            pageContent.html.Append("<p>There are " + _gedcom.families.count.ToString() + " families.");
-            pageContent.html.Append("</fieldset>");
+            pageContent.html.AppendLine("</table>");
+            pageContent.html.AppendLine("<p>There are " + _gedcom.families.count.ToString() + " families.");
+            pageContent.html.AppendLine("</fieldset>");
 
             // Display the sources.
-            pageContent.html.Append("<fieldset style=\"width: 400px; display: inline-block; vertical-align: top;\">");
-            pageContent.html.Append("<legend>Sources</legend>");
-            pageContent.html.Append("<table>");
+            pageContent.html.Append("<fieldset style=\"width: " + SOURCE_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.AppendLine("<legend>Sources</legend>");
+            pageContent.html.AppendLine("<table>");
             count = 0;
             Source[] sourcesInDateOrder = _gedcom.sources.inDateOrder();
             foreach (Source source in sourcesInDateOrder)
             {
-                pageContent.html.Append("<tr><td>" + htmlSource(source) + "</td></tr>");
+                pageContent.html.AppendLine("<tr><td>" + htmlSource(source) + "</td></tr>");
                 count++;
-                if (count >= 10)
+                if (count >= NUM_ITEMS)
                 {
                     break;
                 }
             }
-            pageContent.html.Append("</table>");
-            pageContent.html.Append("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
-            pageContent.html.Append("</fieldset>");
+            pageContent.html.AppendLine("</table>");
+            pageContent.html.AppendLine("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
+            pageContent.html.AppendLine("</fieldset>");
 
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());
