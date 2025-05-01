@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -340,5 +340,10 @@ namespace gedcom.viewer
 
         #endregion
 
+        /// <summary>Signal handler for the Edit -> Add Individual menu point.</summary>
+        private void menuEditAddIndividualClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
