@@ -278,11 +278,18 @@ namespace gedcom.viewer
         private void menuEditEditClick(object sender, RoutedEventArgs e)
         {
             string[] splitUri = _pageContent.editForm.Split('?');
-            string host = splitUri[0];
-            string query = splitUri[1];
+            if (splitUri.Length >= 2)
+            {
+                string host = splitUri[0];
+                string query = splitUri[1];
 
-            // Show the dialog.
-            processDialogScheme(host, query);
+                // Show the dialog.
+                processDialogScheme(host, query);
+            }
+            else
+            {
+                throw (new Exception("No edit url is available."));
+            }
         }
 
 
@@ -328,22 +335,37 @@ namespace gedcom.viewer
         }
 
 
+
         private void menuFileSaveClick(object sender, RoutedEventArgs e)
         {
 
         }
+
+
 
         private void menuFileSaveAsClick(object sender, RoutedEventArgs e)
         {
 
         }
 
-        #endregion
+
 
         /// <summary>Signal handler for the Edit -> Add Individual menu point.</summary>
         private void menuEditAddIndividualClick(object sender, RoutedEventArgs e)
         {
+            DialogIndividual dialogIndividual = new DialogIndividual(_gedcom);
+            if (dialogIndividual.ShowDialog() == true)
+            {
+                // Add the individual to the gedcom.
+                // Does the dialog actually do this?
 
+                // Update the display.
+                // Show the home page.
+                populateWindow("home", "");
+            }
         }
+
+        #endregion
+
     }
 }

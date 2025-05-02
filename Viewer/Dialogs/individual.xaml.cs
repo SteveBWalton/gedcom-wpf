@@ -25,36 +25,48 @@ namespace gedcom.viewer
         #region Member Variables
 
         /// <summary>The gedcom that contains the individual to edit.</summary>
-        Gedcom _gedcom;
+        private readonly Gedcom _gedcom;
+
+        /// <summary>The individual that the dialog is editting.</summary>
+        private Individual _individual;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>Class constrcutor for the edit individual dialog.</summary>
-        /// <param name="gedcom">Specifies the gedcom that contains the individual to edit.</param>
-        public DialogIndividual(Gedcom gedcom, string query)
+        /// <summary>Constructor for the edit individual dialog to create a new individual.</summary>
+        /// <param name="gedcom">Specifies the gedom to add the individual to.</param>
+        public DialogIndividual(Gedcom gedcom)
         {
             InitializeComponent();
 
             // Save the parameters.
             _gedcom = gedcom;
+            _individual = null;
+        }
 
+
+
+        /// <summary>Constrcutor for the edit individual dialog to edit an existing individual.</summary>
+        /// <param name="gedcom">Specifies the gedcom that contains the individual to edit.</param>
+        /// <param name="query">Specifies the query string which contains an ID key to identifiy the individual.</param>
+        public DialogIndividual(Gedcom gedcom, string query):this(gedcom)
+        {
             // Get the index of the individual.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
 
             // Find the specified individual.
-            Individual individual = _gedcom.individuals.find(idx);
-            if (individual == null)
+            _individual = _gedcom.individuals.find(idx);
+            if (_individual == null)
             {
                 throw (new Exception("No individual found for '" + idx + "'"));
             }
 
             // Create rows for the tags.
-            for (int i = 0; i < individual.tag.children.count; i++)
+            for (int i = 0; i < _individual.tag.children.count; i++)
             {
-                TagControl tagControl = new TagControl(individual.tag.children[i], false, setChildSize);
+                TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSize);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
                 
                 RowDefinition rowDefinition = new RowDefinition();

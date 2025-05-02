@@ -31,8 +31,8 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="_Edit" Click="menuEditEditClick">
-                    <MenuItem Header="Edit..."  x:Name="_menuEditEdit">
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="Edit..."  x:Name="_menuEditEdit" Click="menuEditEditClick">
                         <MenuItem.Icon>
                             <Image Source="/Resources/24/edit.png" />
                         </MenuItem.Icon>
