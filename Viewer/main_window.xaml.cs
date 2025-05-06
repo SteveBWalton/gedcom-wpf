@@ -336,6 +336,7 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Signal handler for the 'File' -> 'Save' menu point click.</summary>
         private void menuFileSaveClick(object sender, RoutedEventArgs e)
         {
 
@@ -343,6 +344,7 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Signal handler for the 'FIle' -> 'Save As' menu point click.</summary>
         private void menuFileSaveAsClick(object sender, RoutedEventArgs e)
         {
 
@@ -350,7 +352,7 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>Signal handler for the Edit -> Add Individual menu point.</summary>
+        /// <summary>Signal handler for the 'Edit' -> 'Add Individual' menu point.</summary>
         private void menuEditAddIndividualClick(object sender, RoutedEventArgs e)
         {
             DialogIndividual dialogIndividual = new DialogIndividual(_gedcom);
