@@ -265,7 +265,7 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>Signal handler for the 'View' => 'Home' menu point click.</summary>
+        /// <summary>Signal handler for the 'View' -> 'Home' menu point click.</summary>
         private void menuViewHomeClick(object sender, RoutedEventArgs e)
         {
             // Show the home page.
