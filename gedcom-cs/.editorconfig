@@ -1,14 +1,14 @@
 # To learn more about .editorconfig see https://aka.ms/editorconfigdocs
-root = true
+root=true
 
 # All files
 [*]
-indent_size = 4
-indent_style = space
+indent_size=4
+indent_style=space
 end_of_line=lf
 charset=utf-8
 insert_final_newline=true
 
 # Xml files
 [*.xml]
-indent_size = 2
+indent_size=2
