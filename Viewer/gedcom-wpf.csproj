@@ -67,6 +67,9 @@
     <Compile Include="Dialogs\edit_gedcom.xaml.cs">
       <DependentUpon>edit_gedcom.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\select_tag.xaml.cs">
+      <DependentUpon>select_tag.xaml</DependentUpon>
+    </Compile>
     <Compile Include="html_source.cs" />
     <Compile Include="html_sources.cs" />
     <Compile Include="Dialogs\individual.xaml.cs">
@@ -85,6 +88,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\individual.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\select_tag.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

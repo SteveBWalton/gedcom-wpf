@@ -135,6 +135,7 @@ namespace gedcom.viewer
 
         #endregion
 
+        /// <summary>Signal handler for the show hide child tags button click.  /// </summary>
         private void buttonPlusMinusClick(object sender, RoutedEventArgs e)
         {
             _isExpand = !_isExpand;
@@ -152,6 +153,18 @@ namespace gedcom.viewer
                 _childGrid.Visibility = Visibility.Collapsed;
                 _setParentHeight?.Invoke();
                 this.Height = LINE_HEIGHT;
+            }
+        }
+
+
+
+        /// <summary>Signal handler for the add child tag button click.</summary>
+        private void addChildTagButtonClick(object sender, RoutedEventArgs e)
+        {
+            DialogSelectTag dialogSelectTag = new DialogSelectTag();
+            if (dialogSelectTag.ShowDialog() == true)
+            {
+
             }
         }
     }
