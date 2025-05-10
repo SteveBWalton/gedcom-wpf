@@ -17,8 +17,8 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" >
-            <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True" HorizontalAlignment="Center" VerticalAlignment="Center">Cancel</Button>
-            <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick" HorizontalAlignment="Center" VerticalAlignment="Center">OK</Button>
+            <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="31">Cancel</Button>
+            <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="31">OK</Button>
         </StackPanel>
 
     </Grid>
