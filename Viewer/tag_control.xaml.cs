@@ -161,7 +161,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the add child tag button click.</summary>
         private void addChildTagButtonClick(object sender, RoutedEventArgs e)
         {
-            DialogSelectTag dialogSelectTag = new DialogSelectTag();
+            DialogSelectTag dialogSelectTag = new DialogSelectTag(_tag);
             if (dialogSelectTag.ShowDialog() == true)
             {
 

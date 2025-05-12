@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gedcom.viewer"
         mc:Ignorable="d"
-        Title="Select Tag" Height="450" Width="400">
+        Title="Select Tag" Height="350" Width="300" Loaded="windowLoaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -16,7 +16,9 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" >
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Tag" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,2,0" />
+        <ListBox Grid.Column="1" Grid.Row="0" x:Name="_listSources"/>
+        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="31">Cancel</Button>
             <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="31">OK</Button>
         </StackPanel>

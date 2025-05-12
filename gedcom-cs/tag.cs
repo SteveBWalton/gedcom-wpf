@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,6 +90,7 @@ namespace gedcom
             // Don't really expect this.
             return key;
         }
+
 
 
         /// <summary>Add a line from a gedcom file to this tag.</summary>

@@ -19,19 +19,54 @@ namespace gedcom.viewer
     {
         #region Member Variables
 
+        /// <summary>True if the parent tag is a top level tag.</summary>
+        private bool _isTopLevel;
+
+        /// <summary>The parent tag that will own this new tag.</summary>
+        private readonly Tag _parentTag;
+
         #endregion
 
         #region Constructor
 
-        /// <summary>Constructor for the select tag dialog.</summary>
-        public DialogSelectTag()
+        /// <summary>Default Constructor.</summary>
+        private DialogSelectTag()
         {
             InitializeComponent();
+        }
+
+
+
+        /// <summary>Constructor for regualar parent tag.</summary>
+        /// <param name="parentTag">Specifies the regular parent tag.</param>
+        public DialogSelectTag(Tag parentTag) : this()
+        {
+            _isTopLevel = false;
+            _parentTag = parentTag;
+        }
+
+
+
+        /// <summary>Constructor for top level parent tag.</summary>
+        /// <param name="parentTag">Specifies the parent top level tag.</param>
+        public DialogSelectTag(TopLevel parentTag) : this()
+        {
+            _isTopLevel = true;
+            _parentTag = parentTag.tag;
         }
 
         #endregion
 
         #region Signal Handlers
+
+        /// <summary>Signal handler for window loaded.</summary>
+        private void windowLoaded(object sender, RoutedEventArgs e)
+        {
+            // Every tag can have a child source tag.
+            _listSources.Items.Add("Source");
+        }
+
+
 
         /// <summary>Signal handler for the cancel button click.</summary>
         private void buttonCancelClick(object sender, RoutedEventArgs e)
@@ -48,5 +83,6 @@ namespace gedcom.viewer
         }
 
         #endregion
+
     }
 }
