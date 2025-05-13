@@ -7,10 +7,13 @@
         mc:Ignorable="d"
         Title="Edit Individual" Height="450" Width="800">
     <DockPanel>
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" >
+        <Grid DockPanel.Dock="Bottom" >
+        <Button HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5" Width="100" Height="31" Click="addTagButtonClick" >Add Tag</Button>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True" Width="100" Height="31">Cancel</Button>
             <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick" Width="100" Height="31">OK</Button>
         </StackPanel>
+        </Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid x:Name="_mainGrid">
                 <Grid.ColumnDefinitions>

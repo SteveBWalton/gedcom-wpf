@@ -52,7 +52,14 @@ namespace gedcom.viewer
         public DialogSelectTag(TopLevel parentTag) : this()
         {
             _isTopLevel = true;
-            _parentTag = parentTag.tag;
+            if (parentTag != null)
+            {
+                _parentTag = parentTag.tag;
+            }
+            else
+            {
+                _parentTag = null;
+            }
         }
 
         #endregion

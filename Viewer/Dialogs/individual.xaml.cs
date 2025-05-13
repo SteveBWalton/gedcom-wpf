@@ -94,15 +94,32 @@ namespace gedcom.viewer
 
         #region Signal Handlers
 
+        /// <summary>Signal handler for the cancel button click.</summary>
         private void buttonCancelClick(object sender, RoutedEventArgs e)
         {
             
             
         }
 
+
+
+        /// <summary>Signal handler for the OK button click.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
+        }
+
+
+
+        /// <summary>Signal handler for the add tag button click.</summary>
+        private void addTagButtonClick(object sender, RoutedEventArgs e)
+        {
+            DialogSelectTag dialogSelectTag = new DialogSelectTag(_individual);
+            if (dialogSelectTag.ShowDialog() == true)
+            {
+
+            }
+
         }
 
         #endregion
