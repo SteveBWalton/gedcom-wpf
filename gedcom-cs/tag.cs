@@ -24,7 +24,7 @@ namespace gedcom
 
         #endregion
 
-        #region Class Constructors
+        #region Constructors
 
         /// <summary>Empty class constructor.</summary>
         public Tag()
@@ -34,6 +34,21 @@ namespace gedcom
             _children = new Tags();
             _key = "";
             _value = "";
+        }
+
+
+
+        /// <summary>
+        /// Constructor with the initial values.
+        /// </summary>
+        /// <param name="tagKey">Specifies the key of the tag.</param>
+        /// <param name="tagValue">Specifies the initial value of the tag.</param>
+        /// <param name="tagLevel">Specifies the level of the tag.</param>
+        public Tag(string tagKey, string tagValue, int tagLevel) : this()
+        {
+            _key = tagKey;
+            _value = tagValue;
+            _level = tagLevel;
         }
 
         #endregion
@@ -74,6 +89,12 @@ namespace gedcom
         }
 
 
+
+        /// <summary>The  level of this tag.</summary>
+        public int level
+        {
+            get => _level;
+        }
 
         #endregion
 
@@ -156,12 +177,22 @@ namespace gedcom
 
 
 
+        /// <summary>Get the line that represents the current value of the tag.</summary>
+        /// <returns>The line that represents the current value of the tag.</returns>
+        public string getLine()
+        {
+            return _level.ToString() + " " + _key + " " + _value;
+        }
+
+
+
         /// <summary>Return the tag for display in gedcom format.</summary>
         public string display(int indent)
         {
             StringBuilder output = new StringBuilder();
             output.Append("".PadRight(indent));
-            output.Append(_line);
+            // output.Append(_line);
+            output.Append(getLine());
             // output.Append("\r\n");
             output.Append("\n");
             foreach (Tag child in children)
@@ -177,7 +208,8 @@ namespace gedcom
         public string toText()
         {
             StringBuilder output = new StringBuilder();
-            output.Append(_line);
+            // output.Append(_line);
+            output.Append(getLine());
             // output.Append("\r\n");
             output.Append("\n");
             foreach (Tag child in children)

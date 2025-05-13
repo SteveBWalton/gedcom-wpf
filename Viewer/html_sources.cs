@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -130,7 +130,14 @@ namespace gedcom.viewer
             {
                 html.Append("<tr>");
                 html.Append("<td>" + Convert.ToChar('A' + idx) + "</td>");
-                html.Append("<td><a href=\"app://source?id=" + htmlSource.source.idx + "\">" + htmlSource.source.fullName + "</a></td>");
+                if (htmlSource.source != null)
+                {
+                    html.Append("<td><a href=\"app://source?id=" + htmlSource.source.idx + "\">" + htmlSource.source.fullName + "</a></td>");
+                }
+                else
+                {
+                    html.Append("<td>Error!</td>");
+                }
                 html.AppendLine("<tr>");
                 idx++;
             }

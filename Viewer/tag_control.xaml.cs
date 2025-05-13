@@ -164,7 +164,11 @@ namespace gedcom.viewer
             DialogSelectTag dialogSelectTag = new DialogSelectTag(_tag);
             if (dialogSelectTag.ShowDialog() == true)
             {
+                // Add the tag to this tag as a child.
+                _tag.children.add(dialogSelectTag.result);
 
+                // Fresh the dialog.
+                _setParentHeight?.Invoke();
             }
         }
     }

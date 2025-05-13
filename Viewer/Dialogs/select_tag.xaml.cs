@@ -25,6 +25,9 @@ namespace gedcom.viewer
         /// <summary>The parent tag that will own this new tag.</summary>
         private readonly Tag _parentTag;
 
+        /// <summary>The tag that is created by the dialog.</summary>
+        private Tag _result;
+
         #endregion
 
         #region Constructor
@@ -33,6 +36,7 @@ namespace gedcom.viewer
         private DialogSelectTag()
         {
             InitializeComponent();
+            _result = null;
         }
 
 
@@ -64,6 +68,16 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Properties
+
+        /// <summary>The tag that is created by the dialog.</summary>
+        public Tag result
+        {
+            get => _result;
+        }
+
+        #endregion
+
         #region Signal Handlers
 
         /// <summary>Signal handler for window loaded.</summary>
@@ -78,6 +92,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the cancel button click.</summary>
         private void buttonCancelClick(object sender, RoutedEventArgs e)
         {
+            // Result cancel button clicked.
             this.DialogResult = false;
         }
 
@@ -86,7 +101,11 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the Ok button click.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Result OK button clicked.
             this.DialogResult = true;
+
+            // Create a tag of the specified type.
+            _result = new Tag("SOUR", "@S0001@", _parentTag.level + 1);
         }
 
         #endregion
