@@ -118,6 +118,25 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Add a child control for the specified child tag to the control.</summary>
+        /// <param name="childTag">Specifies the child tag to add to the control.</param>
+        private void addChildControl(Tag childTag)
+        {
+            _imagePlusMinus.Visibility = Visibility.Visible;
+
+            TagControl tagControl = new TagControl(childTag, _isExpand, setChildSize);
+            tagControl.VerticalAlignment = VerticalAlignment.Top;
+
+            RowDefinition rowDefinition = new RowDefinition();
+            rowDefinition.Height = new GridLength(tagControl.Height);
+
+            _childGrid.RowDefinitions.Add(rowDefinition);
+            _childGrid.Children.Add(tagControl);
+            Grid.SetRow(tagControl, _tag.children.Count());
+        }
+
+
+
         /// <summary>Resize the space for each child row.</summary>
         /// <remarks>This is intended so that the children can inform this control when they change size.</remarks>
         private void setChildSize()
@@ -167,7 +186,22 @@ namespace gedcom.viewer
                 // Add the tag to this tag as a child.
                 _tag.children.add(dialogSelectTag.result);
 
-                // Fresh the dialog.
+                // Add a child control for this tag.
+                addChildControl(dialogSelectTag.result);
+
+                // Display the child controls.
+                if (_isExpand)
+                {
+                    // Increase the height of this control.
+                    this.Height += LINE_HEIGHT;
+                }
+                else
+                {
+                    // Put the control into expanded state.
+                    buttonPlusMinusClick(sender, null);
+                }
+
+                // Refresh the dialog.
                 _setParentHeight?.Invoke();
             }
         }
