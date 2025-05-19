@@ -42,7 +42,7 @@ namespace gedcom.viewer
 
             // Save the parameters.
             _gedcom = gedcom;
-            _individual = null;
+            _individual = new Individual(gedcom);
         }
 
 
@@ -50,7 +50,7 @@ namespace gedcom.viewer
         /// <summary>Constrcutor for the edit individual dialog to edit an existing individual.</summary>
         /// <param name="gedcom">Specifies the gedcom that contains the individual to edit.</param>
         /// <param name="query">Specifies the query string which contains an ID key to identifiy the individual.</param>
-        public DialogIndividual(Gedcom gedcom, string query):this(gedcom)
+        public DialogIndividual(Gedcom gedcom, string query) : this(gedcom)
         {
             // Get the index of the individual.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
@@ -68,7 +68,7 @@ namespace gedcom.viewer
             {
                 TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSize);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
-                
+
                 RowDefinition rowDefinition = new RowDefinition();
                 rowDefinition.Height = new GridLength(tagControl.Height);
 

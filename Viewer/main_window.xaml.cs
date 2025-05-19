@@ -90,6 +90,8 @@ namespace gedcom.viewer
             return true;
         }
 
+
+
         /// <summary>Populate the main window with the content from the specified host and query.</summary>
         /// <param name="host">Specifies the page host.</param>
         /// <param name="query">Specifies the page query.</param>

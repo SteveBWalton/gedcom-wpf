@@ -55,7 +55,9 @@ namespace gedcom.viewer
 
             // Add a label for the tag.
             TextBlock textblockTag = new TextBlock();
-            textblockTag.Text = tag.key;
+            TagType tagType = new TagType(tag.key);
+            // textblockTag.Text = tag.key;
+            textblockTag.Text = tagType.tagName;
             textblockTag.TextAlignment = TextAlignment.Right;
             textblockTag.Margin = new Thickness(0, 0, 4, 0);
             textblockTag.VerticalAlignment = VerticalAlignment.Center;

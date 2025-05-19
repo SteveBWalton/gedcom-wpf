@@ -83,8 +83,16 @@ namespace gedcom.viewer
         /// <summary>Signal handler for window loaded.</summary>
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
-            // Every tag can have a child source tag.
-            _listSources.Items.Add("Source");
+            TagType parentTagType = _isTopLevel ? new TagType(_parentTag.value)  :  new TagType(_parentTag.key);
+            _labParentTagType.Text = parentTagType.tagName;
+            __labParentTagValue.Text = _isTopLevel ? _parentTag.key :_parentTag.value;
+
+            List<TagType> tagTypes = parentTagType.getChildren();
+
+            foreach(TagType tagType in tagTypes)
+            {
+                _listSources.Items.Add(tagType.tagName);
+            }
         }
 
 

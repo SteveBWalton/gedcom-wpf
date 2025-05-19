@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +25,16 @@ namespace gedcom
         public TopLevel()
         {
             _tag = new Tag();
+        }
+
+
+
+        /// <summary>Create a top level element in the specified gedcom.</summary>
+        /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
+        public TopLevel(Gedcom gedcom)
+        {
+            _tag = new Tag();
+            _gedcom = gedcom;
         }
 
 
