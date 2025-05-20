@@ -63,6 +63,10 @@ namespace gedcom
                     return "Education";
                 case "OCCU":
                     return "Occupation";
+                case "NOTE":
+                    return "Note";
+                case "OBJE":
+                    return "Media";
                 }
 
                 // There is no known name, use the key.
@@ -93,13 +97,14 @@ namespace gedcom
                 break;
             case "EDUC":
             case "OCCU":
+            case "NOTE":
                 children.Add(new TagType("DATE"));
                 children.Add(new TagType("PLAC"));
                 break;
             }
 
             // For debugging and not completely wrong.
-            if (_tagKey != "SOUR" && _tagKey != "CHAN")
+            if (_tagKey != "SOUR" && _tagKey != "CHAN" && _tagKey != "OBJE")
             {
                 children.Add(new TagType("SOUR"));
             }
