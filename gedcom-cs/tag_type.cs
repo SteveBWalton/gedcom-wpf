@@ -55,6 +55,12 @@ namespace gedcom
                     return "Date";
                 case "PLAC":
                     return "Place";
+                case "NAME":
+                    return "Name";
+                case "SEX":
+                    return "Sex";
+                case "BIRT":
+                    return "Birth";
                 case "FAMC":
                     return "Family Parents";
                 case "FAMS":
@@ -75,6 +81,12 @@ namespace gedcom
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return tagName;
+        }
+
 
         /// <summary>
         /// Could this be a property instead?
@@ -112,7 +124,5 @@ namespace gedcom
             // Return the child types.
             return children;
         }
-
-
     }
 }

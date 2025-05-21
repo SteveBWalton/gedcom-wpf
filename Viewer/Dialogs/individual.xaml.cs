@@ -117,9 +117,20 @@ namespace gedcom.viewer
             DialogSelectTag dialogSelectTag = new DialogSelectTag(_individual);
             if (dialogSelectTag.ShowDialog() == true)
             {
+                // Add a new tag to the individual.
+                _individual.tag.children.add(dialogSelectTag.result);
 
+                // Add a new tag to the dialog.
+                TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSize);
+                tagControl.VerticalAlignment = VerticalAlignment.Top;
+
+                RowDefinition rowDefinition = new RowDefinition();
+                rowDefinition.Height = new GridLength(tagControl.Height);
+
+                _mainGrid.RowDefinitions.Add(rowDefinition);
+                _mainGrid.Children.Add(tagControl);
+                Grid.SetRow(tagControl, _individual.tag.children.count);
             }
-
         }
 
         #endregion

@@ -91,7 +91,7 @@ namespace gedcom.viewer
 
             foreach(TagType tagType in tagTypes)
             {
-                _listSources.Items.Add(tagType.tagName);
+                _listSources.Items.Add(tagType);
             }
         }
 
@@ -112,8 +112,10 @@ namespace gedcom.viewer
             // Result OK button clicked.
             this.DialogResult = true;
 
+            TagType tagType = (TagType)_listSources.SelectedItem;
+
             // Create a tag of the specified type.
-            _result = new Tag("SOUR", "@S0001@", _parentTag.level + 1);
+            _result = new Tag(tagType.tagKey, "value", _parentTag.level + 1);
         }
 
         #endregion
