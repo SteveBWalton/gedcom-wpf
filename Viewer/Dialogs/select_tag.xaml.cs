@@ -91,7 +91,20 @@ namespace gedcom.viewer
 
             foreach(TagType tagType in tagTypes)
             {
-                _listSources.Items.Add(tagType);
+                bool isAdd = true;
+                if (!tagType.isMultiple)
+                {
+                    // If there is already an extry of this type then don't add this type.
+                    if (_parentTag.children.findOne(tagType.tagKey)!=null)
+                    {
+                        // Don't add this tag type to the list.
+                        isAdd = false;
+                    }
+                }
+                if (isAdd)
+                {
+                    _listSources.Items.Add(tagType);
+                }
             }
         }
 

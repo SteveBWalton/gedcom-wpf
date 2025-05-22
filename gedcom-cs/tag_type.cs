@@ -53,6 +53,8 @@ namespace gedcom
                     return "Source";
                 case "DATE":
                     return "Date";
+                case "TIME":
+                    return "Time";
                 case "PLAC":
                     return "Place";
                 case "NAME":
@@ -61,6 +63,8 @@ namespace gedcom
                     return "Sex";
                 case "BIRT":
                     return "Birth";
+                case "DEAT":
+                    return "Death";
                 case "FAMC":
                     return "Family Parents";
                 case "FAMS":
@@ -71,12 +75,49 @@ namespace gedcom
                     return "Occupation";
                 case "NOTE":
                     return "Note";
+                case "CHAN":
+                    return "Last Change";
                 case "OBJE":
                     return "Media";
                 }
 
                 // There is no known name, use the key.
                 return _tagKey;
+            }
+        }
+
+
+
+        /// <summary>True if mulitple tags of this type are allowed at the same level, false if only 1 is allowed per level.</summary>
+        public bool isMultiple
+        {
+            get
+            {
+                switch(_tagKey)
+                {
+                case "INDI":
+                case "SOUR":
+                case "FAMS":
+                case "EDUC":
+                case "OCCU":
+                case "NOTE":
+                case "OBJE":
+                    return true;
+
+                case "DATE":
+                case "TIME":
+                case "PLAC":
+                case "NAME":
+                case "SEX":
+                case "BIRT":
+                case "DEAT":
+                case "FAMC":
+                case "CHAN":
+                    return false;
+                }
+
+                // Not more what to have as the default!
+                return true;
             }
         }
 
@@ -106,12 +147,19 @@ namespace gedcom
                 children.Add(new TagType("FAMS"));
                 children.Add(new TagType("EDUC"));
                 children.Add(new TagType("OCCU"));
+                children.Add(new TagType("NOTE"));
+                children.Add(new TagType("CHAN"));
                 break;
             case "EDUC":
             case "OCCU":
             case "NOTE":
+            case "BIRT":
+            case "DEAT":
                 children.Add(new TagType("DATE"));
                 children.Add(new TagType("PLAC"));
+                break;
+            case "DATE":
+                children.Add(new TagType("TIME"));
                 break;
             }
 
