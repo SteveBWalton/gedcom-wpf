@@ -349,7 +349,15 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'FIle' -> 'Save As' menu point click.</summary>
         private void menuFileSaveAsClick(object sender, RoutedEventArgs e)
         {
-
+            Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Gedom (*.ged)|*.ged",
+            };
+            if (saveFileDialog.ShowDialog()==true)
+            {
+                // Save the file in the specified file.
+                string fileName = saveFileDialog.FileName;
+            }
         }
 
 
