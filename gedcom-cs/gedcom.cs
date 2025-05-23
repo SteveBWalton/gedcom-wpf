@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -167,6 +167,60 @@ namespace gedcom
 
             // Mark as no save required.
             _isDirty = false;
+
+            // Return success.
+            return true;
+        }
+
+
+
+        /// <summary>Save the gedom to the specified gedcom file.</summary>
+        /// <remarks>THIS DOES NOT WORK.  DO NOT WTITE OVER A GOOD GEDCOM FILE.  JUST TESTING FOR NOW.</remarks>
+        /// <param name="fileName">Specifies the file name of the gedcom to save.</param>
+        /// <returns>True for success, false otherwise.</returns>
+        public bool save(string fileName)
+        {
+            using (StreamWriter streamWriter = new StreamWriter(fileName, false, Encoding.UTF8))
+            {
+                // Write the gedcom file header.
+                streamWriter.WriteLine("0 HEAD");
+                streamWriter.WriteLine("1 SOUR gedcom-py");
+                streamWriter.WriteLine("2 NAME gedcom-py");
+                streamWriter.WriteLine("2 VERS 0.01.00");
+                streamWriter.WriteLine("1 DEST DISKETTE");
+                streamWriter.WriteLine("1 DATE " + DateTime.Now.ToString("d MMM yyyy").ToUpper());
+                streamWriter.WriteLine("2 TIME " + DateTime.Now.ToString("HH:mm:ss").ToUpper());
+                streamWriter.WriteLine("1 CHAR UTF-8");
+                streamWriter.WriteLine("1 FILE " + Path.GetFileName(fileName));
+
+                // Write the individuals.
+                foreach (Individual individual in _individuals)
+                {
+                    // The toText() includes a line feed.
+                    streamWriter.Write(individual.tag.toText());
+                }
+
+                // Write the families.
+                foreach (Family family in  _families)
+                {
+                    // The toText() includes a line feed.
+                    streamWriter.Write(family.tag.toText());
+                }
+
+                // Write the sources.
+                foreach (Source source in _sources)
+                {
+                    // The toText() includes a line feed.
+                    streamWriter.Write(source.tag.toText());
+                }
+
+                // Write the media objects.
+                
+                // Write the repositories.
+
+                // Write the gedcom file footer.
+                streamWriter.WriteLine("0 TRLR");
+            }
 
             // Return success.
             return true;

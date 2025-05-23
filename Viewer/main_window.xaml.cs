@@ -353,10 +353,11 @@ namespace gedcom.viewer
             {
                 Filter = "Gedom (*.ged)|*.ged",
             };
-            if (saveFileDialog.ShowDialog()==true)
+            if (saveFileDialog.ShowDialog() == true)
             {
                 // Save the file in the specified file.
                 string fileName = saveFileDialog.FileName;
+                _gedcom.save(fileName);
             }
         }
 

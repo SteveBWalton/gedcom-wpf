@@ -181,6 +181,10 @@ namespace gedcom
         /// <returns>The line that represents the current value of the tag.</returns>
         public string getLine()
         {
+            if (_value == "")
+            {
+                return _level.ToString() + " " + _key;
+            }
             return _level.ToString() + " " + _key + " " + _value;
         }
 
