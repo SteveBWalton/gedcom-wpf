@@ -70,6 +70,7 @@ namespace gedcom.viewer
             textBoxValue.Text = tag.value;
             textBoxValue.Width = 300;
             textBoxValue.VerticalAlignment = VerticalAlignment.Center;
+            textBoxValue.LostFocus += TextBoxValue_LostFocus;
             _mainGrid.Children.Add(textBoxValue);
             Grid.SetRow(textBoxValue, 0);
             Grid.SetColumn(textBoxValue, 2);
@@ -116,6 +117,22 @@ namespace gedcom.viewer
 
             // Request the parent resize the space for this control.
             setParentHeight?.Invoke();
+        }
+
+
+
+        /// <summary>Signal handler for the default text box losing the focus.</summary>
+        /// <remarks>If the value has changed then update the tag.</remarks>
+        private void TextBoxValue_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                if (textBox.Text != _tag.value)
+                {
+                    _tag.value = textBox.Text;
+                }
+            }
         }
 
 

@@ -79,6 +79,8 @@ namespace gedcom
                     return "Last Change";
                 case "OBJE":
                     return "Media";
+                case "_TODO":
+                    return "To Do";
                 }
 
                 // There is no known name, use the key.
@@ -102,6 +104,7 @@ namespace gedcom
                 case "OCCU":
                 case "NOTE":
                 case "OBJE":
+                case "_TODO":
                     return true;
 
                 case "DATE":
@@ -123,16 +126,20 @@ namespace gedcom
 
         #endregion
 
+        /// <summary>The default string representation of the tag type.</summary>
+        /// <returns>The name of the tag type.</returns>
         public override string ToString()
         {
             return tagName;
         }
 
 
+
         /// <summary>
+        /// The tag types that are valid children of this tag type.
         /// Could this be a property instead?
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of tag types that are valid children of this tag type.</returns>
         public List<TagType> getChildren()
         {
             List<TagType> children = new List<TagType>();
@@ -148,6 +155,7 @@ namespace gedcom
                 children.Add(new TagType("EDUC"));
                 children.Add(new TagType("OCCU"));
                 children.Add(new TagType("NOTE"));
+                children.Add(new TagType("_TODO"));
                 children.Add(new TagType("CHAN"));
                 break;
             case "EDUC":
@@ -164,7 +172,7 @@ namespace gedcom
             }
 
             // For debugging and not completely wrong.
-            if (_tagKey != "SOUR" && _tagKey != "CHAN" && _tagKey != "OBJE")
+            if (_tagKey != "SOUR" && _tagKey != "CHAN" && _tagKey != "OBJE" && _tagKey != "_TODO")
             {
                 children.Add(new TagType("SOUR"));
             }
