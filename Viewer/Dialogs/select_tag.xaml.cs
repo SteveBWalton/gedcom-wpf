@@ -128,7 +128,7 @@ namespace gedcom.viewer
             TagType tagType = (TagType)_listSources.SelectedItem;
 
             // Create a tag of the specified type.
-            _result = new Tag(tagType.tagKey, "value", _parentTag.level + 1);
+            _result = new Tag(_parentTag.gedcom, tagType.tagKey, "value", _parentTag.level + 1);
         }
 
         #endregion

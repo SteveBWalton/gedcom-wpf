@@ -65,15 +65,39 @@ namespace gedcom.viewer
             Grid.SetRow(textblockTag, 0);
             Grid.SetColumn(textblockTag, 1);
 
-            // Add a textbox for the tag value.
-            TextBox textBoxValue = new TextBox();
-            textBoxValue.Text = tag.value;
-            textBoxValue.Width = 300;
-            textBoxValue.VerticalAlignment = VerticalAlignment.Center;
-            textBoxValue.LostFocus += TextBoxValue_LostFocus;
-            _mainGrid.Children.Add(textBoxValue);
-            Grid.SetRow(textBoxValue, 0);
-            Grid.SetColumn(textBoxValue, 2);
+            // Width for the control.
+            const int TOTAL_SPACE = 400;
+            int valueWidth = TOTAL_SPACE - 20 * tag.level;
+
+            // Add a control for the tag value.
+            switch (tag.key)
+            {
+            case "SOUR":
+                // Add a combobox for the source.
+                ComboBox sourceComboBox = new ComboBox();
+                sourceComboBox.Width = valueWidth;
+                Source[] sourcesInDateOrder = tag.gedcom.sources.inDateOrder();
+                foreach (Source source in sourcesInDateOrder)
+                {
+                    sourceComboBox.Items.Add(source);
+                }                
+                _mainGrid.Children.Add(sourceComboBox);
+                Grid.SetRow(sourceComboBox, 0);
+                Grid.SetColumn(sourceComboBox, 2);
+                break;
+
+            default:
+                // Add a textbox for the tag value.
+                TextBox textBoxValue = new TextBox();
+                textBoxValue.Text = tag.value;
+                textBoxValue.Width = valueWidth;
+                textBoxValue.VerticalAlignment = VerticalAlignment.Center;
+                textBoxValue.LostFocus += TextBoxValue_LostFocus;
+                _mainGrid.Children.Add(textBoxValue);
+                Grid.SetRow(textBoxValue, 0);
+                Grid.SetColumn(textBoxValue, 2);
+                break;
+            }
 
             // Set the height of this line.
             this.Height = LINE_HEIGHT;

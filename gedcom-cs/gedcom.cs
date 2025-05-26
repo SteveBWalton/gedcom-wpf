@@ -120,7 +120,7 @@ namespace gedcom
             _fileName = fileName;
 
             // Read the lines in the gedcom file.
-            Tag tag = new Tag();
+            Tag tag = new Tag(this);
             using (FileStream fileStream = File.OpenRead(fileName))
             {
                 using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8, true, 1024))
@@ -152,7 +152,7 @@ namespace gedcom
                             }
 
                             // Start a new top level tag.
-                            tag = new Tag();
+                            tag = new Tag(this);
                         }
 
                         // Add the data from the gedcom file to the current tag.

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +15,10 @@ namespace gedcom
 
         #region Class Constructors
 
-        /// <summary>Empty class constructor.</summary>
-        public Family()
-        {
-        }
+        // <summary>Empty class constructor.</summary>
+        //public Family()
+        //{
+        //}
 
         /// <summary>Create an individual from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the individual from.</param>
@@ -73,7 +73,7 @@ namespace gedcom
                 {
                     return null;
                 }
-                return _gedcom.individuals.find(idx);
+                return _tag.gedcom.individuals.find(idx);
             }
         }
 
@@ -90,7 +90,7 @@ namespace gedcom
                 {
                     return null;
                 }
-                return _gedcom.individuals.find(idx);
+                return _tag.gedcom.individuals.find(idx);
             }
         }
 
@@ -253,7 +253,7 @@ namespace gedcom
             Tag[] tags = _tag.children.findAll("CHIL");
             foreach (Tag tag in tags)
             {
-                Individual child = _gedcom.individuals.find(Tag.toIdx(tag.value));
+                Individual child = _tag.gedcom.individuals.find(Tag.toIdx(tag.value));
                 if (child!=null)
                 {
                     children.Add(child);

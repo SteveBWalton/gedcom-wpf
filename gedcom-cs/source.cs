@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +15,10 @@ namespace gedcom
 
         #region Class Constructors
 
-        /// <summary>Empty class constructor.</summary>
-        public Source()
-        {
-        }
+        // <summary>Empty class constructor.</summary>
+        //public Source()
+        //{
+        //}
 
         /// <summary>Create an source from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the source from.</param>
@@ -60,6 +60,15 @@ namespace gedcom
         }
 
         #endregion
+
+
+
+        /// <summary>The human readable description of the source.</summary>
+        /// <returns>The full name of the source.</returns>
+        public override string ToString()
+        {
+            return fullName;
+        }
 
     }
 }

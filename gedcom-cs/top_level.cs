@@ -11,9 +11,6 @@ namespace gedcom
     {
         #region Member Variables
 
-        /// <summary>The gedcom that contains this top level element.</summary>
-        protected Gedcom _gedcom;
-
         /// <summary>The tag that defined this top level element.</summary>
         protected Tag _tag;
 
@@ -21,11 +18,11 @@ namespace gedcom
 
         #region Class Constructors
 
-        /// <summary>Empty class constructor.</summary>
-        public TopLevel()
-        {
-            _tag = new Tag();
-        }
+        // <summary>Empty class constructor.</summary>
+        //public TopLevel()
+        //{
+        //    _tag = new Tag();
+        //}
 
 
 
@@ -33,8 +30,7 @@ namespace gedcom
         /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
         public TopLevel(Gedcom gedcom)
         {
-            _tag = new Tag();
-            _gedcom = gedcom;
+            _tag = new Tag(gedcom);
         }
 
 
@@ -45,7 +41,6 @@ namespace gedcom
         public TopLevel(Tag tag, Gedcom gedcom)
         {
             _tag = tag;
-            _gedcom = gedcom;
         }
 
         #endregion
@@ -76,7 +71,7 @@ namespace gedcom
         /// <summary>The gedcom that contains this top level element.</summary>
         public Gedcom gedcom
         {
-            get { return _gedcom; }
+            get { return _tag.gedcom; }
         }
 
 

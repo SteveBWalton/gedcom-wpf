@@ -19,10 +19,10 @@ namespace gedcom
 
 
 
-        /// <summary>Empty class constructor.</summary>
-        public Individual()
-        {
-        }
+        // <summary>Empty class constructor.</summary>
+        //public Individual()
+        //{
+        //}
 
 
 
@@ -30,7 +30,7 @@ namespace gedcom
         public Individual(Gedcom gedcom) : base(gedcom)
         {
             // An empty individual.
-            _tag = new Tag("@I0000@", "INDI", 0);
+            _tag = new Tag(gedcom, "@I0000@", "INDI", 0);
         }
 
 
@@ -191,7 +191,7 @@ namespace gedcom
                 if (tagFamily != null)
                 {
                     string familyIdx = Tag.toIdx(tagFamily.value);
-                    Family family = _gedcom.families.find(familyIdx);
+                    Family family = _tag.gedcom.families.find(familyIdx);
                     return family;
                 }
                 // Return family unknown.
@@ -324,7 +324,7 @@ namespace gedcom
             string[] families = familyIdxes.ToArray();
 
             // Sort the siblings into birth order.
-            Array.Sort(families, _gedcom.sortFamilesByDate);
+            Array.Sort(families, tag.gedcom.sortFamilesByDate);
 
             // Return the array of siblings.
             return families;
@@ -347,7 +347,7 @@ namespace gedcom
             {
                 sharedMotherIdx = "NoMatch";
             }
-            foreach(Individual individual in _gedcom.individuals)
+            foreach(Individual individual in _tag.gedcom.individuals)
             {
                 if ((individual.fatherIdx == sharedFatherIdx || individual.motherIdx == sharedMotherIdx) && individual.idx != idx)
                 {
@@ -359,7 +359,7 @@ namespace gedcom
             string[] siblings = siblingIdxes.ToArray();
 
             // Sort the siblings into birth order.
-            Array.Sort(siblings, _gedcom.sortIndividualsByBirth); // (IComparer<string>)
+            Array.Sort(siblings, _tag.gedcom.sortIndividualsByBirth); // (IComparer<string>)
 
             // Return the array of siblings.
             return siblings;

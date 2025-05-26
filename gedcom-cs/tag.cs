@@ -11,6 +11,8 @@ namespace gedcom
     {
         #region Member Variables
 
+        /// <summary>The gedcom that contains this tag.</summary>
+        private readonly Gedcom _gedcom;
         /// <summary>The original line that created this tag. </summary>
         private string _line;
         /// <summary>The original level of this tag.</summary>
@@ -26,9 +28,11 @@ namespace gedcom
 
         #region Constructors
 
-        /// <summary>Empty class constructor.</summary>
-        public Tag()
+        /// <summary>Class constructor.</summary>
+        /// <param name="gedcom">Specifies the gedcom that contains the tag.</param>
+        public Tag(Gedcom gedcom)
         {
+            _gedcom = gedcom;
             _line = "";
             _level = -1;
             _children = new Tags();
@@ -38,13 +42,12 @@ namespace gedcom
 
 
 
-        /// <summary>
-        /// Constructor with the initial values.
-        /// </summary>
+        /// <summary>Constructor with the initial values.</summary>
+        /// <param name="gedcom">Specifies the gedcom that contains the tag.</param>
         /// <param name="tagKey">Specifies the key of the tag.</param>
         /// <param name="tagValue">Specifies the initial value of the tag.</param>
         /// <param name="tagLevel">Specifies the level of the tag.</param>
-        public Tag(string tagKey, string tagValue, int tagLevel) : this()
+        public Tag(Gedcom gedcom, string tagKey, string tagValue, int tagLevel) : this(gedcom)
         {
             _key = tagKey;
             _value = tagValue;
@@ -54,6 +57,12 @@ namespace gedcom
         #endregion
 
         #region Properties
+
+        /// <summary>The gedcom that contains this tag.</summary>
+        public Gedcom gedcom
+        {
+            get => _gedcom;
+        }
 
 
 
@@ -165,7 +174,7 @@ namespace gedcom
             if (level == _level + 1)
             {
                 // A new child tag is defined by the line.
-                Tag newChild = new Tag();
+                Tag newChild = new Tag(_gedcom);
                 newChild.add(line);
                 _children.add(newChild);
                 return true;
