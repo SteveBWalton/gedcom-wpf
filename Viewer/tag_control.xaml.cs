@@ -77,10 +77,15 @@ namespace gedcom.viewer
                 ComboBox sourceComboBox = new ComboBox();
                 sourceComboBox.Width = valueWidth;
                 Source[] sourcesInDateOrder = tag.gedcom.sources.inDateOrder();
+                string sourceIdx = gedcom.Tag.toIdx(tag.value);
                 foreach (Source source in sourcesInDateOrder)
                 {
                     sourceComboBox.Items.Add(source);
-                }                
+                    if (source.idx == sourceIdx)
+                    {
+                        sourceComboBox.SelectedIndex = sourceComboBox.Items.Count - 1;
+                    }
+                }
                 _mainGrid.Children.Add(sourceComboBox);
                 Grid.SetRow(sourceComboBox, 0);
                 Grid.SetColumn(sourceComboBox, 2);
