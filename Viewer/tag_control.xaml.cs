@@ -91,6 +91,25 @@ namespace gedcom.viewer
                 Grid.SetColumn(sourceComboBox, 2);
                 break;
 
+            case "FAMC": // Family Child.
+            case "FAMS": // Family Spouse.
+                ComboBox spouseComboBox = new ComboBox();
+                spouseComboBox.Width = valueWidth;
+                Family[] familiesInDateOrder = tag.gedcom.families.inDateOrder();
+                string familyIdx = gedcom.Tag.toIdx(tag.value);
+                foreach (Family family in familiesInDateOrder)
+                {
+                    spouseComboBox.Items.Add(family);
+                    if (family.idx == familyIdx)
+                    {
+                        spouseComboBox.SelectedIndex = spouseComboBox.Items.Count - 1;
+                    }
+                }
+                _mainGrid.Children.Add(spouseComboBox);
+                Grid.SetRow(spouseComboBox, 0);
+                Grid.SetColumn(spouseComboBox, 2);
+                break;
+
             default:
                 // Add a textbox for the tag value.
                 TextBox textBoxValue = new TextBox();

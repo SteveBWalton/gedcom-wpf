@@ -96,6 +96,7 @@ namespace gedcom
 
 
 
+        /// <summary>The full name description of the family.</summary>
         public string fullName
         {
             get
@@ -225,6 +226,14 @@ namespace gedcom
 
 
         #endregion
+
+        /// <summary>The description of the family for the framework.</summary>
+        /// <returns>The full name of the family.</returns>
+        public override string ToString()
+        {
+            return fullName;
+        }
+
 
         #region IComparable<Family>
 
