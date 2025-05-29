@@ -44,6 +44,7 @@ namespace gedcom.viewer
         /// <summary>Constructor for the edit tag user control.</summary>
         /// <param name="tag">Specifies the tag to edit.</param>
         /// <param name="isExpand">Specifies true to show the tag initially expanded.</param>
+        /// <param name="setParentHeight">Specifies a function to resize the parent container.</param>
         public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight)
         {
             InitializeComponent();
@@ -93,6 +94,7 @@ namespace gedcom.viewer
 
             case "FAMC": // Family Child.
             case "FAMS": // Family Spouse.
+                // Add a combobox for the family.
                 ComboBox spouseComboBox = new ComboBox();
                 spouseComboBox.Width = valueWidth;
                 Family[] familiesInDateOrder = tag.gedcom.families.inDateOrder();
@@ -108,6 +110,27 @@ namespace gedcom.viewer
                 _mainGrid.Children.Add(spouseComboBox);
                 Grid.SetRow(spouseComboBox, 0);
                 Grid.SetColumn(spouseComboBox, 2);
+                break;
+
+            case "NAME": // Name
+            case "BIRT": // Birth
+            case "CHAN": // Last Change.
+            case "_PGVU": // Last Change by.
+                // Add a text block for the read-only.
+                TextBlock textblockReadOnly = new TextBlock();
+                textblockReadOnly.Width = valueWidth;
+                textblockReadOnly.Height = LINE_HEIGHT - 2;
+                textblockReadOnly.VerticalAlignment = VerticalAlignment.Center;
+                textblockReadOnly.Padding = new Thickness(4, 0, 0, 0);
+                textblockReadOnly.Background = Brushes.LightGray;
+                if (tag.key == "BIRT" || tag.key == "CHAN")
+                {
+                    tag.value = "Y";
+                }
+                textblockReadOnly.Text = tag.value;
+                _mainGrid.Children.Add(textblockReadOnly);
+                Grid.SetRow(textblockReadOnly, 0);
+                Grid.SetColumn(textblockReadOnly, 2);
                 break;
 
             default:
