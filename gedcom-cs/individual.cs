@@ -29,16 +29,15 @@ namespace gedcom
         /// <summary>Empty class constructor.</summary>
         public Individual(Gedcom gedcom) : base(gedcom)
         {
-            // An empty individual.
-            _tag = new Tag(gedcom, "@I0000@", "INDI", 0);
+            // An empty individual top level tag.
+            _tag = new Tag(gedcom, "@I0000@", "INDI");
         }
 
 
 
         /// <summary>Create an individual from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the individual from.</param>
-        /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
-        public Individual(Tag tag, Gedcom gedcom) : base(tag, gedcom)
+        public Individual(Tag tag) : base(tag)
         {
         }
 

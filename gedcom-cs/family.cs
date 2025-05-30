@@ -22,8 +22,7 @@ namespace gedcom
 
         /// <summary>Create an individual from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the individual from.</param>
-        /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
-        public Family(Tag tag, Gedcom gedcom) : base(tag, gedcom)
+        public Family(Tag tag) : base(tag)
         {
         }
 

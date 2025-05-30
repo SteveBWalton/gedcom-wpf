@@ -23,7 +23,7 @@ namespace gedcom
         /// <summary>Create an source from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the source from.</param>
         /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
-        public Source(Tag tag, Gedcom gedcom) : base(tag, gedcom)
+        public Source(Tag tag) : base(tag)
         {
         }
 

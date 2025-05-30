@@ -11,6 +11,8 @@ namespace gedcom
     {
         #region Member Variables
 
+        /// <summary>The parent tag of this tag.</summary>
+        private readonly Tag _parent;
         /// <summary>The gedcom that contains this tag.</summary>
         private readonly Gedcom _gedcom;
         /// <summary>The original line that created this tag. </summary>
@@ -32,6 +34,7 @@ namespace gedcom
         /// <param name="gedcom">Specifies the gedcom that contains the tag.</param>
         public Tag(Gedcom gedcom)
         {
+            _parent = null;
             _gedcom = gedcom;
             _line = "";
             _level = -1;
@@ -42,17 +45,47 @@ namespace gedcom
 
 
 
+        /// <summary>Constructor for a top level tag with no parent tag with the initial values.</summary>
+        /// <param name="gedcom">Specifies the gedcom that contains the tag.</param>
+        /// <param name="tagKey">Specifies the key of the tag.</param>
+        /// <param name="tagValue">Specifies the initial value of the tag.</param>
+        /// <param name="tagLevel">Specifies the level of the tag.</param>
+        public Tag(Gedcom gedcom, string tagKey, string tagValue) : this(gedcom)
+        {
+            _key = tagKey;
+            _value = tagValue;
+            _level = 0;
+        }
+
+
+
         /// <summary>Constructor with the initial values.</summary>
         /// <param name="gedcom">Specifies the gedcom that contains the tag.</param>
         /// <param name="tagKey">Specifies the key of the tag.</param>
         /// <param name="tagValue">Specifies the initial value of the tag.</param>
         /// <param name="tagLevel">Specifies the level of the tag.</param>
-        public Tag(Gedcom gedcom, string tagKey, string tagValue, int tagLevel) : this(gedcom)
+        public Tag(Tag parent, Gedcom gedcom, string tagKey, string tagValue, int tagLevel) : this(gedcom)
         {
+            _parent = parent;
             _key = tagKey;
             _value = tagValue;
             _level = tagLevel;
         }
+
+
+
+        /// <summary>Constructor with the initial values.</summary>
+        /// <param name="tagKey">Specifies the key of the tag.</param>
+        /// <param name="tagValue">Specifies the initial value of the tag.</param>
+        /// <param name="tagLevel">Specifies the level of the tag.</param>
+        public Tag(Tag parent, string tagKey, string tagValue) : this(parent.gedcom)
+        {
+            _parent = parent;
+            _key = tagKey;
+            _value = tagValue;
+            _level = parent.level+1;
+        }
+
 
         #endregion
 

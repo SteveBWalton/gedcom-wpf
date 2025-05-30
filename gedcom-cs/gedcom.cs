@@ -141,12 +141,12 @@ namespace gedcom
                                 }
                                 else if (tag.line.EndsWith("FAM"))
                                 {
-                                    Family family = new Family(tag, this);
+                                    Family family = new Family(tag);
                                     _families.add(family);
                                 }
                                 else if (tag.line.EndsWith("SOUR"))
                                 {
-                                    Source source = new Source(tag, this);
+                                    Source source = new Source(tag);
                                     _sources.add(source);
                                 }
                             }
