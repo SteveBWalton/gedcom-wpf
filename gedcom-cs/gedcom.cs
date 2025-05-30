@@ -136,7 +136,7 @@ namespace gedcom
                             {
                                 if (tag.line.EndsWith("INDI"))
                                 {
-                                    Individual individual = new Individual(tag, this);
+                                    Individual individual = new Individual(tag);
                                     _individuals.add(individual);
                                 }
                                 else if (tag.line.EndsWith("FAM"))

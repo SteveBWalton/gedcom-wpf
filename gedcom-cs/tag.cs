@@ -207,7 +207,7 @@ namespace gedcom
             if (level == _level + 1)
             {
                 // A new child tag is defined by the line.
-                Tag newChild = new Tag(_gedcom);
+                Tag newChild = new Tag(this);
                 newChild.add(line);
                 _children.add(newChild);
                 return true;
