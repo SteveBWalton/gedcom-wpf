@@ -81,7 +81,7 @@ namespace gedcom
             get
             {
                 Tag tagChanged = _tag.children.findOne("CHAN");
-                if (tagChanged==null)
+                if (tagChanged == null)
                 {
                     return DateTime.MinValue;
                 }
@@ -100,6 +100,53 @@ namespace gedcom
         }
 
         #endregion
+
+        /// <summary>Set the last changed to now.</summary>
+        /// <remarks>Might add the user name as a parameter for this?</remarks>
+        /// <returns>True for a new tag, false for update the existing tag.</returns>
+        public bool setLastChanged()
+        {
+            // The default return value.
+            bool isNewTag = false;
+
+            // Get the changed tag,
+            Tag tagChanged = _tag.children.findOne("CHAN");
+            if (tagChanged == null)
+            {
+                // Add a new tag.
+                isNewTag = true;
+                tagChanged = new Tag(_tag, "CHAN", "Y");
+            }
+
+            // Get the date tag.
+            Tag tagDate = tagChanged.children.findOne("DATE");
+            if (tagDate == null)
+            {
+                // Add a new tag.
+                isNewTag = true;
+                tagDate = new Tag(tagChanged, "DATE", DateTime.Now.ToString("d MMM yyyy").ToUpper());
+            }
+            else
+            {
+                tagDate.value = DateTime.Now.ToString("d MMM yyyy").ToUpper();
+            }
+
+            // Get the time tag.
+            Tag tagTime = tagDate.children.findOne("TIME");
+            if (tagTime == null)
+            {
+                // Add a new tag.
+                isNewTag = true;
+                tagTime = new Tag(tagDate, "TIME", DateTime.Now.ToString("hh:mm"));
+            }
+            else
+            {
+                tagTime.value = DateTime.Now.ToString("hh:mm");
+            }
+
+            // Return the new tag status.
+            return isNewTag;
+        }
 
     }
 }

@@ -106,6 +106,9 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the OK button click.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Update the last changed tag.
+            _individual.setLastChanged();
+
             this.DialogResult = true;
         }
 
