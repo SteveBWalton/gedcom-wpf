@@ -120,7 +120,7 @@ namespace gedcom.viewer
             DialogSelectTag dialogSelectTag = new DialogSelectTag(_individual);
             if (dialogSelectTag.ShowDialog() == true)
             {
-                // Add a new tag to the individual.
+                // Add a new tag to the individual.                
                 _individual.tag.children.add(dialogSelectTag.result);
 
                 // Add a new tag to the dialog.

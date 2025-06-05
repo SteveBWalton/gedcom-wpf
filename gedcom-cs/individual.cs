@@ -296,7 +296,7 @@ namespace gedcom
 
 
 
-        /// <summary>Impliment a compare function for sorting.</summary>
+        /// <summary>Compare function for sorting inidividuals by last changed.</summary>
         /// <param name="otherIndividual">Specifies the individual to compare with.</param>
         /// <returns>The comparison of the last edit date of the two individuals.</returns>
         public int CompareTo(Individual otherIndividual)

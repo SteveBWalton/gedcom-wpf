@@ -95,7 +95,7 @@ namespace gedcom
         {
             get
             {
-                switch(_tagKey)
+                switch (_tagKey)
                 {
                 case "INDI":
                 case "SOUR":
@@ -121,6 +121,29 @@ namespace gedcom
 
                 // Not more what to have as the default!
                 return true;
+            }
+        }
+
+
+
+        /// <summary>The priority of the tag in gedcom files.</summary>
+        /// <remarks>The default / uknown priority is 1000.</remarks>
+        public int sortOrder
+        {
+            get
+            {
+                switch (_tagKey)
+                {
+                case "SOUR":
+                    return 1500;
+                case "_TODO":
+                    return 1600;
+                case "CHAN":
+                    return 2000;
+                }
+
+                // Default
+                return 1000;
             }
         }
 

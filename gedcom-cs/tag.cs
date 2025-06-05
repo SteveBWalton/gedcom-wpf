@@ -47,7 +47,7 @@ namespace gedcom
 
 
         /// <summary>Constructor for an empty child tag of a parent tag.</summary>
-        /// <param name="parent"></param>
+        /// <param name="parent">Specifies the tag that that contains this tag.</param>
         public Tag(Tag parent):this(parent.gedcom)
         {
             _parent = parent;
@@ -70,13 +70,14 @@ namespace gedcom
 
 
 
-        /// <summary>Constructor with the initial values.</summary>
-        /// <param name="gedcom">Specifies the gedcom that contains the tag.</param>
+        /// <summary>Constructor of child tag with the initial values.</summary>
+        /// <param name="parent">Specifies the tag that that contains this tag.</param>
         /// <param name="tagKey">Specifies the key of the tag.</param>
         /// <param name="tagValue">Specifies the initial value of the tag.</param>
         public Tag(Tag parent, string tagKey, string tagValue) : this(parent.gedcom, tagKey, tagValue)
         {
             _parent = parent;
+            _level = parent.level + 1;
         }
   
         #endregion
@@ -245,19 +246,42 @@ namespace gedcom
         /// <summary>Return the tag for writing to file and editing.</summary>
         public string toText()
         {
+            // Variable to hold the text.
             StringBuilder output = new StringBuilder();
-            // output.Append(_line);
+
+            // Output this tag without the children.
             output.Append(getLine());
-            // output.Append("\r\n");
             output.Append("\n");
-            foreach (Tag child in children)
+
+            // Source the tags info file order.
+            Tag[] tags = children.ToArray();
+            Array.Sort(tags, compareTagsFileOrder);
+
+            // Write the tags into the text.
+            foreach (Tag child in tags)
             {
                 output.Append(child.toText());
             }
+
+            // Return the built text.
             return output.ToString();
         }
 
 
+
+        /// <summary>
+        /// Compare function to sort tags by file order.
+        /// </summary>
+        /// <param name="tag1">Specifies the first tag.</param>
+        /// <param name="tag2">Specifies the second tag.</param>
+        /// <returns></returns>
+        public static int compareTagsFileOrder(Tag tag1, Tag tag2)
+        {
+            TagType tagType1 = new TagType(tag1._key);
+            TagType tagType2 = new TagType(tag2._key);
+
+            return tagType1.sortOrder.CompareTo(tagType2.sortOrder);
+        }
 
         #region Functions
 

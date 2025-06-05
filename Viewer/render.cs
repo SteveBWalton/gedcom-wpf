@@ -469,6 +469,9 @@ namespace gedcom.viewer
 
                 // Show the original gedcom.
                 pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");
+
+                // Show the file gedcom.
+                pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.toText() + "</pre>");
             }
 
             // Return the built string as html.
