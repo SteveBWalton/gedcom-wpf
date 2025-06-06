@@ -127,13 +127,45 @@ namespace gedcom
 
 
         /// <summary>The priority of the tag in gedcom files.</summary>
-        /// <remarks>The default / uknown priority is 1000.</remarks>
+        /// <remarks>The default / uknown priority is 1000.  The values have no significance it is just the order.</remarks>
         public int sortOrder
         {
             get
             {
                 switch (_tagKey)
                 {
+                // These should be towards the start of the top level tag.
+                case "NAME":
+                    return 10;
+                case "SEX":
+                    return 20;
+                case "BIRT":
+                    return 30;
+                case "DEAT":
+                    return 40;
+                case "FAMC":
+                    return 50;
+
+                case "FAMS":
+                    return 100;
+                case "EDUC":
+                    return 110;
+                case "OCCU":
+                    return 120;
+                case "NOTE":
+                    return 130;
+
+                // These are sub tags that rary appear at level 1.
+                case "DATE":
+                    return 210;
+                case "TIME":
+                    return 220;
+                case "PLAC":
+                    return 300;
+
+                // These should be towards the end of the top level tag.
+                case "OBJE":
+                    return 1400;
                 case "SOUR":
                     return 1500;
                 case "_TODO":
