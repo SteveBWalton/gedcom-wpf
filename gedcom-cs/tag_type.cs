@@ -75,6 +75,10 @@ namespace gedcom
                     return "Occupation";
                 case "NOTE":
                     return "Note";
+                case "SURN":
+                    return "Surname";
+                case "GIVN":
+                    return "Given Names";
                 case "CHAN":
                     return "Last Change";
                 case "OBJE":
@@ -115,6 +119,8 @@ namespace gedcom
                 case "BIRT":
                 case "DEAT":
                 case "FAMC":
+                case "SURN":
+                case "GIVN":
                 case "CHAN":
                     return false;
                 }
@@ -157,11 +163,15 @@ namespace gedcom
 
                 // These are sub tags that rary appear at level 1.
                 case "DATE":
-                    return 210;
-                case "TIME":
-                    return 220;
-                case "PLAC":
                     return 300;
+                case "TIME":
+                    return 310;
+                case "PLAC":
+                    return 320;
+                case "GIVN":
+                    return 210;
+                case "SURN":
+                    return 220;
 
                 // These should be towards the end of the top level tag.
                 case "OBJE":
@@ -212,6 +222,10 @@ namespace gedcom
                 children.Add(new TagType("NOTE"));
                 children.Add(new TagType("_TODO"));
                 children.Add(new TagType("CHAN"));
+                break;
+            case "NAME":
+                children.Add(new TagType("GIVN"));
+                children.Add(new TagType("SURN"));
                 break;
             case "EDUC":
             case "OCCU":
