@@ -112,7 +112,18 @@ namespace gedcom
         public string value
         {
             get { return _value; }
-            set { _value = value; }
+            set 
+            {
+                if (_value != value)
+                {
+                    _value = value;
+
+                    if (_key == "SURN" || _key == "GIVN")
+                    {
+                        _parent.refreshValue();
+                    }
+                }
+            }
         }
 
 
@@ -335,6 +346,36 @@ namespace gedcom
         }
 
 
+
+        /// <summary>Child tags call this when they want their parent tag to update its value.</summary>
+        /// <returns>True for a value change false otherwise.</returns>
+        private bool refreshValue()
+        {
+            if (_key == "NAME")
+            {
+                string newName = "";
+                Tag givenNames = _children.findOne("GIVN");
+                if (givenNames != null)
+                {
+                    newName = givenNames.value;
+                }
+
+                Tag surName = _children.findOne("SURN");
+                if (surName != null)
+                {
+                    newName += " /" + surName.value + "/";
+                }
+
+                if (newName !=_value)
+                {
+                    _value = newName;
+                    return true;
+                }
+            }
+
+            // Return no change.
+            return false;
+        }
 
         #endregion
 

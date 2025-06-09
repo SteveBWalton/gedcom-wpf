@@ -208,7 +208,7 @@ namespace gedcom
         public List<TagType> getChildren()
         {
             List<TagType> children = new List<TagType>();
-            switch(_tagKey)
+            switch (_tagKey)
             {
             case "INDI":
                 children.Add(new TagType("NAME"));
