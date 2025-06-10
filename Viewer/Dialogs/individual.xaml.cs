@@ -92,6 +92,16 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Properties
+
+        /// <summary>The individual that the dialog is editting.</summary>
+        public Individual individual
+        {
+            get => _individual;
+        }
+
+        #endregion
+
         #region Signal Handlers
 
         /// <summary>Signal handler for the cancel button click.</summary>

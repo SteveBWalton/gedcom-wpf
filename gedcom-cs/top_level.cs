@@ -116,6 +116,7 @@ namespace gedcom
                 // Add a new tag.
                 isNewTag = true;
                 tagChanged = new Tag(_tag, "CHAN", "Y");
+                _tag.children.add(tagChanged);
             }
 
             // Get the date tag.
@@ -125,6 +126,7 @@ namespace gedcom
                 // Add a new tag.
                 isNewTag = true;
                 tagDate = new Tag(tagChanged, "DATE", DateTime.Now.ToString("d MMM yyyy").ToUpper());
+                tagChanged.children.add(tagDate);
             }
             else
             {
@@ -138,10 +140,27 @@ namespace gedcom
                 // Add a new tag.
                 isNewTag = true;
                 tagTime = new Tag(tagDate, "TIME", DateTime.Now.ToString("hh:mm"));
+                tagDate.children.add(tagTime);
             }
             else
             {
                 tagTime.value = DateTime.Now.ToString("hh:mm");
+            }
+
+            // Get the changed by tag.
+            string userName = "Gedcom-wpf";
+            Tag tagBy = tagChanged.children.findOne("_PGVU");
+            if (tagBy == null)
+            {
+                // Add a new tag.
+                isNewTag = true;
+                tagBy = new Tag(tagChanged, "_PGVU", userName);
+                tagChanged.children.add(tagBy);
+            }
+            else
+            {
+                // Updatea the existing tag.
+                tagBy.value = userName;
             }
 
             // Return the new tag status.

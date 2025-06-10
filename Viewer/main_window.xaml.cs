@@ -370,7 +370,7 @@ namespace gedcom.viewer
             if (dialogIndividual.ShowDialog() == true)
             {
                 // Add the individual to the gedcom.
-                // Does the dialog actually do this?
+                _gedcom.individuals.add(dialogIndividual.individual);
 
                 // Update the display.
                 // Show the home page.

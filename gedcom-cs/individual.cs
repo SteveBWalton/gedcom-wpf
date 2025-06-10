@@ -29,8 +29,11 @@ namespace gedcom
         /// <summary>Empty class constructor.</summary>
         public Individual(Gedcom gedcom) : base(gedcom)
         {
+            // Create an key for the individual.
+            string newKey = "@I" + (gedcom.individuals.Count() + 1).ToString("0000") + "@";
+
             // An empty individual top level tag.
-            _tag = new Tag(gedcom, "@I0000@", "INDI");
+            _tag = new Tag(gedcom, newKey, "INDI");
         }
 
 
