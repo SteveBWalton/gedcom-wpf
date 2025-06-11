@@ -148,19 +148,20 @@ namespace gedcom
             }
 
             // Get the changed by tag.
-            string userName = "Gedcom-wpf";
-            Tag tagBy = tagChanged.children.findOne("_PGVU");
-            if (tagBy == null)
+            System.Security.Principal.WindowsIdentity windowsIdentity = System.Security.Principal.WindowsIdentity.GetCurrent();
+            string userName = windowsIdentity.Name;
+            Tag tagEditBy = tagChanged.children.findOne("_PGVU");
+            if (tagEditBy == null)
             {
                 // Add a new tag.
                 isNewTag = true;
-                tagBy = new Tag(tagChanged, "_PGVU", userName);
-                tagChanged.children.add(tagBy);
+                tagEditBy = new Tag(tagChanged, "_PGVU", userName);
+                tagChanged.children.add(tagEditBy);
             }
             else
             {
                 // Updatea the existing tag.
-                tagBy.value = userName;
+                tagEditBy.value = userName;
             }
 
             // Return the new tag status.
