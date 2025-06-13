@@ -161,7 +161,7 @@ namespace gedcom.viewer
                 // Show the children.
                 for (int i = 0; i < _tag.children.count; i++)
                 {
-                    TagControl tagControl = new TagControl(_tag.children[i], _isExpand, setChildSize);
+                    TagControl tagControl = new TagControl(_tag.children[i], _isExpand, setChildSizeControl);
                     tagControl.VerticalAlignment = VerticalAlignment.Top;
 
                     RowDefinition rowDefinition = new RowDefinition();
@@ -214,7 +214,7 @@ namespace gedcom.viewer
         {
             _imagePlusMinus.Visibility = Visibility.Visible;
 
-            TagControl tagControl = new TagControl(childTag, _isExpand, setChildSize);
+            TagControl tagControl = new TagControl(childTag, _isExpand, setChildSizeControl);
             tagControl.VerticalAlignment = VerticalAlignment.Top;
 
             RowDefinition rowDefinition = new RowDefinition();
@@ -223,13 +223,16 @@ namespace gedcom.viewer
             _childGrid.RowDefinitions.Add(rowDefinition);
             _childGrid.Children.Add(tagControl);
             Grid.SetRow(tagControl, _tag.children.Count());
+
+            // Request the parent resize the space for this control.
+            _setParentHeight?.Invoke();
         }
 
 
 
         /// <summary>Resize the space for each child row.</summary>
         /// <remarks>This is intended so that the children can inform this control when they change size.</remarks>
-        private void setChildSize()
+        private void setChildSizeControl()
         {
             foreach (RowDefinition rowDefinition in _childGrid.RowDefinitions)
             {

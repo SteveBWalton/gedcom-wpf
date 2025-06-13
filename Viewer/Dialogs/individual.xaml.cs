@@ -66,7 +66,7 @@ namespace gedcom.viewer
             // Create rows for the tags.
             for (int i = 0; i < _individual.tag.children.count; i++)
             {
-                TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSize);
+                TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSizeIndividual);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
 
                 RowDefinition rowDefinition = new RowDefinition();
@@ -82,7 +82,7 @@ namespace gedcom.viewer
 
         /// <summary>Resize the space for each child row.</summary>
         /// <remarks>This is intended so that the children can inform this control when they change size.</remarks>
-        private void setChildSize()
+        private void setChildSizeIndividual()
         {
             foreach (RowDefinition rowDefinition in _mainGrid.RowDefinitions)
             {
@@ -134,7 +134,7 @@ namespace gedcom.viewer
                 _individual.tag.children.add(dialogSelectTag.result);
 
                 // Add a new tag to the dialog.
-                TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSize);
+                TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSizeIndividual);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
 
                 RowDefinition rowDefinition = new RowDefinition();
