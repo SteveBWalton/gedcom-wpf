@@ -107,8 +107,6 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the cancel button click.</summary>
         private void buttonCancelClick(object sender, RoutedEventArgs e)
         {
-            
-            
         }
 
 
@@ -133,13 +131,15 @@ namespace gedcom.viewer
                 // Add a new tag to the individual.                
                 _individual.tag.children.add(dialogSelectTag.result);
 
-                // Add a new tag to the dialog.
+                // Add a new tag control to the dialog.
                 TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSizeIndividual);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
 
+                // Add a new row to the dialog.
                 RowDefinition rowDefinition = new RowDefinition();
                 rowDefinition.Height = new GridLength(tagControl.Height);
 
+                // Add the new tag control to the new row.
                 _mainGrid.RowDefinitions.Add(rowDefinition);
                 _mainGrid.Children.Add(tagControl);
                 Grid.SetRow(tagControl, _individual.tag.children.count);
