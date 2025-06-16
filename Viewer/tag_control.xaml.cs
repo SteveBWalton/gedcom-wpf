@@ -67,8 +67,10 @@ namespace gedcom.viewer
             Grid.SetColumn(textblockTag, 1);
 
             // Width for the control.
-            const int TOTAL_SPACE = 400;
+            const int TOTAL_SPACE = 500;
             int valueWidth = TOTAL_SPACE - 20 * tag.level;
+            // Width for helper buttons.
+            const int BUTTON_WIDTH = 30;
 
             // Add a control for the tag value.
             switch (tag.key)
@@ -131,6 +133,29 @@ namespace gedcom.viewer
                 _mainGrid.Children.Add(textblockReadOnly);
                 Grid.SetRow(textblockReadOnly, 0);
                 Grid.SetColumn(textblockReadOnly, 2);
+                break;
+
+            case "DATE":
+                // Add an extra button for additional date options.
+                StackPanel dateStackPanel = new StackPanel();
+                dateStackPanel.Orientation = Orientation.Horizontal;
+                // Add a textbox for the tag value.
+                TextBox textDateValue = new TextBox();
+                textDateValue.Text = tag.value;
+                textDateValue.Width = valueWidth - BUTTON_WIDTH;
+                textDateValue.VerticalAlignment = VerticalAlignment.Center;
+                textDateValue.LostFocus += TextBoxValue_LostFocus;
+                dateStackPanel.Children.Add(textDateValue);
+                // Add a button for additional date options.
+                Button dateButton = new Button();
+                dateButton.Content = "...";
+                dateButton.Width = BUTTON_WIDTH;
+                dateButton.VerticalAlignment = VerticalAlignment.Center;
+                dateStackPanel.Children.Add(dateButton);
+                // Add stack panel to grid.
+                _mainGrid.Children.Add(dateStackPanel);
+                Grid.SetRow(dateStackPanel, 0);
+                Grid.SetColumn(dateStackPanel, 2);
                 break;
 
             default:
