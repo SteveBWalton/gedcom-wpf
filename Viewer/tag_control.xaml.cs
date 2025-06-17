@@ -151,6 +151,7 @@ namespace gedcom.viewer
                 dateButton.Content = "...";
                 dateButton.Width = BUTTON_WIDTH;
                 dateButton.VerticalAlignment = VerticalAlignment.Center;
+                dateButton.Click += dateButton_Click;
                 dateStackPanel.Children.Add(dateButton);
                 // Add stack panel to grid.
                 _mainGrid.Children.Add(dateStackPanel);
@@ -213,6 +214,17 @@ namespace gedcom.viewer
 
             // Request the parent resize the space for this control.
             setParentHeight?.Invoke();
+        }
+
+
+
+        private void dateButton_Click(object sender, RoutedEventArgs e)
+        {
+            DateDialog dateDialog = new DateDialog();
+            if (dateDialog.ShowDialog() == true)
+            {
+                // Update the related control.
+            }
         }
 
 

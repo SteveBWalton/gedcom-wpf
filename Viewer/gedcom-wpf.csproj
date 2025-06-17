@@ -65,6 +65,9 @@
       <DependentUpon>app.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Dialogs\date_dialog.xaml.cs">
+      <DependentUpon>date_dialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\edit_gedcom.xaml.cs">
       <DependentUpon>edit_gedcom.xaml</DependentUpon>
     </Compile>
@@ -84,6 +87,10 @@
     </Compile>
     <Compile Include="tree_family_line.cs" />
     <Compile Include="user_options.cs" />
+    <Page Include="Dialogs\date_dialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\edit_gedcom.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
