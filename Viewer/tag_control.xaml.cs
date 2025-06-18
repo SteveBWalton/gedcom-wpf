@@ -144,14 +144,15 @@ namespace gedcom.viewer
                 textDateValue.Text = tag.value;
                 textDateValue.Width = valueWidth - BUTTON_WIDTH;
                 textDateValue.VerticalAlignment = VerticalAlignment.Center;
-                textDateValue.LostFocus += TextBoxValue_LostFocus;
+                textDateValue.LostFocus += textBoxValueLostFocus;
                 dateStackPanel.Children.Add(textDateValue);
                 // Add a button for additional date options.
                 Button dateButton = new Button();
                 dateButton.Content = "...";
                 dateButton.Width = BUTTON_WIDTH;
                 dateButton.VerticalAlignment = VerticalAlignment.Center;
-                dateButton.Click += dateButton_Click;
+                dateButton.Tag = textDateValue;
+                dateButton.Click += dateButtonClick;
                 dateStackPanel.Children.Add(dateButton);
                 // Add stack panel to grid.
                 _mainGrid.Children.Add(dateStackPanel);
@@ -165,7 +166,7 @@ namespace gedcom.viewer
                 textBoxValue.Text = tag.value;
                 textBoxValue.Width = valueWidth;
                 textBoxValue.VerticalAlignment = VerticalAlignment.Center;
-                textBoxValue.LostFocus += TextBoxValue_LostFocus;
+                textBoxValue.LostFocus += textBoxValueLostFocus;
                 _mainGrid.Children.Add(textBoxValue);
                 Grid.SetRow(textBoxValue, 0);
                 Grid.SetColumn(textBoxValue, 2);
@@ -216,34 +217,7 @@ namespace gedcom.viewer
             setParentHeight?.Invoke();
         }
 
-
-
-        private void dateButton_Click(object sender, RoutedEventArgs e)
-        {
-            DateDialog dateDialog = new DateDialog();
-            if (dateDialog.ShowDialog() == true)
-            {
-                // Update the related control.
-            }
-        }
-
-
-
-        /// <summary>Signal handler for the default text box losing the focus.</summary>
-        /// <remarks>If the value has changed then update the tag.</remarks>
-        private void TextBoxValue_LostFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-            if (textBox != null)
-            {
-                if (textBox.Text != _tag.value)
-                {
-                    _tag.value = textBox.Text;
-                }
-            }
-        }
-
-
+        #endregion
 
         /// <summary>Add a child control for the specified child tag to the control.</summary>
         /// <param name="childTag">Specifies the child tag to add to the control.</param>
@@ -277,12 +251,11 @@ namespace gedcom.viewer
             }
         }
 
-
-        #endregion
-
         #region Properties
 
         #endregion
+
+        #region Signal Handlers
 
         /// <summary>Signal handler for the show hide child tags button click.  /// </summary>
         private void buttonPlusMinusClick(object sender, RoutedEventArgs e)
@@ -335,5 +308,42 @@ namespace gedcom.viewer
                 _setParentHeight?.Invoke();
             }
         }
+
+
+
+        /// <summary>Signal handler for the date helper button click.</summary>
+        private void dateButtonClick(object sender, RoutedEventArgs e)
+        {
+            Button buttonDateHelper = (Button)sender;
+            TextBox txtDate = (TextBox)buttonDateHelper.Tag;
+
+            DateDialog dateDialog = new DateDialog();
+            dateDialog.tagDate = txtDate.Text;
+            if (dateDialog.ShowDialog() == true)
+            {
+                // Update the related control.
+                txtDate.Text = dateDialog.tagDate;
+                // Update the actual tag, (lost focus usually does this).
+                _tag.value = txtDate.Text;
+            }
+        }
+
+
+
+        /// <summary>Signal handler for the default text box losing the focus.</summary>
+        /// <remarks>If the value has changed then update the tag.</remarks>
+        private void textBoxValueLostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                if (textBox.Text != _tag.value)
+                {
+                    _tag.value = textBox.Text;
+                }
+            }
+        }
+
+        #endregion
     }
 }

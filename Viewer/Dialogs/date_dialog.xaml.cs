@@ -19,6 +19,13 @@ namespace gedcom.viewer
     /// </summary>
     public partial class DateDialog : Window
     {
+        #region Member Variables
+
+        /// <summary>The date string to use in the gedcom file.</summary>
+        private string _tagDate;
+
+        #endregion
+
 
         #region Constructors
 
@@ -29,11 +36,34 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Properties
+
+        /// <summary>The date string to use in the gedcom file.</summary>
+        public string tagDate
+        {
+            get => _tagDate;
+            set { _tagDate = value; }
+        }
+
+
+        #endregion
+
         #region Signal Handlers
+
+        /// <summary>Signal handler for the window loaded event.</summary>
+        private void windowLoaded(object sender, RoutedEventArgs e)
+        {
+            _txtTagDate.Text = _tagDate;
+        }
+
+
 
         /// <summary>Signal handler for the OK button click. </summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Update the tagDate property.
+            _tagDate = _txtTagDate.Text;
+            // Close the dialog with success.
             this.DialogResult = true;
         }
 
