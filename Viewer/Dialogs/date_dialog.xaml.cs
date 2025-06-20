@@ -71,14 +71,77 @@ namespace gedcom.viewer
                 _tagDate = value;
 
                 // Decode the date value onto the dialog.
-
-                // TODO: This is just initial values not decode the actual date value.
-                _onFromBetween = OnFromBetween.ON;
-                _secondDateOnBeforeAfter.Visibility = Visibility.Hidden;
-                _secondDateGrid.Visibility = Visibility.Hidden;
+                decodeString();
             }
         }
 
+
+        #endregion
+
+        #region Encode Decode
+
+        /// <summary>Decode the tagDate string to member variables.</summary>
+        /// <returns>True for success, false otherwise.</returns>
+        private bool decodeString()
+        {
+            string workingString = _tagDate;
+
+            _onFromBetween = OnFromBetween.ON;
+            if (workingString.Contains("FROM"))
+            {
+                _onFromBetween = OnFromBetween.FROM;
+                workingString.Replace("FROM", "");
+            }
+            if (workingString.Contains("BETWEEN"))
+            {
+                _onFromBetween = OnFromBetween.BETWEEN;
+                workingString.Replace("BETWEEN", "");
+            }
+
+            // Return success.
+            return true;
+        }
+
+
+
+        /// <summary>Transfter the values from the member variables to the dialog.</summary>
+        /// <returns>True for success, false otherwise.</returns>
+        private bool toDialog()
+        {
+            // No update from the dialog controls.
+            _isNoUpdate = true;
+
+            // Deal with the On From Between status.
+            if (_onFromBetween == OnFromBetween.ON)
+            {
+                // Hide the second date.
+                _secondDateOnBeforeAfter.Visibility = Visibility.Hidden;
+                _secondDateGrid.Visibility = Visibility.Hidden;
+
+                _radiobuttonOnFromBetween.IsChecked = true;
+            }
+            else
+            {
+                // Show the second date.
+                _secondDateOnBeforeAfter.Visibility = Visibility.Visible;
+                _secondDateGrid.Visibility = Visibility.Visible;
+
+                if (_onFromBetween == OnFromBetween.FROM)
+                {
+                    _radiobuttonFromOnBetween.IsChecked = true;
+                }
+                else if (_onFromBetween == OnFromBetween.BETWEEN)
+                {
+                    _radiobuttonBetweenOnFrom.IsChecked = true;
+                }
+            }
+
+            // Allow updates from the dialog controls.
+            _isNoUpdate = false;
+
+            // Return success.
+            return true;
+        }
 
         #endregion
 
@@ -89,8 +152,8 @@ namespace gedcom.viewer
         {
             _txtTagDate.Text = _tagDate;
 
-            // Allow updates from the form controls now.
-            _isNoUpdate = false;
+            // Update the dialog.
+            toDialog();
         }
 
 
