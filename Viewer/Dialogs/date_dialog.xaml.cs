@@ -21,8 +21,30 @@ namespace gedcom.viewer
     {
         #region Member Variables
 
+        /// <summary>Type to represent the On, Before, After.</summary>
+        private enum OnFromBetween
+        {
+            ON,
+            FROM,
+            BETWEEN
+        }
+
+        /// <summary>Type to represent the On, Before, After.</summary>
+        private enum OnBeforeAfter
+        {
+            ON,
+            BEFORE,
+            AFTER
+        }
+
         /// <summary>The date string to use in the gedcom file.</summary>
         private string _tagDate;
+
+        /// <summary>True when the controls should not update the object or each other.</summary>
+        private bool _isNoUpdate;
+
+        /// <summary>The current 'On', 'From', 'Between' status of the dialog.</summary>
+        private OnFromBetween _onFromBetween;
 
         #endregion
 
@@ -31,6 +53,7 @@ namespace gedcom.viewer
 
         public DateDialog()
         {
+            _isNoUpdate = true;
             InitializeComponent();
         }
 
@@ -39,10 +62,21 @@ namespace gedcom.viewer
         #region Properties
 
         /// <summary>The date string to use in the gedcom file.</summary>
+        /// <remarks>This is not thread safe.</remarks>
         public string tagDate
         {
             get => _tagDate;
-            set { _tagDate = value; }
+            set 
+            {
+                _tagDate = value;
+
+                // Decode the date value onto the dialog.
+
+                // TODO: This is just initial values not decode the actual date value.
+                _onFromBetween = OnFromBetween.ON;
+                _secondDateOnBeforeAfter.Visibility = Visibility.Hidden;
+                _secondDateGrid.Visibility = Visibility.Hidden;
+            }
         }
 
 
@@ -54,6 +88,9 @@ namespace gedcom.viewer
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
             _txtTagDate.Text = _tagDate;
+
+            // Allow updates from the form controls now.
+            _isNoUpdate = false;
         }
 
 
@@ -75,6 +112,61 @@ namespace gedcom.viewer
 
         }
 
+
+
+        /// <summary>Signal handler for the 'On' in the 'On', 'From', 'Between' group is checked.</summary>
+        private void radiobuttonOnFromBetweenChecked(object sender, RoutedEventArgs e)
+        {
+            // Check for updates allowed.
+            if (_isNoUpdate)
+            {
+                return;
+            }
+
+            _onFromBetween = OnFromBetween.ON;
+
+            // Hide the second date.
+            _secondDateOnBeforeAfter.Visibility = Visibility.Hidden;
+            _secondDateGrid.Visibility = Visibility.Hidden;
+        }
+
+
+
+        /// <summary>Signal handler for the 'From' in the 'On', 'From', 'Between' group is checked.</summary>
+        private void radiobuttonFromOnBetweenChecked(object sender, RoutedEventArgs e)
+        {
+            // Check for updates allowed.
+            if (_isNoUpdate)
+            {
+                return;
+            }
+
+            _onFromBetween = OnFromBetween.FROM;
+
+            // Show the second date.
+            _secondDateOnBeforeAfter.Visibility = Visibility.Visible;
+            _secondDateGrid.Visibility = Visibility.Visible;
+        }
+
+
+
+        /// <summary>Signal handler for the 'Between' in the 'On', 'From', 'Between' group is checked.</summary>
+        private void radiobuttonBetweenOnFromChecked(object sender, RoutedEventArgs e)
+        {
+            // Check for updates allowed.
+            if (_isNoUpdate)
+            {
+                return;
+            }
+
+            _onFromBetween = OnFromBetween.BETWEEN;
+
+            // Show the second date.
+            _secondDateOnBeforeAfter.Visibility = Visibility.Visible;
+            _secondDateGrid.Visibility = Visibility.Visible;
+        }
+
         #endregion
+
     }
 }
