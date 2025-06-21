@@ -37,6 +37,71 @@ namespace gedcom.viewer
             AFTER
         }
 
+        /// <summary>Class to represent the encoded values of a single date on the dialog.</summary>
+        private class DialogDate
+        {
+            #region Member Variables
+
+            /// <summary>The on before after status of this date.</summary>
+            public OnBeforeAfter onBeforeAfter;
+
+            #endregion
+
+            #region Constructors
+
+            DialogDate(string workingString)
+            {
+                decodeString(workingString);
+            }
+
+            #endregion
+
+            #region Encode Decode
+
+            /// <summary>Convert the specified string into class member variables.</summary>
+            /// <param name="workingString">Specifies the string that defines the date.</param>
+            /// <returns>True for success, false otherwise.</returns>
+            public bool decodeString(string workingString)
+            {
+                onBeforeAfter = OnBeforeAfter.ON;
+                if (workingString.Contains("BEF"))
+                {
+                    onBeforeAfter = OnBeforeAfter.BEFORE;
+                    workingString.Replace("BEF", "");
+                }
+                if (workingString.Contains("AFT"))
+                {
+                    onBeforeAfter = OnBeforeAfter.AFTER;
+                    workingString.Replace("AFT", "");
+                }
+
+                // return success.
+                return true;
+            }
+
+
+
+            /// <summary>Convert the class member variables into a string.</summary>
+            /// <returns>The string that represents the class member variables.</returns>
+            public override string ToString()
+            {
+                StringBuilder result = new StringBuilder();
+                switch(onBeforeAfter)
+                {
+                case OnBeforeAfter.BEFORE:
+                    result.Append("BEF ");
+                    break;
+                case OnBeforeAfter.AFTER:
+                    result.Append("AFT ");
+                    break;
+                }
+
+                return result.ToString();
+            }
+
+            #endregion
+        }
+
         /// <summary>The date string to use in the gedcom file.</summary>
         private string _tagDate;
 
@@ -46,6 +111,9 @@ namespace gedcom.viewer
         /// <summary>The current 'On', 'From', 'Between' status of the dialog.</summary>
         private OnFromBetween _onFromBetween;
 
+        private DialogDate _firstDate;
+        private DialogDate _secondDate;
+        
         #endregion
 
 
@@ -104,7 +172,7 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>Transfter the values from the member variables to the dialog.</summary>
+        /// <summary>Transfer the values from the member variables to the dialog.</summary>
         /// <returns>True for success, false otherwise.</returns>
         private bool toDialog()
         {
