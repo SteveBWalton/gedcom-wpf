@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,7 +50,12 @@ namespace gedcom.viewer
 
             #region Constructors
 
-            DialogDate(string workingString)
+            public DialogDate()
+            {
+                onBeforeAfter = OnBeforeAfter.ON;
+            }
+
+            public DialogDate(string workingString)
             {
                 decodeString(workingString);
             }
@@ -116,13 +122,15 @@ namespace gedcom.viewer
         
         #endregion
 
-
         #region Constructors
 
         public DateDialog()
         {
             _isNoUpdate = true;
             InitializeComponent();
+
+            _firstDate = new DialogDate();
+            _secondDate = new DialogDate();
         }
 
         #endregion
@@ -159,11 +167,41 @@ namespace gedcom.viewer
             {
                 _onFromBetween = OnFromBetween.FROM;
                 workingString.Replace("FROM", "");
+
+                // Split the working string on "TO".
+                int splitPos = workingString.IndexOf("TO");
+                if (splitPos > 0)
+                {
+                    _firstDate.decodeString(workingString.Substring(0, splitPos));
+                    _secondDate.decodeString(workingString.Substring(splitPos + 3));
+                }
+                else
+                {
+                    // This is not really correct.
+                    _firstDate.decodeString(workingString);
+                }
             }
-            if (workingString.Contains("BETWEEN"))
+            else if (workingString.Contains("BET"))
             {
                 _onFromBetween = OnFromBetween.BETWEEN;
-                workingString.Replace("BETWEEN", "");
+                workingString.Replace("BET", "");
+
+                // Split the working string on "AND"
+                int splitPos = workingString.IndexOf("AND");
+                if (splitPos > 0)
+                {
+                    _firstDate.decodeString(workingString.Substring(0, splitPos));
+                    _secondDate.decodeString(workingString.Substring(splitPos + 4));
+                }
+                else
+                {
+                    // This is not really correct.
+                    _firstDate.decodeString(workingString);
+                }
+            }
+            else
+            {
+                _firstDate.decodeString(workingString);
             }
 
             // Return success.
@@ -187,6 +225,8 @@ namespace gedcom.viewer
                 _secondDateGrid.Visibility = Visibility.Hidden;
 
                 _radiobuttonOnFromBetween.IsChecked = true;
+
+                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter);
             }
             else
             {
@@ -202,10 +242,40 @@ namespace gedcom.viewer
                 {
                     _radiobuttonBetweenOnFrom.IsChecked = true;
                 }
+
+                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter);
+                updateDate(_secondDate, _radiobuttonSecondOn, _radiobuttonSecondBefore, _radiobuttonSecondAfter);
             }
 
             // Allow updates from the dialog controls.
             _isNoUpdate = false;
+
+            // Return success.
+            return true;
+        }
+
+
+
+        /// <summary>Update the specified dialog controls with the specified date settings.</summary>
+        /// <param name="dialogDate">Specifies the date settings.</param>
+        /// <param name="radiobuttonOn"></param>
+        /// <param name="radiobuttonBefore"></param>
+        /// <param name="radiobuttonAfter"></param>
+        /// <returns></returns>
+        private bool updateDate(DialogDate dialogDate, RadioButton radiobuttonOn, RadioButton radiobuttonBefore, RadioButton radiobuttonAfter)
+        {
+            switch (dialogDate.onBeforeAfter)
+            {
+            case OnBeforeAfter.ON:
+                radiobuttonOn.IsChecked = true;
+                break;
+            case OnBeforeAfter.BEFORE:
+                radiobuttonBefore.IsChecked = true;
+                break;
+            case OnBeforeAfter.AFTER:
+                radiobuttonAfter.IsChecked = true;
+                break;
+            }
 
             // Return success.
             return true;
@@ -218,6 +288,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the window loaded event.</summary>
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
+            // Update the date text box.
             _txtTagDate.Text = _tagDate;
 
             // Update the dialog.
@@ -295,6 +366,19 @@ namespace gedcom.viewer
             // Show the second date.
             _secondDateOnBeforeAfter.Visibility = Visibility.Visible;
             _secondDateGrid.Visibility = Visibility.Visible;
+        }
+
+
+
+        /// <summary>Signal handler for the date textbox losing the focus.</summary>
+        private void txtTagDateLostFocus(object sender, RoutedEventArgs e)
+        {
+            // Decode the new string value.
+            _tagDate = _txtTagDate.Text;
+            decodeString();
+
+            // Update the other controls on the dialog.
+            toDialog();
         }
 
         #endregion

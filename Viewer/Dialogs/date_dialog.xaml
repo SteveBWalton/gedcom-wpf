@@ -18,16 +18,16 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="_txtTagDate" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="tagDate" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" FontSize="16" FontWeight="Bold" TextAlignment="Center" />
+        <TextBox x:Name="_txtTagDate" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="tagDate" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" FontSize="16" FontWeight="Bold" TextAlignment="Center" LostFocus="txtTagDateLostFocus" />
         <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <RadioButton x:Name="_radiobuttonOnFromBetween" Content="On" Margin="4,0,4,0" Checked="radiobuttonOnFromBetweenChecked" IsChecked="True" />
             <RadioButton x:Name="_radiobuttonFromOnBetween" Content="From" Margin="4,0,4,0" Checked="radiobuttonFromOnBetweenChecked" />
             <RadioButton x:Name="_radiobuttonBetweenOnFrom" Content="Between" Margin="4,0,4,0" Checked="radiobuttonBetweenOnFromChecked" />
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <RadioButton Content="On" Margin="4,0,4,0" />
-            <RadioButton Content="Before" Margin="4,0,4,0" />
-            <RadioButton Content="After" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonFirstOn" Content="On" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonFirstBefore" Content="Before" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonFirstAfter" Content="After" Margin="4,0,4,0" />
         </StackPanel>
         <Grid Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -62,9 +62,9 @@
             <CheckBox Grid.Column="3" Grid.Row="1" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
         </Grid>
         <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="1" x:Name="_secondDateOnBeforeAfter" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <RadioButton Content="On" Margin="4,0,4,0" />
-            <RadioButton Content="Before" Margin="4,0,4,0" />
-            <RadioButton Content="After" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonSecondOn" Content="On" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonSecondBefore" Content="Before" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonSecondAfter" Content="After" Margin="4,0,4,0" />
         </StackPanel>
         <Grid Grid.Column="1" Grid.Row="3" x:Name="_secondDateGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
