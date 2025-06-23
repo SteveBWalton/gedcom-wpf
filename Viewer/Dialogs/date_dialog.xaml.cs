@@ -39,12 +39,16 @@ namespace gedcom.viewer
         }
 
         /// <summary>Class to represent the encoded values of a single date on the dialog.</summary>
+        /// <remarks>Should this class get it's own file, possibly in gedcom-cs?</remarks>
         private class DialogDate
         {
             #region Member Variables
 
             /// <summary>The on before after status of this date.</summary>
             public OnBeforeAfter onBeforeAfter;
+
+            /// <summary>True if the date only about, false otherwise.</summary>
+            public bool isAbout;
 
             #endregion
 
@@ -69,6 +73,7 @@ namespace gedcom.viewer
             /// <returns>True for success, false otherwise.</returns>
             public bool decodeString(string workingString)
             {
+                // On Before After.
                 onBeforeAfter = OnBeforeAfter.ON;
                 if (workingString.Contains("BEF"))
                 {
@@ -79,6 +84,16 @@ namespace gedcom.viewer
                 {
                     onBeforeAfter = OnBeforeAfter.AFTER;
                     workingString.Replace("AFT", "");
+                }
+
+                // Optional About.
+                if (workingString.Contains("ABT"))
+                {
+                    isAbout = true;
+                }
+                else
+                {
+                    isAbout = false;
                 }
 
                 // return success.
@@ -100,6 +115,11 @@ namespace gedcom.viewer
                 case OnBeforeAfter.AFTER:
                     result.Append("AFT ");
                     break;
+                }
+
+                if(isAbout)
+                {
+                    result.Append("ABT ");
                 }
 
                 return result.ToString();
@@ -226,7 +246,7 @@ namespace gedcom.viewer
 
                 _radiobuttonOnFromBetween.IsChecked = true;
 
-                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter);
+                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter, _checkboxFirstAbout);
             }
             else
             {
@@ -243,8 +263,8 @@ namespace gedcom.viewer
                     _radiobuttonBetweenOnFrom.IsChecked = true;
                 }
 
-                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter);
-                updateDate(_secondDate, _radiobuttonSecondOn, _radiobuttonSecondBefore, _radiobuttonSecondAfter);
+                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter, _checkboxFirstAbout);
+                updateDate(_secondDate, _radiobuttonSecondOn, _radiobuttonSecondBefore, _radiobuttonSecondAfter, _checkboxSecondAbout);
             }
 
             // Allow updates from the dialog controls.
@@ -262,7 +282,7 @@ namespace gedcom.viewer
         /// <param name="radiobuttonBefore"></param>
         /// <param name="radiobuttonAfter"></param>
         /// <returns></returns>
-        private bool updateDate(DialogDate dialogDate, RadioButton radiobuttonOn, RadioButton radiobuttonBefore, RadioButton radiobuttonAfter)
+        private bool updateDate(DialogDate dialogDate, RadioButton radiobuttonOn, RadioButton radiobuttonBefore, RadioButton radiobuttonAfter, CheckBox checkboxAbout)
         {
             switch (dialogDate.onBeforeAfter)
             {
@@ -276,6 +296,8 @@ namespace gedcom.viewer
                 radiobuttonAfter.IsChecked = true;
                 break;
             }
+
+            checkboxAbout.IsChecked = dialogDate.isAbout;
 
             // Return success.
             return true;
