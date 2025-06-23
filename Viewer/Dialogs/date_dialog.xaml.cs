@@ -50,15 +50,41 @@ namespace gedcom.viewer
             /// <summary>True if the date only about, false otherwise.</summary>
             public bool isAbout;
 
+            /// <summary>The day of the month.</summary>
+            public int day;
+            /// <summary>The month of the year, 1 based.</summary>
+            public int month;
+            /// <summary>The 4 digit year.</summary>
+            public int year;
+
+            /// <summary>True if the day of the month is unknown, false if known.</summary>
+            public bool isDayUnknown;
+            /// <summary>True if the month of the year is unknown, false if known.</summary>
+            public bool isMonthUnknown;
+            /// <summary>True if the 4 digit year is unknown, false if known.</summary>
+            public bool isYearUnknown;
+
             #endregion
 
             #region Constructors
 
+            /// <summary>The empty default constructor.</summary>
             public DialogDate()
             {
                 onBeforeAfter = OnBeforeAfter.ON;
+                isAbout = false;
+                isDayUnknown = false;
+                isMonthUnknown = false;
+                isYearUnknown = false;
+                day = 1;
+                month = 1;
+                year = 2024;
             }
 
+
+
+            /// <summary>The constructor to take initial values from a string.</summary>
+            /// <param name="workingString">Specifies the string that contains the initial values.</param>
             public DialogDate(string workingString)
             {
                 decodeString(workingString);
@@ -96,18 +122,120 @@ namespace gedcom.viewer
                     isAbout = false;
                 }
 
+                // Try to get the month.
+                int monthPos = 9999;
+                int monthIdx = 1;
+                foreach (string monthName in new string[] { "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" })
+                {
+                    int pos;
+                    if ((pos = workingString.ToUpper().IndexOf(monthName)) >= 0)
+                    {
+                        if (pos < monthPos)
+                        {
+                            monthPos = pos;
+                            month = monthIdx;
+                        }
+                    }
+                    monthIdx++;
+                }
+
+                // Try to get the day and year from around the month.
+                if (monthPos == 9999)
+                {
+                    // No month information.
+                    isMonthUnknown = true;
+                    isDayUnknown = true;
+                    string yearString = getDigits(workingString, 0, 1);
+                    isYearUnknown = false;
+                    if (!int.TryParse(yearString, out year))
+                    {
+                        year = 1990;
+                        isYearUnknown = true;
+                    }
+                }
+                else
+                {
+                    isMonthUnknown = false;
+                    // Search forward for year information and backwards for day information.
+                    string yearString = getDigits(workingString, monthPos, 1);
+                    string dayString = getDigits(workingString, monthPos, -1);
+                    // Console.WriteLine("'" + _tag.value + "' => '" + dayString + "', " + month.ToString() + ", '" + yearString + "'");
+                    isYearUnknown = false;
+                    if (!int.TryParse(yearString, out year))
+                    {
+                        year = 1990;
+                        isYearUnknown = true;
+                    }
+                    isDayUnknown = false;
+                    if (!int.TryParse(dayString, out day))
+                    {
+                        day = 1;
+                        isDayUnknown = true;
+                    }
+                }
+
                 // return success.
                 return true;
             }
 
+            /// <summary>Search fowards or backwards in the tag value string for digits.</summary>
+            /// <param name="position">Specifies the position to search from.</param>
+            /// <param name="direction">Specifies the search direction.</param>
+            /// <returns></returns>
+            private string getDigits(string workingString, int position, int direction)
+            {
+                // Find the starting position.
+                int startPosition = position;
+                while (!Char.IsDigit(workingString[startPosition]))
+                {
+                    startPosition += direction;
+                    if (startPosition < 0)
+                    {
+                        startPosition = 0;
+                        break;
+                    }
+                    if (startPosition >= workingString.Length)
+                    {
+                        startPosition = workingString.Length - 1;
+                        break;
+                    }
+                }
 
+                // Find the ending position.
+                int endPosition = startPosition;
+                while (Char.IsDigit(workingString[endPosition]))
+                {
+                    endPosition += direction;
+                    if (endPosition < 0)
+                    {
+                        endPosition = 0;
+                        break;
+                    }
+                    if (endPosition >= workingString.Length)
+                    {
+                        endPosition = workingString.Length - 1;
+                        break;
+                    }
+                }
+
+                // Switch start and end into assending order.
+                if (startPosition > endPosition)
+                {
+                    int swap = startPosition;
+                    startPosition = endPosition;
+                    endPosition = swap;
+                }
+
+                // Return the sub string identified.
+                return workingString.Substring(startPosition, endPosition - startPosition + 1);
+            }
 
             /// <summary>Convert the class member variables into a string.</summary>
             /// <returns>The string that represents the class member variables.</returns>
             public override string ToString()
             {
                 StringBuilder result = new StringBuilder();
-                switch(onBeforeAfter)
+                switch (onBeforeAfter)
                 {
                 case OnBeforeAfter.BEFORE:
                     result.Append("BEF ");
@@ -117,7 +245,7 @@ namespace gedcom.viewer
                     break;
                 }
 
-                if(isAbout)
+                if (isAbout)
                 {
                     result.Append("ABT ");
                 }
@@ -246,7 +374,7 @@ namespace gedcom.viewer
 
                 _radiobuttonOnFromBetween.IsChecked = true;
 
-                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter, _checkboxFirstAbout);
+                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter, _checkboxFirstAbout, _txtFirstDay, _cboFirstMonth, _txtFirstYear, _chkFirstDayUnknown, _chkFirstMonthUnknown, _chkFirstYearUnknown);
             }
             else
             {
@@ -263,8 +391,8 @@ namespace gedcom.viewer
                     _radiobuttonBetweenOnFrom.IsChecked = true;
                 }
 
-                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter, _checkboxFirstAbout);
-                updateDate(_secondDate, _radiobuttonSecondOn, _radiobuttonSecondBefore, _radiobuttonSecondAfter, _checkboxSecondAbout);
+                updateDate(_firstDate, _radiobuttonFirstOn, _radiobuttonFirstBefore, _radiobuttonFirstAfter, _checkboxFirstAbout, _txtFirstDay, _cboFirstMonth, _txtFirstYear, _chkFirstDayUnknown, _chkFirstMonthUnknown, _chkFirstYearUnknown);
+                updateDate(_secondDate, _radiobuttonSecondOn, _radiobuttonSecondBefore, _radiobuttonSecondAfter, _checkboxSecondAbout, _txtSecondDay, _cboSecondMonth, _txtSecondYear, _chkSecondDayUnknown, _chkSecondMonthUnknown, _chkSecondYearUnknown);
             }
 
             // Allow updates from the dialog controls.
@@ -282,7 +410,7 @@ namespace gedcom.viewer
         /// <param name="radiobuttonBefore"></param>
         /// <param name="radiobuttonAfter"></param>
         /// <returns></returns>
-        private bool updateDate(DialogDate dialogDate, RadioButton radiobuttonOn, RadioButton radiobuttonBefore, RadioButton radiobuttonAfter, CheckBox checkboxAbout)
+        private bool updateDate(DialogDate dialogDate, RadioButton radiobuttonOn, RadioButton radiobuttonBefore, RadioButton radiobuttonAfter, CheckBox checkboxAbout, TextBox txtDay, ComboBox cboMonth, TextBox txtYear, CheckBox chkDayUnknown, CheckBox chkMonthUnknown, CheckBox chkYearUnknown)
         {
             switch (dialogDate.onBeforeAfter)
             {
@@ -298,6 +426,18 @@ namespace gedcom.viewer
             }
 
             checkboxAbout.IsChecked = dialogDate.isAbout;
+
+            txtDay.Text = dialogDate.day.ToString();
+            txtYear.Text = dialogDate.year.ToString();
+            cboMonth.SelectedIndex = dialogDate.month;
+
+            chkDayUnknown.IsChecked = dialogDate.isDayUnknown;
+            chkMonthUnknown.IsChecked = dialogDate.isMonthUnknown;
+            chkYearUnknown.IsChecked = dialogDate.isYearUnknown;
+
+            txtDay.Visibility = dialogDate.isDayUnknown ? Visibility.Hidden : Visibility.Visible;
+            cboMonth.Visibility = dialogDate.isMonthUnknown ? Visibility.Hidden : Visibility.Visible;
+            txtYear.Visibility = dialogDate.isYearUnknown ? Visibility.Hidden : Visibility.Visible;
 
             // Return success.
             return true;
