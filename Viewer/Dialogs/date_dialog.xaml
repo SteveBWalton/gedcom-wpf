@@ -25,9 +25,9 @@
             <RadioButton x:Name="_radiobuttonBetweenOnFrom" Content="Between" Margin="4,0,4,0" Checked="radiobuttonBetweenOnFromChecked" />
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <RadioButton x:Name="_radiobuttonFirstOn" Content="On" Margin="4,0,4,0" />
-            <RadioButton x:Name="_radiobuttonFirstBefore" Content="Before" Margin="4,0,4,0" />
-            <RadioButton x:Name="_radiobuttonFirstAfter" Content="After" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonFirstOn" Content="On" Margin="4,0,4,0" Checked="radiobuttonFirstOnChecked" />
+            <RadioButton x:Name="_radiobuttonFirstBefore" Content="Before" Margin="4,0,4,0" Checked="radiobuttonFirstBeforeChecked" />
+            <RadioButton x:Name="_radiobuttonFirstAfter" Content="After" Margin="4,0,4,0" Checked="radiobuttonFirstAfterChecked" />
         </StackPanel>
         <Grid Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -40,10 +40,10 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <CheckBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" x:Name="_checkboxFirstAbout" Content="About" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
-            <TextBox Width="30" Grid.Column="1" Grid.Row="0" x:Name="_txtFirstDay" Text="29" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
-            <CheckBox Grid.Column="1" Grid.Row="1" x:Name="_chkFirstDayUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
-            <ComboBox Grid.Column="2" Grid.Row="0" x:Name="_cboFirstMonth" Width="50" Margin="2,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <CheckBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" x:Name="_checkboxFirstAbout" Content="About" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="checkboxFirstAboutChanged" Unchecked="checkboxFirstAboutChanged"  />
+            <TextBox Width="30" Grid.Column="1" Grid.Row="0" x:Name="_txtFirstDay" Text="29" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" LostFocus="txtFirstDayLostFocus"/>
+            <CheckBox Grid.Column="1" Grid.Row="1" x:Name="_chkFirstDayUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Unchecked="chkFirstDayUnknownChanged" Checked="chkFirstDayUnknownChanged"  />
+            <ComboBox Grid.Column="2" Grid.Row="0" x:Name="_cboFirstMonth" Width="50" Margin="2,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Center" SelectionChanged="cboFirstMonthSelectionChanged">
                     <ComboBoxItem Content="Jan" />
                     <ComboBoxItem Content="Feb" />
                     <ComboBoxItem Content="Mar" />
@@ -57,14 +57,14 @@
                     <ComboBoxItem Content="Nov" />
                     <ComboBoxItem Content="Dec" />
                 </ComboBox>
-            <CheckBox Grid.Column="2" Grid.Row="1" x:Name="_chkFirstMonthUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
-            <TextBox Width="50" Grid.Column="3" Grid.Row="0" x:Name="_txtFirstYear" Text="1968" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
-            <CheckBox Grid.Column="3" Grid.Row="1" x:Name="_chkFirstYearUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+            <CheckBox Grid.Column="2" Grid.Row="1" x:Name="_chkFirstMonthUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="chkFirstMonthUnknownChanged" Unchecked="chkFirstMonthUnknownChanged"  />
+            <TextBox Width="50" Grid.Column="3" Grid.Row="0" x:Name="_txtFirstYear" Text="1968" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" LostFocus="txtFirstYearLostFocus"/>
+            <CheckBox Grid.Column="3" Grid.Row="1" x:Name="_chkFirstYearUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="chkFirstYearUnknownChanged" Unchecked="chkFirstYearUnknownChanged"  />
         </Grid>
         <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="1" x:Name="_secondDateOnBeforeAfter" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <RadioButton x:Name="_radiobuttonSecondOn" Content="On" Margin="4,0,4,0" />
-            <RadioButton x:Name="_radiobuttonSecondBefore" Content="Before" Margin="4,0,4,0" />
-            <RadioButton x:Name="_radiobuttonSecondAfter" Content="After" Margin="4,0,4,0" />
+            <RadioButton x:Name="_radiobuttonSecondOn" Content="On" Margin="4,0,4,0" Checked="radiobuttonSecondOnChecked" />
+            <RadioButton x:Name="_radiobuttonSecondBefore" Content="Before" Margin="4,0,4,0" Checked="radiobuttonSecondBeforeChecked" />
+            <RadioButton x:Name="_radiobuttonSecondAfter" Content="After" Margin="4,0,4,0" Checked="radiobuttonSecondAfterChecked" />
         </StackPanel>
         <Grid Grid.Column="1" Grid.Row="3" x:Name="_secondDateGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid.ColumnDefinitions>
@@ -77,10 +77,10 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <CheckBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" x:Name="_checkboxSecondAbout" Content="About" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
-            <TextBox Width="30" Grid.Column="1" Grid.Row="0" x:Name="_txtSecondDay" Text="29" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
-            <CheckBox Grid.Column="1" Grid.Row="1" x:Name="_chkSecondDayUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
-            <ComboBox Grid.Column="2" Grid.Row="0" x:Name="_cboSecondMonth" Width="50" Margin="2,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <CheckBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" x:Name="_checkboxSecondAbout" Content="About" Margin="0,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="checkboxSecondAboutChanged" Unchecked="checkboxSecondAboutChanged"  />
+            <TextBox Width="30" Grid.Column="1" Grid.Row="0" x:Name="_txtSecondDay" Text="29" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" LostFocus="txtSecondDayLostFocus"/>
+            <CheckBox Grid.Column="1" Grid.Row="1" x:Name="_chkSecondDayUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="chkSecondDayUnknownChanged" Unchecked="chkSecondDayUnknownChanged"  />
+            <ComboBox Grid.Column="2" Grid.Row="0" x:Name="_cboSecondMonth" Width="50" Margin="2,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Center" SelectionChanged="cboSecondMonthSelectionChanged">
                 <ComboBoxItem Content="Jan" />
                 <ComboBoxItem Content="Feb" />
                 <ComboBoxItem Content="Mar" />
@@ -94,9 +94,9 @@
                 <ComboBoxItem Content="Nov" />
                 <ComboBoxItem Content="Dec" />
             </ComboBox>
-            <CheckBox Grid.Column="2" Grid.Row="1" x:Name="_chkSecondMonthUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
-            <TextBox Width="50" Grid.Column="3" Grid.Row="0" x:Name="_txtSecondYear" Text="1968" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
-            <CheckBox Grid.Column="3" Grid.Row="1" x:Name="_chkSecondYearUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+            <CheckBox Grid.Column="2" Grid.Row="1" x:Name="_chkSecondMonthUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="chkSecondMonthUnknownChanged" Unchecked="chkSecondMonthUnknownChanged"  />
+            <TextBox Width="50" Grid.Column="3" Grid.Row="0" x:Name="_txtSecondYear" Text="1968" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" LostFocus="txtSecondYearLostFocus"/>
+            <CheckBox Grid.Column="3" Grid.Row="1" x:Name="_chkSecondYearUnknown" Margin="0,4,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="chkSecondYearUnknownChanged" Unchecked="chkSecondYearUnknownChanged"  />
         </Grid>
         <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True" Width="100" Height="31">Cancel</Button>
