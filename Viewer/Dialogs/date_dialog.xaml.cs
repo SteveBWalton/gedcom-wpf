@@ -292,6 +292,7 @@ namespace gedcom.viewer
 
         #region Constructors
 
+        /// <summary>Constructor for the Date Helper dialog.</summary>
         public DateDialog()
         {
             _isNoUpdate = true;
@@ -735,7 +736,7 @@ namespace gedcom.viewer
             fromDialog();
         }
 
-        #endregion
+
 
         /// <summary>Signal handler for the first date day unknown changed.</summary>
         private void chkFirstDayUnknownChanged(object sender, RoutedEventArgs e)
@@ -952,5 +953,8 @@ namespace gedcom.viewer
                 fromDialog();
             }
         }
+
+        #endregion
+
     }
 }

@@ -65,6 +65,9 @@
       <DependentUpon>app.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Dialogs\place_dialog.xaml.cs">
+      <DependentUpon>place_dialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\date_dialog.xaml.cs">
       <DependentUpon>date_dialog.xaml</DependentUpon>
     </Compile>
@@ -87,6 +90,10 @@
     </Compile>
     <Compile Include="tree_family_line.cs" />
     <Compile Include="user_options.cs" />
+    <Page Include="Dialogs\place_dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\date_dialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

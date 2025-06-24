@@ -160,6 +160,31 @@ namespace gedcom.viewer
                 Grid.SetColumn(dateStackPanel, 2);
                 break;
 
+            case "PLAC":
+                // Add an extra button for the additional place options.
+                StackPanel placeStackPanel = new StackPanel();
+                placeStackPanel.Orientation = Orientation.Horizontal;
+                // Add a textbox for the tag value.
+                TextBox textPlaceValue = new TextBox();
+                textPlaceValue.Text = tag.value;
+                textPlaceValue.Width = valueWidth - BUTTON_WIDTH;
+                textPlaceValue.VerticalAlignment = VerticalAlignment.Center;
+                textPlaceValue.LostFocus += textBoxValueLostFocus;
+                placeStackPanel.Children.Add(textPlaceValue);
+                // Add a button for additional date options.
+                Button placeButton = new Button();
+                placeButton.Content = "...";
+                placeButton.Width = BUTTON_WIDTH;
+                placeButton.VerticalAlignment = VerticalAlignment.Center;
+                placeButton.Tag = textPlaceValue;
+                placeButton.Click += placeButtonClick;
+                placeStackPanel.Children.Add(placeButton);
+                // Add stack panel to grid.
+                _mainGrid.Children.Add(placeStackPanel);
+                Grid.SetRow(placeStackPanel, 0);
+                Grid.SetColumn(placeStackPanel, 2);
+                break;
+
             default:
                 // Add a textbox for the tag value.
                 TextBox textBoxValue = new TextBox();
@@ -219,6 +244,11 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Properties
+
+        #endregion
+
+
         /// <summary>Add a child control for the specified child tag to the control.</summary>
         /// <param name="childTag">Specifies the child tag to add to the control.</param>
         private void addChildControl(Tag childTag)
@@ -251,9 +281,6 @@ namespace gedcom.viewer
             }
         }
 
-        #region Properties
-
-        #endregion
 
         #region Signal Handlers
 
@@ -325,6 +352,27 @@ namespace gedcom.viewer
                 txtDate.Text = dateDialog.tagDate;
                 // Update the actual tag, (lost focus usually does this).
                 _tag.value = txtDate.Text;
+            }
+        }
+
+
+        /// <summary>Signal handler for the place helper button click.</summary>
+        private void placeButtonClick(object sender, RoutedEventArgs e)
+        {
+            Button buttonPlaceHelper = (Button)sender;
+            TextBox txtPlace = (TextBox)buttonPlaceHelper.Tag;
+
+            PlaceDialog placeDialog = new PlaceDialog();
+            placeDialog.tagPlace = txtPlace.Text;
+            // We will need all the child tag values here.
+            if (placeDialog.ShowDialog() == true)
+            {
+                // Update the related control.
+                txtPlace.Text = placeDialog.tagPlace;                
+                // Update the actual tag, (lost focus usually does this).
+                _tag.value = txtPlace.Text;
+
+                // We will need to update the child tags as well.
             }
         }
 
