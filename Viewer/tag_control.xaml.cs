@@ -356,6 +356,7 @@ namespace gedcom.viewer
         }
 
 
+
         /// <summary>Signal handler for the place helper button click.</summary>
         private void placeButtonClick(object sender, RoutedEventArgs e)
         {

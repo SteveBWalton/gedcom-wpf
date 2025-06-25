@@ -10,6 +10,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -18,8 +20,12 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="_txtTagPlace" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Text="tagPlace" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" FontSize="16" FontWeight="Bold" TextAlignment="Center" LostFocus="txtTagDateLostFocus" />
-        <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" >
+        <TextBox x:Name="_txtTagPlace" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4" Text="tagPlace" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" FontSize="16" FontWeight="Bold" TextAlignment="Center" LostFocus="txtTagDateLostFocus" />
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Address" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <TextBox x:Name="_address" Grid.Column="1" Grid.Row="2" Text="" Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <TextBlock Grid.Column="2" Grid.Row="2" Text="Country" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <TextBox x:Name="_country" Grid.Column="3" Grid.Row="2" Text="" Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" />
+        <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="4" Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True" Width="100" Height="31">Cancel</Button>
             <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick" Width="100" Height="31">OK</Button>
         </StackPanel>
