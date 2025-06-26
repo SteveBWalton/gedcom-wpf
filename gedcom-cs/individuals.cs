@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,30 +14,27 @@ namespace gedcom
         #region Member Variables
 
         /// <summary>The collection of individuals.</summary>
-        // private ArrayList _individuals;
-        private List<Individual> _individuals;
+        private readonly List<Individual> _individuals;
 
         #endregion
 
-        #region Class Constructor
+        #region Constructors
 
         /// <summary>Empty class constructor.</summary>
         public Individuals()
         {
-            clear();
+            _individuals = new List<Individual>();            
         }
 
         #endregion
 
         #region List
 
-
-
         /// <summary>Empty the collection.</summary>
         /// <returns>True for success, false otherwise.</returns>
         public bool clear()
-        {
-            _individuals = new List<Individual>();
+        {            
+            _individuals.Clear();
             return true;
         }
 
@@ -64,13 +61,11 @@ namespace gedcom
 
         /// <summary>An indexer for this class.</summary>
         /// <param name="idx">Specifies the index of the individual [0..count-1].</param>
-        /// <returns>The tag at the specified position.</returns>
+        /// <returns>The individual at the specified position.</returns>
         public Individual this[int idx]
         {
             get { return (Individual)_individuals[idx]; }
         }
-
-
 
         #endregion
 

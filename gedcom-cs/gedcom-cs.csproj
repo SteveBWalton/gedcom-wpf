@@ -47,6 +47,8 @@
     <Compile Include="gedcom.cs" />
     <Compile Include="individual.cs" />
     <Compile Include="individuals.cs" />
+    <Compile Include="place.cs" />
+    <Compile Include="places.cs" />
     <Compile Include="Properties\assemblyinfo.cs" />
     <Compile Include="source.cs" />
     <Compile Include="sources.cs" />
