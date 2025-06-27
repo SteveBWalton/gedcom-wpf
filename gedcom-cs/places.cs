@@ -110,20 +110,39 @@ namespace gedcom
         #endregion
 
         /// <summary>Return the place in the collection with the specified name.</summary>
+        /// <remarks>If the place name contains a comma then a deep search.</remarks>
         /// <param name="placeName">Specifies the name of the place to find.</param>
         /// <returns>The place with the specified name or null.</returns>
         public Place getPlace(string placeName)
         {
-            foreach(Place place in _places)
+            if (placeName.Contains(","))
             {
-                if (place.name == placeName)
+                // Deep search of the child places.
+                int lastPos = placeName.LastIndexOf(",");
+                string right = placeName.Substring(lastPos + 1).Trim();
+                string left = placeName.Substring(0, lastPos).Trim();
+                Place parent = getPlace(right);
+                if (parent == null)
                 {
-                    return place;
+                    return null;
+                }
+                return parent.children.getPlace(left);
+            }
+            else
+            {
+                // Standard search of theses places.
+                foreach (Place place in _places)
+                {
+                    if (place.name == placeName)
+                    {
+                        return place;
+                    }
                 }
             }
             return null;
         }
-        
+
+
         
         /// <summary>
         /// Might change this add tag???

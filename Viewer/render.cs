@@ -242,6 +242,10 @@ namespace gedcom.viewer
             {
                 return getSource(query);
             }
+            else if (host =="place")
+            {
+                return getPlace(query);
+            }
             return getError(host, query);
         }
 
@@ -329,7 +333,7 @@ namespace gedcom.viewer
             count = 0;
             foreach(Place place in _gedcom.places)            
             {
-                pageContent.html.AppendLine("<tr><td>" + place.name + "</td></tr>");
+                pageContent.html.AppendLine("<tr><td><a href=\"app://place?id=" + place.name + "\">" + place.name + "</a></td></tr>");
                 count++;
                 if (count >= NUM_ITEMS)
                 {
@@ -977,6 +981,68 @@ namespace gedcom.viewer
         private string htmlSource(Source source)
         {
             return "<a href=\"app://source?id=" + source.idx + "\">" + source.fullName + "</a>";
+        }
+
+        #endregion
+
+        #region Place
+
+        /// <summary>Render the requested source as html.</summary>
+        /// <param name="query">Specifies the request query for this source.</param>
+        /// <returns>The requested source as html.</returns>
+        private PageContent getPlace(string query)
+        {
+            PageContent pageContent = new PageContent();
+
+            NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
+            string idx = queryParams.Get("id");
+
+            // Setup the edit options.
+            pageContent.editForm = ""; // "source?id=" + idx;
+            pageContent.editGedomDirectly = ""; // "source?id=" + idx;
+
+            Place place = _gedcom.places.getPlace(idx);
+            if (place == null)
+            {
+                pageContent.html.Append("<h1>Place</h1>");
+                pageContent.html.Append("<p>query is '" + query + "'</p>");
+                pageContent.html.Append("<p>Can't find '" + idx + "'.</p>");
+                pageContent.html.Append(idx + " not found!");
+            }
+            else
+            {
+                // Title for the place.
+                pageContent.html.AppendLine("<h1>" + place.fullName + "</h1>");
+
+                // Show the child places.
+                // pageContent.html.Append("<fieldset style=\"width: " + INDIVIDUAL_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+                pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
+                pageContent.html.AppendLine("<legend>Child Locations</legend>");
+
+                pageContent.html.AppendLine("<table>");
+                pageContent.html.AppendLine("<tr style=\"font-weight: bold;\"><td>Child Locations</td></tr>");
+                foreach (Place child in place.children)
+                {
+                    pageContent.html.Append("<tr>");
+                    pageContent.html.Append("<td><a href=\"app://place?id=" + child.fullName + "\">" + child.name + "</a></td>");
+                    pageContent.html.AppendLine("</tr>");
+                }
+
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine("</fieldset>");
+
+                // Show individuals with connection to this place.
+                pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
+                pageContent.html.AppendLine("<legend>Individuals</legend>");
+                pageContent.html.AppendLine("<table>");
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine("</fieldset>");
+            }
+
+            // Return the built string as html.
+            // return _userOptions.renderHtml(html.ToString());
+            // Return the page content.
+            return pageContent;
         }
 
         #endregion

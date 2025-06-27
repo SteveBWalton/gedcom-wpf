@@ -66,6 +66,20 @@ namespace gedcom
         }
 
 
+
+        /// <summary>The full name of this place.</summary>
+        public string fullName
+        {
+            get
+            {
+                if (_parent == null)
+                {
+                    return _name;
+                }
+                return _name + ", " + _parent.fullName;
+            }
+        }
+
         #endregion
 
     }
