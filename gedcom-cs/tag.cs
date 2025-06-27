@@ -199,13 +199,19 @@ namespace gedcom
                 {
                     _key = _line.Substring(firstSpace + 1);
                     _value = "";
-
                 }
                 else
                 {
                     _key = _line.Substring(firstSpace + 1, secondSpace - firstSpace - 1);
                     _value = _line.Substring(secondSpace + 1);
                 }
+
+                if (_key == "PLAC")
+                {
+                    _gedcom.places.addString(_value);
+                }
+
+
                 return true;
             }
             if (level == _level + 1)

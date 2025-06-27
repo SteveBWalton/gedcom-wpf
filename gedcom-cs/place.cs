@@ -11,13 +11,60 @@ namespace gedcom
     /// Place is not a gedcom top level tag.
     /// Place tags are used inside top level tags at any level.
     /// </summary>
-    class Place
+    public class Place
     {
         #region Member Variables
+
+        /// <summary>The parent place of this place.</summary>
+        private readonly Place _parent;
+
+        /// <summary>The child places of this place.</summary>
+        private readonly Places _children;
+
+        /// <summary>The name of this place.</summary>
+        private string _name;
 
         #endregion
 
         #region Constructors
+
+        /// <summary>Constructor that specified the parent for this place.</summary>
+        /// <param name="parent">Specifies the parent for this place.</param>
+        /// <param name="name">Specifies the name of this place.</param>
+        public Place(Place parent, string name)
+        {
+            _parent = parent;
+            _children = new Places(this);
+            _name = name;
+        }
+
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>The parent place of this place.</summary>
+        public Place parent
+        {
+            get => _parent;
+        }
+
+
+
+        /// <summary>The child places of this place.</summary>
+        public Places children
+        {
+            get => _children;
+        }
+
+
+
+        /// <summary>The name of this place.</summary>
+        public string name
+        {
+            get => _name;
+        }
+
 
         #endregion
 

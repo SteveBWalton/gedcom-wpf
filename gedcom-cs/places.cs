@@ -11,7 +11,7 @@ namespace gedcom
     /// <summary>
     /// Class to represent a collection of places.
     /// </summary>
-    class Places : IEnumerable<Place>
+    public class Places : IEnumerable<Place>
     {
         #region Member Variables
 
@@ -26,9 +26,11 @@ namespace gedcom
         #region Construtors
 
         /// <summary>Constructor for the places collection.</summary>
-        public Places()
+        /// <param name="parent">Specifies the parent place that owns this collection of places.</param>
+        public Places(Place parent)
         {
             _places = new List<Place>();
+            _parent = parent;
         }
 
         #endregion
@@ -84,7 +86,6 @@ namespace gedcom
 
         #endregion
 
-
         #region IEnumerable<Place>
 
 
@@ -107,5 +108,52 @@ namespace gedcom
 
 
         #endregion
+
+        /// <summary>Return the place in the collection with the specified name.</summary>
+        /// <param name="placeName">Specifies the name of the place to find.</param>
+        /// <returns>The place with the specified name or null.</returns>
+        public Place getPlace(string placeName)
+        {
+            foreach(Place place in _places)
+            {
+                if (place.name == placeName)
+                {
+                    return place;
+                }
+            }
+            return null;
+        }
+        
+        
+        /// <summary>
+        /// Might change this add tag???
+        /// </summary>
+        /// <returns></returns>
+        public bool addString(string text)
+        {
+            // Split off the final place.
+            string right = text;
+            string left = "";
+            if (text.Contains(","))
+            {
+                int lastPos = text.LastIndexOf(",");
+                right = text.Substring(lastPos + 1).Trim();
+                left = text.Substring(0, lastPos).Trim();
+            }
+
+            Place place = getPlace(right);
+            if (place ==null)
+            {
+                place = new Place(_parent, right);
+                add(place);
+            }
+            if (left != "")
+            {
+                place.children.addString(left);
+            }
+
+            // return success
+            return true;
+        }
     }
 }

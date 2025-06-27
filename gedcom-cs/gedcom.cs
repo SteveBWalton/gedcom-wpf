@@ -25,6 +25,10 @@ namespace gedcom
         private readonly Sources _sources;
         /// <summary>True if the gedcom has changed since the last change.</summary>
         private bool _isDirty;
+
+        /// <summary>The places in this gedcom.</summary>
+        private readonly Places _places;
+
         #endregion
 
         #region Constructors
@@ -35,6 +39,7 @@ namespace gedcom
             _individuals = new Individuals();
             _families = new Families();
             _sources = new Sources();
+            _places = new Places(null);
             clear();
             _isDirty = false;
         }
@@ -48,6 +53,7 @@ namespace gedcom
             _individuals.clear();
             _families.clear();
             _sources.clear();
+            _places.clear();
             _isDirty = false;
         }
 
@@ -103,6 +109,15 @@ namespace gedcom
                 }
             }
         }
+
+
+
+        /// <summary>The places in this gedcom.</summary>
+        public Places places
+        {
+            get => _places;
+        }
+
 
         #endregion
 

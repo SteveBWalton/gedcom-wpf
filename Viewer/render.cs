@@ -322,6 +322,25 @@ namespace gedcom.viewer
             pageContent.html.AppendLine("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
             pageContent.html.AppendLine("</fieldset>");
 
+            // Display the places.
+            pageContent.html.Append("<fieldset style=\"width: " + SOURCE_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.AppendLine("<legend>Places</legend>");
+            pageContent.html.AppendLine("<table>");
+            count = 0;
+            foreach(Place place in _gedcom.places)            
+            {
+                pageContent.html.AppendLine("<tr><td>" + place.name + "</td></tr>");
+                count++;
+                if (count >= NUM_ITEMS)
+                {
+                    break;
+                }
+            }
+            pageContent.html.AppendLine("</table>");
+            pageContent.html.AppendLine("<p>There are " + _gedcom.places.count.ToString() + " places.");
+            pageContent.html.AppendLine("</fieldset>");
+
+
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());
             return pageContent;
