@@ -383,6 +383,28 @@ namespace gedcom
             return false;
         }
 
+
+
+        /// <summary>Get all the child tags of this tag.</summary>
+        /// <returns>List of all the child tags of this tag.</returns>
+        public Tag[] getAllTags()
+        {
+            // Build  a list of all the child tag.
+            List<Tag> allTags = new List<Tag>();
+
+            // Add this tag to 
+            allTags.Add(this);
+
+            // Add all the children tags.
+            foreach (Tag child in _children)
+            {
+                allTags.AddRange(child.getAllTags());
+            }
+
+            // Return the list of child tags.
+            return allTags.ToArray();
+        }
+
         #endregion
 
     }

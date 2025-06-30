@@ -366,5 +366,31 @@ namespace gedcom
             // Return the array of siblings.
             return siblings;
         }
+
+
+        /// <summary>Returns true if the individual has a connection to the specified place.</summary>
+        /// <param name="place">Specifies the place.</param>
+        /// <returns>True if the individual has a connection to the specified place, false otherwise.</returns>
+        public bool hasConnection(Place place)
+        {
+            // Get the full place name.
+            string fullPlaceName = place.fullName;
+
+            // Loop through all the tags.
+            Tag[] allTags = _tag.getAllTags();
+            foreach (Tag tag in allTags)
+            {
+                if (tag.key == "PLAC")
+                {
+                    if (tag.value.EndsWith(fullPlaceName))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // Return no connection.
+            return false;
+        }
     }
 }

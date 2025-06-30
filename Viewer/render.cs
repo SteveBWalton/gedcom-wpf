@@ -1035,7 +1035,19 @@ namespace gedcom.viewer
                 pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
                 pageContent.html.AppendLine("<legend>Individuals</legend>");
                 pageContent.html.AppendLine("<table>");
+
+                int count = 0;
+                Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
+                foreach (Individual individual in individualsInDateOrder)
+                {
+                    if (individual.hasConnection(place))
+                    {
+                        pageContent.html.AppendLine("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
+                        count++;
+                    }
+                }
                 pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine("<p>There are " + count.ToString() + " individuals with a connection to " + place.fullName + ".");
                 pageContent.html.AppendLine("</fieldset>");
             }
 
