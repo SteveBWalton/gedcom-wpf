@@ -133,18 +133,17 @@ namespace gedcom.viewer
             // Examine the date value.
             string placeValue = tag.value;
 
-            // Default date.
-            // html.Append("at ");
+            // Default place.
             html.Append("in ");
 
             Tag tagAddress = tag.children.findOne("ADDR");
             if (tagAddress != null)
             {
-                placeValue = tagAddress.value + ", " + placeValue;
+                html.Append(tagAddress.value + ", ");
             }
 
             // Add the full place information.
-            html.Append(placeValue);
+            html.Append(htmlPlace(placeValue));
 
             // Show the sources.
             html.Append(addSourceReferences(tag, htmlSources));
@@ -513,7 +512,27 @@ namespace gedcom.viewer
             {
                 return "Error";
             }
-            return "<a href=\"app://individual?id=" + individual.idx + "\">" + individual.fullName + "</a>";
+            // return "<a href=\"app://individual?id=" + individual.idx + "\">" + individual.fullName + "</a>";
+            StringBuilder result = new StringBuilder("<a href=\"app://individual?id=" + individual.idx + "\">" + individual.fullName);
+            if (individual.dob != null)
+            {
+                result.Append(" (");
+                if (individual.dob.approxDate != null)
+                {
+                    result.Append(individual.dob.approxDate.Year.ToString());
+                }
+                if (individual.dod != null)
+                {
+                    result.Append("-");
+                    if (individual.dod.approxDate != null)
+                    {
+                        result.Append(individual.dod.approxDate.Year.ToString());
+                    }
+                }
+                result.Append(")");
+            }
+            result.Append("</a>");
+            return result.ToString();
         }
 
 
@@ -1072,7 +1091,29 @@ namespace gedcom.viewer
             {
                 return "<a href=\"app://place?id=" + place.fullName + "\">" + place.name + "</a>";
             }
-            return "<a href=\"app://place?id=" + place.fullName + "\">" + place.name + "</a>, "+htmlPlace(place.parent);            
+            return "<a href=\"app://place?id=" + place.fullName + "\">" + place.name + "</a>, " + htmlPlace(place.parent);
+        }
+
+
+
+        /// <summary>Returns the full name of the place in html with links.</summary>
+        /// <param name="placeDescription">Specifies the place value.</param>
+        /// <returns>The html for the place with the full name and links.</returns>
+        private string htmlPlace(string placeDescription)
+        {
+            if (placeDescription.Contains(","))
+            {
+                // Split the place desription.
+                int lastPos = placeDescription.IndexOf(",");
+                string right = placeDescription.Substring(lastPos + 1).Trim();
+                string left = placeDescription.Substring(0, lastPos).Trim();                
+                return "<a href=\"app://place?id=" + placeDescription + "\">" + left + "</a>, " + htmlPlace(right);
+            }
+            else
+            {
+                // Simple place description.
+                return "<a href=\"app://place?id=" + placeDescription + "\">" + placeDescription + "</a>";
+            }
         }
 
         #endregion
