@@ -115,6 +115,10 @@ namespace gedcom
         /// <returns>The place with the specified name or null.</returns>
         public Place getPlace(string placeName)
         {
+            // Replace any '%20' with actual spaces.
+            placeName = placeName.Replace("%20", " ");
+            
+            // Standard search or deep search.
             if (placeName.Contains(","))
             {
                 // Deep search of the child places.

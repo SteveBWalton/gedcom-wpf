@@ -1012,7 +1012,7 @@ namespace gedcom.viewer
             else
             {
                 // Title for the place.
-                pageContent.html.AppendLine("<h1>" + place.fullName + "</h1>");
+                pageContent.html.AppendLine("<h1>" + htmlPlace(place) + "</h1>");
 
                 // Show the child places.
                 // pageContent.html.Append("<fieldset style=\"width: " + INDIVIDUAL_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
@@ -1055,6 +1055,24 @@ namespace gedcom.viewer
             // return _userOptions.renderHtml(html.ToString());
             // Return the page content.
             return pageContent;
+        }
+
+
+
+        /// <summary>Returns the full name of the place in html with links.</summary>
+        /// <param name="place">Specifies the place to display.</param>
+        /// <returns>The html for the place with the full name and links.</returns>
+        private string htmlPlace(Place place)
+        {
+            if (place == null)
+            {
+                return "Error";
+            }
+            if (place.parent == null)
+            {
+                return "<a href=\"app://place?id=" + place.fullName + "\">" + place.name + "</a>";
+            }
+            return "<a href=\"app://place?id=" + place.fullName + "\">" + place.name + "</a>, "+htmlPlace(place.parent);            
         }
 
         #endregion
