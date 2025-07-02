@@ -332,15 +332,12 @@ namespace gedcom.viewer
             count = 0;
             foreach(Place place in _gedcom.places)            
             {
-                pageContent.html.AppendLine("<tr><td><a href=\"app://place?id=" + place.name + "\">" + place.name + "</a></td></tr>");
-                count++;
-                if (count >= NUM_ITEMS)
-                {
-                    break;
-                }
+                int totalCount = place.getTotalCount();
+                pageContent.html.AppendLine("<tr><td><a href=\"app://place?id=" + place.name + "\">" + place.name + "</a> (" + totalCount.ToString() + ")</td></tr>");
+                count += totalCount;
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + _gedcom.places.count.ToString() + " places.");
+            pageContent.html.AppendLine("<p>There are " + count.ToString() + " places.");
             pageContent.html.AppendLine("</fieldset>");
 
 
@@ -1043,7 +1040,7 @@ namespace gedcom.viewer
                 foreach (Place child in place.children)
                 {
                     pageContent.html.Append("<tr>");
-                    pageContent.html.Append("<td><a href=\"app://place?id=" + child.fullName + "\">" + child.name + "</a></td>");
+                    pageContent.html.Append("<td><a href=\"app://place?id=" + child.fullName + "\">" + child.name + "</a> (" + child.getTotalCount() + ")</td>");
                     pageContent.html.AppendLine("</tr>");
                 }
 

@@ -82,5 +82,15 @@ namespace gedcom
 
         #endregion
 
+        /// <summary>The total number of child places for this place.</summary>
+        public int getTotalCount()
+        {
+            int count = 1;
+            foreach (Place child in _children)
+            {
+                count += child.getTotalCount();
+            }
+            return count;
+        }
     }
 }
