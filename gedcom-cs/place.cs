@@ -24,6 +24,9 @@ namespace gedcom
         /// <summary>The name of this place.</summary>
         private string _name;
 
+        /// <summary>True if this place is really just an address.</summary>
+        private bool _isAddress;
+
         #endregion
 
         #region Constructors
@@ -31,11 +34,12 @@ namespace gedcom
         /// <summary>Constructor that specified the parent for this place.</summary>
         /// <param name="parent">Specifies the parent for this place.</param>
         /// <param name="name">Specifies the name of this place.</param>
-        public Place(Place parent, string name)
+        public Place(Place parent, string name, bool isAddress)
         {
             _parent = parent;
             _children = new Places(this);
             _name = name;
+            _isAddress = isAddress;
         }
 
 

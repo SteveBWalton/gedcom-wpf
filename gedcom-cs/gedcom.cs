@@ -180,6 +180,9 @@ namespace gedcom
                 // Deal with final block.
             }
 
+            // Add places from the tags.
+            addPlaces();
+
             // Mark as no save required.
             _isDirty = false;
 
@@ -240,6 +243,32 @@ namespace gedcom
             // Return success.
             return true;
         }
+
+
+
+        /// <summary>
+        /// Loop through all the tags and add the places
+        /// </summary>
+        private void addPlaces()
+        {
+            // Loop through the individuals.
+            foreach(Individual individual in _individuals)
+            {
+                Tag[] allTags = individual.tag.getAllTags();
+                foreach(Tag tag in allTags)
+                {
+                    if (tag.key=="PLAC")
+                    {
+                        _places.addTag(tag);
+                    }
+                }
+            }
+        }
+
+
+
+
+
 
         #endregion
 

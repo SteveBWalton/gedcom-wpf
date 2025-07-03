@@ -152,7 +152,7 @@ namespace gedcom
         /// Might change this add tag???
         /// </summary>
         /// <returns></returns>
-        public bool addString(string text)
+        private bool addString(string text, bool isAddress)
         {
             // Split off the final place.
             string right = text;
@@ -165,18 +165,39 @@ namespace gedcom
             }
 
             Place place = getPlace(right);
-            if (place ==null)
+            if (place == null)
             {
-                place = new Place(_parent, right);
+                place = new Place(_parent, right, isAddress);
                 add(place);
             }
             if (left != "")
             {
-                place.children.addString(left);
+                place.children.addString(left, false);
             }
 
             // return success
             return true;
+        }
+    
+    
+
+        /// <summary>Add the place in the tag to this collection.</summary>
+        /// <param name="tag">Specifies the PLAC tag to add the place from.</param>
+        /// <returns>True for success, false otherwise.</returns>
+        public bool addTag(Tag tag)
+        {
+            Tag tagAddress = tag.children.findOne("ADDR");
+
+            if (tagAddress == null)
+            {
+                // Add the basic place.
+                return addString(tag.value, false);
+            }
+            else
+            {
+                // Add the place plus the address.
+                return addString(tagAddress.value + ", " + tag.value, true);
+            }
         }
     }
 }

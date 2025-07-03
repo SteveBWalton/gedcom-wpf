@@ -151,9 +151,16 @@ namespace gedcom.viewer
             toDialog();
         }
 
+
+
         #endregion
 
+        private void buttonGoogleMapsClick(object sender, RoutedEventArgs e)
+        {
+            string url = "https://www.google.com/maps/search/?api=1&query="+ _latitude.Text + ","+ _longitude.Text;
 
-
+            // Launch the url in the default browser.
+            System.Diagnostics.Process.Start(url);
+        }
     }
 }

@@ -322,7 +322,7 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
+            pageContent.html.AppendLine("<p>Thexitere are " + _gedcom.sources.count.ToString() + " sources.");
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the places.
@@ -339,7 +339,6 @@ namespace gedcom.viewer
             pageContent.html.AppendLine("</table>");
             pageContent.html.AppendLine("<p>There are " + count.ToString() + " places.");
             pageContent.html.AppendLine("</fieldset>");
-
 
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());

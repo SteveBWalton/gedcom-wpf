@@ -206,12 +206,6 @@ namespace gedcom
                     _value = _line.Substring(secondSpace + 1);
                 }
 
-                if (_key == "PLAC")
-                {
-                    _gedcom.places.addString(_value);
-                }
-
-
                 return true;
             }
             if (level == _level + 1)
