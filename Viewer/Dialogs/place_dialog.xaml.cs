@@ -22,6 +22,9 @@ namespace gedcom.viewer
     {
         #region Member Variables
 
+        /// <summary>The gedcom that this place is in.</summary>
+        private Gedcom _gedcom;
+
         /// <summary>The place string to use in the gedcom file.</summary>
         private string _tagPlace;
 
@@ -32,8 +35,9 @@ namespace gedcom.viewer
 
         #region Constructors
 
-        public PlaceDialog()
+        public PlaceDialog(Gedcom gedcom)
         {
+            _gedcom = gedcom;
             _isNoUpdate = true;
             InitializeComponent();
         }
@@ -52,7 +56,10 @@ namespace gedcom.viewer
                 _tagPlace = value;
 
                 // Decode the date value onto the dialog.
-                decodeString();
+                if (!_isNoUpdate)
+                {
+                    toDialog();
+                }
             }
         }
 
@@ -61,20 +68,6 @@ namespace gedcom.viewer
 
         #region Encode Decode
 
-        /// <summary>Decode the tagDate string to member variables.</summary>
-        /// <returns>True for success, false otherwise.</returns>
-        private bool decodeString()
-        {
-            string workingString = _tagPlace;
-
-
-
-            // Return success.
-            return true;
-        }
-
-
-
         /// <summary>Transfer the values from the member variables to the dialog.</summary>
         /// <returns>True for success, false otherwise.</returns>
         private bool toDialog()
@@ -82,8 +75,8 @@ namespace gedcom.viewer
             // No update from the dialog controls.
             _isNoUpdate = true;
 
-            // Deal with the On From Between status.
-
+            // Select the existing place (might not be available).
+            _cboExistingPlaces.SelectedItem = _tagPlace;
 
             // Allow updates from the dialog controls.
             _isNoUpdate = false;
@@ -107,6 +100,23 @@ namespace gedcom.viewer
 
         #endregion
 
+        /// <summary>
+        /// Add the specified places to the existing places combo box.
+        /// </summary>
+        /// <param name="places">Specifies the places to add to the combobox.</param>
+        private void addExistingPlaces(Places places)
+        {
+            // Add the specified places to the combo box.
+            foreach(Place place in places)
+            {
+                // Add the place to the combobox.
+                _cboExistingPlaces.Items.Add(place.fullName);
+
+                // Add the children of the place.
+                addExistingPlaces(place.children);
+            }
+        }        
+        
         #region Signal Handlers
 
         /// <summary>Signal handler for the window loaded event.</summary>
@@ -114,6 +124,9 @@ namespace gedcom.viewer
         {
             // Update the date text box.
             _txtTagPlace.Text = _tagPlace;
+
+            // Populate the existing places comobobox.            
+            addExistingPlaces(_gedcom.places);
 
             // Update the dialog.
             toDialog();
@@ -145,7 +158,6 @@ namespace gedcom.viewer
         {
             // Decode the new string value.
             _tagPlace = _txtTagPlace.Text;
-            decodeString();
 
             // Update the other controls on the dialog.
             toDialog();
@@ -161,6 +173,32 @@ namespace gedcom.viewer
 
             // Launch the url in the default browser.
             System.Diagnostics.Process.Start(url);
+        }
+
+
+
+        /// <summary>Signal handler for the existing place combo selection changing.</summary>
+        private void cboExistingPlacesSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Check that updates are allowed.
+            if(_isNoUpdate)
+            {
+                return;
+            }
+
+            // Check for a valid selection.
+            if (_cboExistingPlaces.SelectedIndex<0)
+            {
+                // No selection abort.
+                return;
+            }
+
+            string placeString = (string)_cboExistingPlaces.SelectedItem;
+            Place selectedPlace = _gedcom.places.getPlace(placeString);
+            if (selectedPlace!=null)
+            {
+                _txtTagPlace.Text = selectedPlace.fullName;
+            }
         }
     }
 }

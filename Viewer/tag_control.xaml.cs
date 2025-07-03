@@ -363,7 +363,7 @@ namespace gedcom.viewer
             Button buttonPlaceHelper = (Button)sender;
             TextBox txtPlace = (TextBox)buttonPlaceHelper.Tag;
 
-            PlaceDialog placeDialog = new PlaceDialog();
+            PlaceDialog placeDialog = new PlaceDialog(_tag.gedcom);
             placeDialog.tagPlace = txtPlace.Text;
             // We will need all the child tag values here.
             if (placeDialog.ShowDialog() == true)
