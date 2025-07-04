@@ -1030,7 +1030,19 @@ namespace gedcom.viewer
                 pageContent.html.AppendLine("<h1>" + htmlPlace(place) + "</h1>");
 
                 // Show the child places.
-                // pageContent.html.Append("<fieldset style=\"width: " + INDIVIDUAL_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+                pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
+                pageContent.html.AppendLine("<legend>Properties</legend>");
+                pageContent.html.AppendLine("<table>");
+                pageContent.html.Append("<tr><td>Longitude</td><td>");
+                pageContent.html.Append(place.longitude.ToString("##0.000000"));
+                pageContent.html.AppendLine("</td></tr>");
+                pageContent.html.Append("<tr><td>Latitude</td><td>");
+                pageContent.html.Append(place.latitude.ToString("##0.000000"));
+                pageContent.html.AppendLine("</td></tr>");
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine("</fieldset>");
+
+                // Show the child places.
                 pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
                 pageContent.html.AppendLine("<legend>Child Locations</legend>");
 

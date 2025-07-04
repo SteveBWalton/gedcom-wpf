@@ -159,24 +159,29 @@ namespace gedcom
             {
                 // Add this place.
                 // Split off the final place.
-                string right = text;
-                string left = "";
                 if (text.Contains(","))
                 {
                     int lastPos = text.LastIndexOf(",");
-                    right = text.Substring(lastPos + 1).Trim();
-                    left = text.Substring(0, lastPos).Trim();
-                }
+                    string right = text.Substring(lastPos + 1).Trim();
+                    string left = text.Substring(0, lastPos).Trim();
 
-                place = getPlace(right);
-                if (place == null)
-                {
-                    place = new Place(_parent, right, false, 0, 0);
-                    add(place);
-                }
-                if (left != "")
-                {
+                    // Add or find the right most single place.
+                    place = getPlace(right);
+                    if (place == null)
+                    {
+                        place = new Place(_parent, right, false, 0, 0);
+                        add(place);
+                    }
+
+                    // Add all the left places to the children of the right most place.
                     place.children.addString(left, isAddress, latitude, longitude);
+                }
+                else
+                {
+                    // Add this single place to this collection.
+                    place = new Place(_parent, text, isAddress, latitude, longitude);
+                    add(place);
+                    Console.WriteLine(text + " at " + latitude.ToString() + ", " + longitude.ToString());
                 }
             }
             else
@@ -206,16 +211,24 @@ namespace gedcom
             Tag tagMap = tag.children.findOne("MAP");
             if (tagMap != null)
             {
-                Tag tagLatitude = tagMap.children.findOne("LONG");
+                Tag tagLatitude = tagMap.children.findOne("LATI");
                 if (tagLatitude != null)
                 {
                     double.TryParse(tagLatitude.value.Substring(1), out latitude);
+                    if (tagLatitude.value.Substring(0, 1) == "S")
+                    {
+                        latitude = -latitude;
+                    }
                 }
 
                 Tag tagLongitude = tagMap.children.findOne("LONG");
-                if (tagLongitude!=null)
+                if (tagLongitude != null)
                 {
                     double.TryParse(tagLongitude.value.Substring(1), out longitude);
+                    if (tagLongitude.value.Substring(0, 1) == "W")
+                    {
+                        longitude = -longitude;
+                    }
                 }
             }
 

@@ -188,7 +188,7 @@ namespace gedcom.viewer
             }
 
             // Check for a valid selection.
-            if (_cboExistingPlaces.SelectedIndex<0)
+            if (_cboExistingPlaces.SelectedIndex < 0)
             {
                 // No selection abort.
                 return;
