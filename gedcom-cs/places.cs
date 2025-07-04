@@ -152,27 +152,41 @@ namespace gedcom
         /// Might change this add tag???
         /// </summary>
         /// <returns></returns>
-        private bool addString(string text, bool isAddress)
+        private bool addString(string text, bool isAddress, double latitude, double longitude)
         {
-            // Split off the final place.
-            string right = text;
-            string left = "";
-            if (text.Contains(","))
-            {
-                int lastPos = text.LastIndexOf(",");
-                right = text.Substring(lastPos + 1).Trim();
-                left = text.Substring(0, lastPos).Trim();
-            }
-
-            Place place = getPlace(right);
+            Place place = getPlace(text);
             if (place == null)
             {
-                place = new Place(_parent, right, isAddress);
-                add(place);
+                // Add this place.
+                // Split off the final place.
+                string right = text;
+                string left = "";
+                if (text.Contains(","))
+                {
+                    int lastPos = text.LastIndexOf(",");
+                    right = text.Substring(lastPos + 1).Trim();
+                    left = text.Substring(0, lastPos).Trim();
+                }
+
+                place = getPlace(right);
+                if (place == null)
+                {
+                    place = new Place(_parent, right, false, 0, 0);
+                    add(place);
+                }
+                if (left != "")
+                {
+                    place.children.addString(left, isAddress, latitude, longitude);
+                }
             }
-            if (left != "")
+            else
             {
-                place.children.addString(left, false);
+                // Update the existing place.
+                if (latitude != 0.0 && longitude != 0.0)
+                {
+                    place.latitude = latitude;
+                    place.longitude = longitude;
+                }
             }
 
             // return success
@@ -186,17 +200,37 @@ namespace gedcom
         /// <returns>True for success, false otherwise.</returns>
         public bool addTag(Tag tag)
         {
+            double longitude = 0.0;
+            double latitude = 0.0;
+
+            Tag tagMap = tag.children.findOne("MAP");
+            if (tagMap != null)
+            {
+                Tag tagLatitude = tagMap.children.findOne("LONG");
+                if (tagLatitude != null)
+                {
+                    double.TryParse(tagLatitude.value.Substring(1), out latitude);
+                }
+
+                Tag tagLongitude = tagMap.children.findOne("LONG");
+                if (tagLongitude!=null)
+                {
+                    double.TryParse(tagLongitude.value.Substring(1), out longitude);
+                }
+            }
+
+
             Tag tagAddress = tag.children.findOne("ADDR");
 
             if (tagAddress == null)
             {
                 // Add the basic place.
-                return addString(tag.value, false);
+                return addString(tag.value, false, latitude, longitude);
             }
             else
             {
                 // Add the place plus the address.
-                return addString(tagAddress.value + ", " + tag.value, true);
+                return addString(tagAddress.value + ", " + tag.value, true, latitude, longitude);
             }
         }
     }

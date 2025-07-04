@@ -118,6 +118,7 @@ namespace gedcom.viewer
             case "BIRT": // Birth
             case "CHAN": // Last Change.
             case "_PGVU": // Last Change by.
+            case "MAP":
                 // Add a text block for the read-only.
                 TextBlock textblockReadOnly = new TextBlock();
                 textblockReadOnly.Width = valueWidth;
@@ -125,7 +126,7 @@ namespace gedcom.viewer
                 textblockReadOnly.VerticalAlignment = VerticalAlignment.Center;
                 textblockReadOnly.Padding = new Thickness(4, 0, 0, 0);
                 textblockReadOnly.Background = Brushes.LightGray;
-                if (tag.key == "BIRT" || tag.key == "CHAN")
+                if (tag.key == "BIRT" || tag.key == "CHAN" || tag.key == "MAP")
                 {
                     tag.value = "Y";
                 }

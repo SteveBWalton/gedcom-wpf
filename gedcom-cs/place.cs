@@ -27,6 +27,12 @@ namespace gedcom
         /// <summary>True if this place is really just an address.</summary>
         private bool _isAddress;
 
+        /// <summary>The latitude of the place.  Positive is north, negative is south.</summary>
+        private double _latitude;
+
+        /// <summary>The longitude of the place.  Positive is east, negative is west.</summary>
+        private double _longitude;
+
         #endregion
 
         #region Constructors
@@ -34,12 +40,14 @@ namespace gedcom
         /// <summary>Constructor that specified the parent for this place.</summary>
         /// <param name="parent">Specifies the parent for this place.</param>
         /// <param name="name">Specifies the name of this place.</param>
-        public Place(Place parent, string name, bool isAddress)
+        public Place(Place parent, string name, bool isAddress, double latitude, double longitude)
         {
             _parent = parent;
             _children = new Places(this);
             _name = name;
             _isAddress = isAddress;
+            _latitude = latitude;
+            _longitude = longitude;
         }
 
 
@@ -82,6 +90,24 @@ namespace gedcom
                 }
                 return _name + ", " + _parent.fullName;
             }
+        }
+
+
+
+        /// <summary>The latitude of the place.  Positive is north, negative is south.</summary>
+        public double latitude
+        {
+            get => _latitude;
+            set { _latitude = value; }
+        }
+
+
+
+        /// <summary>The longitude of the place.  Positive is east, negative is west.</summary>
+        public double longitude
+        {
+            get => _longitude;
+            set { _longitude = value; }
         }
 
         #endregion

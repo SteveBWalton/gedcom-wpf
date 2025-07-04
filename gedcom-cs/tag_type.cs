@@ -83,6 +83,12 @@ namespace gedcom
                     return "Last Change";
                 case "OBJE":
                     return "Media";
+                case "MAP":
+                    return "Map";
+                case "LATI":
+                    return "Latitude";
+                case "LONG":
+                    return "Longitude";
                 case "_TODO":
                     return "To Do";
                 }

@@ -167,9 +167,10 @@ namespace gedcom.viewer
 
         #endregion
 
+        /// <summary>Signal handler for the google maps button click.</summary>
         private void buttonGoogleMapsClick(object sender, RoutedEventArgs e)
         {
-            string url = "https://www.google.com/maps/search/?api=1&query="+ _latitude.Text + ","+ _longitude.Text;
+            string url = "https://www.google.com/maps/search/?api=1&query="+ _txtLatitude.Text + ","+ _txtLongitude.Text;
 
             // Launch the url in the default browser.
             System.Diagnostics.Process.Start(url);
@@ -195,9 +196,22 @@ namespace gedcom.viewer
 
             string placeString = (string)_cboExistingPlaces.SelectedItem;
             Place selectedPlace = _gedcom.places.getPlace(placeString);
-            if (selectedPlace!=null)
+            if (selectedPlace != null)
             {
                 _txtTagPlace.Text = selectedPlace.fullName;
+
+                if (selectedPlace.latitude == 0 && selectedPlace.longitude == 0)
+                {
+                    // Map information is not available.
+                    _txtLatitude.Text = "";
+                    _txtLongitude.Text = "";
+                }
+                else
+                {
+                    // Map information is available.
+                    _txtLatitude.Text = selectedPlace.latitude.ToString();
+                    _txtLongitude.Text = selectedPlace.longitude.ToString();
+                }
             }
         }
     }
