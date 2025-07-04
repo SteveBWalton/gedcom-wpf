@@ -232,7 +232,6 @@ namespace gedcom
                 }
             }
 
-
             Tag tagAddress = tag.children.findOne("ADDR");
 
             if (tagAddress == null)

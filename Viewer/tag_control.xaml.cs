@@ -29,10 +29,17 @@ namespace gedcom.viewer
         /// <summary>The tag to display.</summary>
         private Tag _tag;
 
-        /// <summary>
-        /// True if the child tags are expanded, false otherwise.
-        /// </summary>
+        /// <summary>True if the child tags are expanded, false otherwise.</summary>
         private bool _isExpand;
+
+        /// <summary>The children TagControl objects of this.</summary>
+        private readonly List<TagControl> _children;
+
+        /// <summary>A textbox to hold the tag value.</summary>
+        private TextBox _textBoxValue;
+
+        /// <summary>A text block that might hold the (readonly) tag value.</summary>
+        private TextBlock _textblockValue;
 
         /// <summary>A function to request the parent control to resize the space for this control.</summary>
         private SetParentHeight _setParentHeight;
@@ -53,6 +60,11 @@ namespace gedcom.viewer
             _tag = tag;
             _isExpand = isExpand;
             _setParentHeight = setParentHeight;
+            _children = new List<TagControl>();
+
+            // Controls that might hold the value.
+            _textBoxValue = null;
+            _textblockValue = null;
 
             // Add a label for the tag.
             TextBlock textblockTag = new TextBlock();
@@ -120,20 +132,20 @@ namespace gedcom.viewer
             case "_PGVU": // Last Change by.
             case "MAP":
                 // Add a text block for the read-only.
-                TextBlock textblockReadOnly = new TextBlock();
-                textblockReadOnly.Width = valueWidth;
-                textblockReadOnly.Height = LINE_HEIGHT - 2;
-                textblockReadOnly.VerticalAlignment = VerticalAlignment.Center;
-                textblockReadOnly.Padding = new Thickness(4, 0, 0, 0);
-                textblockReadOnly.Background = Brushes.LightGray;
+                _textblockValue = new TextBlock();
+                _textblockValue.Width = valueWidth;
+                _textblockValue.Height = LINE_HEIGHT - 2;
+                _textblockValue.VerticalAlignment = VerticalAlignment.Center;
+                _textblockValue.Padding = new Thickness(4, 0, 0, 0);
+                _textblockValue.Background = Brushes.LightGray;
                 if (tag.key == "BIRT" || tag.key == "CHAN" || tag.key == "MAP")
                 {
                     tag.value = "Y";
                 }
-                textblockReadOnly.Text = tag.value;
-                _mainGrid.Children.Add(textblockReadOnly);
-                Grid.SetRow(textblockReadOnly, 0);
-                Grid.SetColumn(textblockReadOnly, 2);
+                _textblockValue.Text = tag.value;
+                _mainGrid.Children.Add(_textblockValue);
+                Grid.SetRow(_textblockValue, 0);
+                Grid.SetColumn(_textblockValue, 2);
                 break;
 
             case "DATE":
@@ -141,18 +153,18 @@ namespace gedcom.viewer
                 StackPanel dateStackPanel = new StackPanel();
                 dateStackPanel.Orientation = Orientation.Horizontal;
                 // Add a textbox for the tag value.
-                TextBox textDateValue = new TextBox();
-                textDateValue.Text = tag.value;
-                textDateValue.Width = valueWidth - BUTTON_WIDTH;
-                textDateValue.VerticalAlignment = VerticalAlignment.Center;
-                textDateValue.LostFocus += textBoxValueLostFocus;
-                dateStackPanel.Children.Add(textDateValue);
+                _textBoxValue = new TextBox();
+                _textBoxValue.Text = tag.value;
+                _textBoxValue.Width = valueWidth - BUTTON_WIDTH;
+                _textBoxValue.VerticalAlignment = VerticalAlignment.Center;
+                _textBoxValue.LostFocus += textBoxValueLostFocus;
+                dateStackPanel.Children.Add(_textBoxValue);
                 // Add a button for additional date options.
                 Button dateButton = new Button();
                 dateButton.Content = "...";
                 dateButton.Width = BUTTON_WIDTH;
                 dateButton.VerticalAlignment = VerticalAlignment.Center;
-                dateButton.Tag = textDateValue;
+                dateButton.Tag = _textBoxValue;
                 dateButton.Click += dateButtonClick;
                 dateStackPanel.Children.Add(dateButton);
                 // Add stack panel to grid.
@@ -166,18 +178,18 @@ namespace gedcom.viewer
                 StackPanel placeStackPanel = new StackPanel();
                 placeStackPanel.Orientation = Orientation.Horizontal;
                 // Add a textbox for the tag value.
-                TextBox textPlaceValue = new TextBox();
-                textPlaceValue.Text = tag.value;
-                textPlaceValue.Width = valueWidth - BUTTON_WIDTH;
-                textPlaceValue.VerticalAlignment = VerticalAlignment.Center;
-                textPlaceValue.LostFocus += textBoxValueLostFocus;
-                placeStackPanel.Children.Add(textPlaceValue);
+                _textBoxValue = new TextBox();
+                _textBoxValue.Text = tag.value;
+                _textBoxValue.Width = valueWidth - BUTTON_WIDTH;
+                _textBoxValue.VerticalAlignment = VerticalAlignment.Center;
+                _textBoxValue.LostFocus += textBoxValueLostFocus;
+                placeStackPanel.Children.Add(_textBoxValue);
                 // Add a button for additional date options.
                 Button placeButton = new Button();
                 placeButton.Content = "...";
                 placeButton.Width = BUTTON_WIDTH;
                 placeButton.VerticalAlignment = VerticalAlignment.Center;
-                placeButton.Tag = textPlaceValue;
+                placeButton.Tag = _textBoxValue;
                 placeButton.Click += placeButtonClick;
                 placeStackPanel.Children.Add(placeButton);
                 // Add stack panel to grid.
@@ -188,14 +200,14 @@ namespace gedcom.viewer
 
             default:
                 // Add a textbox for the tag value.
-                TextBox textBoxValue = new TextBox();
-                textBoxValue.Text = tag.value;
-                textBoxValue.Width = valueWidth;
-                textBoxValue.VerticalAlignment = VerticalAlignment.Center;
-                textBoxValue.LostFocus += textBoxValueLostFocus;
-                _mainGrid.Children.Add(textBoxValue);
-                Grid.SetRow(textBoxValue, 0);
-                Grid.SetColumn(textBoxValue, 2);
+                _textBoxValue = new TextBox();
+                _textBoxValue.Text = tag.value;
+                _textBoxValue.Width = valueWidth;
+                _textBoxValue.VerticalAlignment = VerticalAlignment.Center;
+                _textBoxValue.LostFocus += textBoxValueLostFocus;
+                _mainGrid.Children.Add(_textBoxValue);
+                Grid.SetRow(_textBoxValue, 0);
+                Grid.SetColumn(_textBoxValue, 2);
                 break;
             }
 
@@ -216,6 +228,7 @@ namespace gedcom.viewer
                 {
                     TagControl tagControl = new TagControl(_tag.children[i], _isExpand, setChildSizeControl);
                     tagControl.VerticalAlignment = VerticalAlignment.Top;
+                    _children.Add(tagControl);
 
                     RowDefinition rowDefinition = new RowDefinition();
                     rowDefinition.Height = new GridLength(tagControl.Height);
@@ -249,6 +262,23 @@ namespace gedcom.viewer
 
         #endregion
 
+        private void setValue(string newValue)
+        {
+            // Update the tag value.
+            _tag.value = newValue;
+
+            // Only 1 of these will be available to display the value.
+            if (_textBoxValue != null)
+            {
+                _textBoxValue.Text = newValue;
+            }
+            if (_textblockValue!=null)
+            {
+                _textblockValue.Text = newValue;
+            }
+        }
+
+
 
         /// <summary>Add a child control for the specified child tag to the control.</summary>
         /// <param name="childTag">Specifies the child tag to add to the control.</param>
@@ -258,6 +288,7 @@ namespace gedcom.viewer
 
             TagControl tagControl = new TagControl(childTag, _isExpand, setChildSizeControl);
             tagControl.VerticalAlignment = VerticalAlignment.Top;
+            _children.Add(tagControl);
 
             RowDefinition rowDefinition = new RowDefinition();
             rowDefinition.Height = new GridLength(tagControl.Height);
@@ -363,9 +394,41 @@ namespace gedcom.viewer
         {
             Button buttonPlaceHelper = (Button)sender;
             TextBox txtPlace = (TextBox)buttonPlaceHelper.Tag;
+            double latitude = 0.0;
+            double longitude = 0.0;
+
+            // Loop through child tags to get values.
+            foreach (TagControl tagControl in _children)
+            {
+                if (tagControl._tag.key == "MAP")
+                {
+                    // Search for longitude and latitude values.
+                    foreach (TagControl mapTag in tagControl._children)
+                    {
+                        if (mapTag._tag.key == "LATI")
+                        {
+                            double.TryParse(mapTag._tag.value.Substring(1), out latitude);
+                            if (mapTag._tag.value.Substring(0, 1) == "S")
+                            {
+                                latitude = -latitude;
+                            }
+                        }
+                        if (mapTag._tag.key == "LONG")
+                        {
+                            double.TryParse(mapTag._tag.value.Substring(1), out longitude);
+                            if (mapTag._tag.value.Substring(0, 1) == "W")
+                            {
+                                longitude = -longitude;
+                            }
+                        }
+                    }
+                }
+            }
 
             PlaceDialog placeDialog = new PlaceDialog(_tag.gedcom);
             placeDialog.tagPlace = txtPlace.Text;
+            placeDialog.tagLatitude = latitude;
+            placeDialog.tagLongitude = longitude;
             // We will need all the child tag values here.
             if (placeDialog.ShowDialog() == true)
             {
@@ -374,7 +437,37 @@ namespace gedcom.viewer
                 // Update the actual tag, (lost focus usually does this).
                 _tag.value = txtPlace.Text;
 
-                // We will need to update the child tags as well.
+                string mapLatitude = "";
+                string mapLongitude = "";
+                if (placeDialog.tagLatitude != 0.0)
+                {
+                    mapLatitude = (placeDialog.tagLatitude > 0 ? "N" : "S") + (Math.Abs(placeDialog.tagLatitude).ToString("##0.000000"));
+                }
+                if (placeDialog.tagLongitude!=0.0)
+                {
+                    mapLongitude = (placeDialog.tagLongitude > 0 ? "E" : "W") + (Math.Abs(placeDialog.tagLongitude).ToString("##0.000000"));
+                }
+                
+
+                    // Loop through child tags to set values and delete them.
+                    foreach (TagControl tagControl in _children)
+                {
+                    if (tagControl._tag.key == "MAP")
+                    {
+                        // Search for longitude and latitude values.
+                        foreach (TagControl mapTag in tagControl._children)
+                        {
+                            if (mapTag._tag.key == "LATI")
+                            {
+                                mapTag.setValue(mapLatitude);
+                            }
+                            if (mapTag._tag.key == "LONG")
+                            {
+                                mapTag.setValue(mapLongitude);
+                            }
+                        }
+                    }
+                }
             }
         }
 

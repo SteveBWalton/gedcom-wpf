@@ -28,6 +28,12 @@ namespace gedcom.viewer
         /// <summary>The place string to use in the gedcom file.</summary>
         private string _tagPlace;
 
+        /// <summary>The longitude to use the gedcom file.</summary>
+        private double _tagLongitude;
+
+        /// <summary>The latitude to use the gedcom file.</summary>
+        private double _tagLatitude;
+
         /// <summary>True when the controls should not update the object or each other.</summary>
         private bool _isNoUpdate;
        
@@ -64,6 +70,29 @@ namespace gedcom.viewer
         }
 
 
+
+        /// <summary>The longitude to use the gedcom file.</summary>
+        public double tagLongitude
+        {
+            get => _tagLongitude;
+            set
+            {
+                _tagLongitude = value;
+            }
+        }
+
+
+
+        /// <summary>The latitude to use the gedcom file.</summary>
+        public double tagLatitude
+        {
+            get => _tagLatitude;
+            set
+            {
+                _tagLatitude = value;
+            }
+        }
+
         #endregion
 
         #region Encode Decode
@@ -74,6 +103,11 @@ namespace gedcom.viewer
         {
             // No update from the dialog controls.
             _isNoUpdate = true;
+
+            _txtTagPlace.Text = _tagPlace;
+
+            _txtLongitude.Text = _tagLongitude.ToString("##0.000000");
+            _txtLatitude.Text = _tagLatitude.ToString("##0.000000");
 
             // Select the existing place (might not be available).
             _cboExistingPlaces.SelectedItem = _tagPlace;
@@ -93,6 +127,11 @@ namespace gedcom.viewer
         {
             // Build a new date string.
             StringBuilder newDate = new StringBuilder();
+
+            _tagPlace = _txtTagPlace.Text;
+
+            double.TryParse(_txtLongitude.Text, out _tagLongitude);
+            double.TryParse(_txtLatitude.Text, out _tagLatitude);
 
             // Return success.
             return true;
@@ -137,8 +176,9 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the OK button click. </summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
-            // Update the tagDate property.
-            _tagPlace = _txtTagPlace.Text;
+            // Update the properties.
+            fromDialog();
+            
             // Close the dialog with success.
             this.DialogResult = true;
         }
