@@ -262,6 +262,8 @@ namespace gedcom.viewer
 
         #endregion
 
+        /// <summary>Set the value for this tag control.</summary>
+        /// <param name="newValue">Specifies the new value for this node.</param>
         private void setValue(string newValue)
         {
             // Update the tag value.
