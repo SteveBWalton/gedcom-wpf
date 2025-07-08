@@ -282,6 +282,24 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Delete this tag control and it's children.</summary>
+        private void delete()
+        {
+            // Delete the children.
+            while (_children.Count > 0)
+            {
+                _children[0].delete();
+                _children.RemoveAt(0);
+            }
+
+            // Delete this node.
+            _tag = null;
+
+            // Request a resize.
+            _setParentHeight?.Invoke();
+        }
+
+
         /// <summary>Add a child control for the specified child tag to the control.</summary>
         /// <param name="childTag">Specifies the child tag to add to the control.</param>
         private void addChildControl(Tag childTag)
@@ -368,6 +386,18 @@ namespace gedcom.viewer
                 // Refresh the dialog.
                 _setParentHeight?.Invoke();
             }
+        }
+
+
+
+        /// <summary>Signal handler for the delete tag button click.</summary>
+        private void deleteTagButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Delete this tag.
+            delete();
+
+            // Refresh the dialog.
+            _setParentHeight?.Invoke();
         }
 
 
@@ -490,5 +520,6 @@ namespace gedcom.viewer
         }
 
         #endregion
+
     }
 }

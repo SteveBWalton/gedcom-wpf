@@ -31,7 +31,7 @@
             <Button Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" ToolTip="Add child tag." Click="addChildTagButtonClick" >
                 <Image Source="/Resources/16/add.png" Height="16" Width="16"  />
             </Button>
-            <Button Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" ToolTip="Delete this tag." >
+            <Button Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" ToolTip="Delete this tag." Click="deleteTagButtonClick" >
                 <Image Source="/Resources/16/trash.png" Height="16" Width="16"  />
             </Button>
         </Grid>
