@@ -26,6 +26,9 @@ namespace gedcom.viewer
         /// <summary>Delegate to a function to request the parent control resizes the space for this control.</summary>
         public delegate void SetParentHeight();
 
+        /// <summary>Delegate to a function to request the parent control to delete this control.</summary>
+        public delegate void AskParentDelete(TagControl child);
+
         /// <summary>The tag to display.</summary>
         private Tag _tag;
 
@@ -44,6 +47,9 @@ namespace gedcom.viewer
         /// <summary>A function to request the parent control to resize the space for this control.</summary>
         private SetParentHeight _setParentHeight;
 
+        /// <summary>A function to request the parent control to delete this control.</summary>
+        private AskParentDelete _askParentDelete;
+
         #endregion
 
         #region Constructors
@@ -52,7 +58,7 @@ namespace gedcom.viewer
         /// <param name="tag">Specifies the tag to edit.</param>
         /// <param name="isExpand">Specifies true to show the tag initially expanded.</param>
         /// <param name="setParentHeight">Specifies a function to resize the parent container.</param>
-        public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight)
+        public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete)
         {
             InitializeComponent();
 
@@ -60,6 +66,7 @@ namespace gedcom.viewer
             _tag = tag;
             _isExpand = isExpand;
             _setParentHeight = setParentHeight;
+            _askParentDelete = askParentDelete;
             _children = new List<TagControl>();
 
             // Controls that might hold the value.
@@ -226,7 +233,7 @@ namespace gedcom.viewer
                 // Show the children.
                 for (int i = 0; i < _tag.children.count; i++)
                 {
-                    TagControl tagControl = new TagControl(_tag.children[i], _isExpand, setChildSizeControl);
+                    TagControl tagControl = new TagControl(_tag.children[i], _isExpand, setChildSizeControl, deleteChild);
                     tagControl.VerticalAlignment = VerticalAlignment.Top;
                     _children.Add(tagControl);
 
@@ -306,7 +313,7 @@ namespace gedcom.viewer
         {
             _imagePlusMinus.Visibility = Visibility.Visible;
 
-            TagControl tagControl = new TagControl(childTag, _isExpand, setChildSizeControl);
+            TagControl tagControl = new TagControl(childTag, _isExpand, setChildSizeControl, deleteChild);
             tagControl.VerticalAlignment = VerticalAlignment.Top;
             _children.Add(tagControl);
 
@@ -331,6 +338,33 @@ namespace gedcom.viewer
             {
                 rowDefinition.Height = new GridLength(0, GridUnitType.Auto);
             }
+        }
+
+
+
+        /// <summary>A child tag control has requested to be deleted.</summary>
+        /// <param name="childToDelete">Specifies the child tag control that has requested to be deleted.</param>
+        private void deleteChild(TagControl childToDelete)
+        {
+            int i = 0;
+            while (i < _children.Count)
+            {
+                if (_children[i] == childToDelete)
+                {
+                    // Delete the row.
+                    _childGrid.RowDefinitions.RemoveAt(i);
+
+                    // Delete control.
+                    childToDelete.delete();
+
+                    // Remove from collection.
+                    _children.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }            
         }
 
 
@@ -393,11 +427,8 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the delete tag button click.</summary>
         private void deleteTagButtonClick(object sender, RoutedEventArgs e)
         {
-            // Delete this tag.
-            delete();
-
-            // Refresh the dialog.
-            _setParentHeight?.Invoke();
+            // Ask the parent to delete this tag.
+            _askParentDelete?.Invoke(this);
         }
 
 

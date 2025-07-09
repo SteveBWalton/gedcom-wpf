@@ -66,7 +66,7 @@ namespace gedcom.viewer
             // Create rows for the tags.
             for (int i = 0; i < _individual.tag.children.count; i++)
             {
-                TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSizeIndividual);
+                TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSizeIndividual, askParentDelete);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
 
                 RowDefinition rowDefinition = new RowDefinition();
@@ -88,6 +88,13 @@ namespace gedcom.viewer
             {
                 rowDefinition.Height = new GridLength(0, GridUnitType.Auto);
             }
+        }
+
+        /// <summary>The child tag control has requested to be deleted.</summary>
+        /// <param name="tagControl">Specifies the child tag control that has requested to be deleted.</param>
+        private void askParentDelete(TagControl tagControl)
+        {
+            throw (new Exception("Not Implemented."));
         }
 
         #endregion
@@ -132,7 +139,7 @@ namespace gedcom.viewer
                 _individual.tag.children.add(dialogSelectTag.result);
 
                 // Add a new tag control to the dialog.
-                TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSizeIndividual);
+                TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSizeIndividual, askParentDelete);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
 
                 // Add a new row to the dialog.
