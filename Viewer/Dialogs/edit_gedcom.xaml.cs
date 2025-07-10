@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,7 +52,7 @@ namespace gedcom.viewer
             using (System.IO.StringReader stringReader = new System.IO.StringReader(_statusTextBox.Text))
             {
                 string line;
-                while((line=stringReader.ReadLine())!=null)
+                while ((line = stringReader.ReadLine()) != null)
                 {
                     if (isFirst)
                     {

@@ -22,11 +22,16 @@ namespace gedcom.viewer
         /// <summary>True if the parent tag is a top level tag.</summary>
         private bool _isTopLevel;
 
-        /// <summary>The parent tag that will own this new tag.</summary>
-        private readonly Tag _parentTag;
+        // <summary>The parent tag that will own this new tag.</summary>
+        // private readonly Tag _parentTag;
+
+        private string _parentTagKey;
+        private string _parentTagValue;
+        private string[] _childKeys;
 
         /// <summary>The tag that is created by the dialog.</summary>
-        private Tag _result;
+        // private Tag _result;
+        private string _result;
 
         #endregion
 
@@ -46,7 +51,28 @@ namespace gedcom.viewer
         public DialogSelectTag(Tag parentTag) : this()
         {
             _isTopLevel = false;
-            _parentTag = parentTag;
+            _parentTagKey = parentTag.key;
+            _parentTagValue = parentTag.value;
+            List<string> keys = new List<string>();
+            foreach (Tag child in parentTag.children)
+            {
+                keys.Add(child.key);
+            }
+            _childKeys = keys.ToArray();
+        }
+
+
+
+        /// <summary>Constructor for a parent tag control with no actual tag.</summary>
+        /// <param name="tagKey"></param>
+        /// <param name="tagValue"></param>
+        /// <param name="childKeys"></param>
+        public DialogSelectTag(string tagKey, string tagValue, string[] childKeys) : this()
+        {
+            _isTopLevel = false;
+            _parentTagKey = tagKey;
+            _parentTagValue = tagValue;
+            _childKeys = childKeys;
         }
 
 
@@ -58,11 +84,22 @@ namespace gedcom.viewer
             _isTopLevel = true;
             if (parentTag != null)
             {
-                _parentTag = parentTag.tag;
+                _parentTagValue = parentTag.tag.value;
+                _parentTagKey = parentTag.tag.key;
+                List<string> keys = new List<string>();
+                foreach (Tag child in parentTag.tag.children)
+                {
+                    keys.Add(child.key);
+                }
+                _childKeys = keys.ToArray();
+
             }
             else
             {
-                _parentTag = null;
+                // _parentTag = null;
+                _parentTagValue = "";
+                _parentTagKey = "";
+                _childKeys = new string[0];
             }
         }
 
@@ -70,8 +107,8 @@ namespace gedcom.viewer
 
         #region Properties
 
-        /// <summary>The tag that is created by the dialog.</summary>
-        public Tag result
+        /// <summary>The tag key that is created by the dialog.</summary>
+        public string result
         {
             get => _result;
         }
@@ -83,9 +120,9 @@ namespace gedcom.viewer
         /// <summary>Signal handler for window loaded.</summary>
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
-            TagType parentTagType = _isTopLevel ? new TagType(_parentTag.value)  :  new TagType(_parentTag.key);
+            TagType parentTagType = _isTopLevel ? new TagType(_parentTagValue)  :  new TagType(_parentTagKey);
             _labParentTagType.Text = parentTagType.tagName;
-            __labParentTagValue.Text = _isTopLevel ? _parentTag.key :_parentTag.value;
+            _labParentTagValue.Text = _isTopLevel ? _parentTagKey :_parentTagValue;
 
             List<TagType> tagTypes = parentTagType.getChildren();
 
@@ -95,7 +132,8 @@ namespace gedcom.viewer
                 if (!tagType.isMultiple)
                 {
                     // If there is already an extry of this type then don't add this type.
-                    if (_parentTag.children.findOne(tagType.tagKey)!=null)
+                    if (_childKeys.Contains(tagType.tagKey))
+                    //if (_parentTag.children.findOne(tagType.tagKey)!=null)
                     {
                         // Don't add this tag type to the list.
                         isAdd = false;
@@ -128,7 +166,8 @@ namespace gedcom.viewer
             TagType tagType = (TagType)_listSources.SelectedItem;
 
             // Create a tag of the specified type.
-            _result = new Tag(_parentTag, tagType.tagKey, "value");
+            // _result = new Tag(_parentTag, tagType.tagKey, "value");
+            _result = tagType.tagKey;
         }
 
         #endregion

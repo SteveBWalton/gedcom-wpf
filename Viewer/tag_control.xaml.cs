@@ -29,9 +29,16 @@ namespace gedcom.viewer
         /// <summary>Delegate to a function to request the parent control to delete this control.</summary>
         public delegate void AskParentDelete(TagControl child);
 
-        /// <summary>The tag to display.</summary>
-        private Tag _tag;
-
+        /// <summary>The key of the tag.</summary>
+        /// <remarks>Originally the tag control stored the tag but I do not want to change the value of the original tag.</remarks>
+        private string _tagKey;
+        /// <summary>The value of the tag.</summary>
+        /// <remarks>Originally the tag control stored the tag but I do not want to change the value of the original tag.</remarks>
+        private string _tagValue;
+        /// <summary>The level of the tag.</summary>
+        /// <remarks>Originally the tag control stored the tag but I do not want to change the value of the original tag.</remarks>
+        private int _tagLevel;
+        private  readonly Gedcom _gedcom;
         /// <summary>True if the child tags are expanded, false otherwise.</summary>
         private bool _isExpand;
 
@@ -58,12 +65,19 @@ namespace gedcom.viewer
         /// <param name="tag">Specifies the tag to edit.</param>
         /// <param name="isExpand">Specifies true to show the tag initially expanded.</param>
         /// <param name="setParentHeight">Specifies a function to resize the parent container.</param>
-        public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete)
+        public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete) : this(tag.key, tag.value, tag.level, tag.children, tag.gedcom, isExpand, setParentHeight, askParentDelete)
+        {
+        }
+
+        public TagControl(string tagKey, string tagValue, int tagLevel, Tags children, Gedcom thisGedcom, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete)
         {
             InitializeComponent();
 
             // Record the parameters.
-            _tag = tag;
+            _tagKey = tagKey;
+            _tagValue = tagValue;
+            _tagLevel = tagLevel;
+            _gedcom = thisGedcom;
             _isExpand = isExpand;
             _setParentHeight = setParentHeight;
             _askParentDelete = askParentDelete;
@@ -75,7 +89,7 @@ namespace gedcom.viewer
 
             // Add a label for the tag.
             TextBlock textblockTag = new TextBlock();
-            TagType tagType = new TagType(tag.key);
+            TagType tagType = new TagType(_tagKey);
             // textblockTag.Text = tag.key;
             textblockTag.Text = tagType.tagName;
             textblockTag.TextAlignment = TextAlignment.Right;
@@ -87,19 +101,19 @@ namespace gedcom.viewer
 
             // Width for the control.
             const int TOTAL_SPACE = 500;
-            int valueWidth = TOTAL_SPACE - 20 * tag.level;
+            int valueWidth = TOTAL_SPACE - 20 * tagLevel;
             // Width for helper buttons.
             const int BUTTON_WIDTH = 30;
 
             // Add a control for the tag value.
-            switch (tag.key)
+            switch (_tagKey)
             {
             case "SOUR":
                 // Add a combobox for the source.
                 ComboBox sourceComboBox = new ComboBox();
                 sourceComboBox.Width = valueWidth;
-                Source[] sourcesInDateOrder = tag.gedcom.sources.inDateOrder();
-                string sourceIdx = gedcom.Tag.toIdx(tag.value);
+                Source[] sourcesInDateOrder = _gedcom.sources.inDateOrder();
+                string sourceIdx = gedcom.Tag.toIdx(_tagValue);
                 foreach (Source source in sourcesInDateOrder)
                 {
                     sourceComboBox.Items.Add(source);
@@ -118,8 +132,8 @@ namespace gedcom.viewer
                 // Add a combobox for the family.
                 ComboBox spouseComboBox = new ComboBox();
                 spouseComboBox.Width = valueWidth;
-                Family[] familiesInDateOrder = tag.gedcom.families.inDateOrder();
-                string familyIdx = gedcom.Tag.toIdx(tag.value);
+                Family[] familiesInDateOrder = _gedcom.families.inDateOrder();
+                string familyIdx = gedcom.Tag.toIdx(tagValue);
                 foreach (Family family in familiesInDateOrder)
                 {
                     spouseComboBox.Items.Add(family);
@@ -145,11 +159,11 @@ namespace gedcom.viewer
                 _textblockValue.VerticalAlignment = VerticalAlignment.Center;
                 _textblockValue.Padding = new Thickness(4, 0, 0, 0);
                 _textblockValue.Background = Brushes.LightGray;
-                if (tag.key == "BIRT" || tag.key == "CHAN" || tag.key == "MAP")
+                if (tagKey == "BIRT" || tagKey == "CHAN" || tagKey == "MAP")
                 {
-                    tag.value = "Y";
+                    tagValue = "Y";
                 }
-                _textblockValue.Text = tag.value;
+                _textblockValue.Text = tagValue;
                 _mainGrid.Children.Add(_textblockValue);
                 Grid.SetRow(_textblockValue, 0);
                 Grid.SetColumn(_textblockValue, 2);
@@ -161,7 +175,7 @@ namespace gedcom.viewer
                 dateStackPanel.Orientation = Orientation.Horizontal;
                 // Add a textbox for the tag value.
                 _textBoxValue = new TextBox();
-                _textBoxValue.Text = tag.value;
+                _textBoxValue.Text = tagValue;
                 _textBoxValue.Width = valueWidth - BUTTON_WIDTH;
                 _textBoxValue.VerticalAlignment = VerticalAlignment.Center;
                 _textBoxValue.LostFocus += textBoxValueLostFocus;
@@ -186,7 +200,7 @@ namespace gedcom.viewer
                 placeStackPanel.Orientation = Orientation.Horizontal;
                 // Add a textbox for the tag value.
                 _textBoxValue = new TextBox();
-                _textBoxValue.Text = tag.value;
+                _textBoxValue.Text = tagValue;
                 _textBoxValue.Width = valueWidth - BUTTON_WIDTH;
                 _textBoxValue.VerticalAlignment = VerticalAlignment.Center;
                 _textBoxValue.LostFocus += textBoxValueLostFocus;
@@ -208,7 +222,7 @@ namespace gedcom.viewer
             default:
                 // Add a textbox for the tag value.
                 _textBoxValue = new TextBox();
-                _textBoxValue.Text = tag.value;
+                _textBoxValue.Text = tagValue;
                 _textBoxValue.Width = valueWidth;
                 _textBoxValue.VerticalAlignment = VerticalAlignment.Center;
                 _textBoxValue.LostFocus += textBoxValueLostFocus;
@@ -222,7 +236,7 @@ namespace gedcom.viewer
             this.Height = LINE_HEIGHT;
 
             // Show or hide the plus minus image.
-            if (_tag.children.count == 0)
+            if (children == null || children.count == 0)
             {
                 _imagePlusMinus.Visibility = Visibility.Hidden;
             }
@@ -231,9 +245,9 @@ namespace gedcom.viewer
                 _imagePlusMinus.Visibility = Visibility.Visible;
 
                 // Show the children.
-                for (int i = 0; i < _tag.children.count; i++)
+                for (int i = 0; i < children.count; i++)
                 {
-                    TagControl tagControl = new TagControl(_tag.children[i], _isExpand, setChildSizeControl, deleteChild);
+                    TagControl tagControl = new TagControl(children[i], _isExpand, setChildSizeControl, deleteChild);
                     tagControl.VerticalAlignment = VerticalAlignment.Top;
                     _children.Add(tagControl);
 
@@ -267,21 +281,63 @@ namespace gedcom.viewer
 
         #region Properties
 
+        /// <summary>The key of the tag that this tag control represents.</summary>
+        public string tagKey
+        {
+            get => _tagKey;
+        }
+
+        public string tagValue
+        {
+            get => _tagValue;
+            set
+            {
+                // Update the tag value.
+                _tagValue = value;
+
+                // Only 1 of these will be available to display the value.
+                if (_textBoxValue != null)
+                {
+                    _textBoxValue.Text = value;
+                }
+                if (_textblockValue != null)
+                {
+                    _textblockValue.Text = value;
+                }
+            }
+        }
+
         #endregion
 
+        /// <summary>Return the string that represent the value of this tag control.</summary>
+        /// <returns>The string that represent the value of this tag control.</returns>
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.AppendLine(_tagLevel.ToString() + " " + _tagKey + " " + _tagValue);
+            foreach(TagControl tagControl in _children)
+            {
+                result.Append(tagControl.ToString());
+            }
+            return result.ToString();
+        }
+
+
+
+        /// Remove this! use tagValue property instead.
         /// <summary>Set the value for this tag control.</summary>
         /// <param name="newValue">Specifies the new value for this node.</param>
         private void setValue(string newValue)
         {
             // Update the tag value.
-            _tag.value = newValue;
+            _tagValue = newValue;
 
             // Only 1 of these will be available to display the value.
             if (_textBoxValue != null)
             {
                 _textBoxValue.Text = newValue;
             }
-            if (_textblockValue!=null)
+            if (_textblockValue != null)
             {
                 _textblockValue.Text = newValue;
             }
@@ -289,8 +345,24 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Return the keys of the children as an array.</summary>
+        /// <returns></returns>
+        private string[] getChildrenAsKeys()
+        {
+            List<string> result = new List<string>();
+            foreach(TagControl tagControl in _children)
+            {
+                result.Add(tagControl.tagKey);
+            }
+            return result.ToArray();
+        }
+
+
+
         /// <summary>Delete this tag control and it's children.</summary>
-        private void delete()
+        /// <remarks>Only the parent control should call this when it is removing the container.
+        /// I wanted to make this private but the final parent is not a TagControl object.</remarks>
+        public void delete()
         {
             // Delete the children.
             while (_children.Count > 0)
@@ -299,21 +371,19 @@ namespace gedcom.viewer
                 _children.RemoveAt(0);
             }
 
-            // Delete this node.
-            _tag = null;
-
             // Request a resize.
             _setParentHeight?.Invoke();
         }
 
 
+
         /// <summary>Add a child control for the specified child tag to the control.</summary>
         /// <param name="childTag">Specifies the child tag to add to the control.</param>
-        private void addChildControl(Tag childTag)
+        private void addChildControl(string childTagKey)
         {
             _imagePlusMinus.Visibility = Visibility.Visible;
 
-            TagControl tagControl = new TagControl(childTag, _isExpand, setChildSizeControl, deleteChild);
+            TagControl tagControl = new TagControl(childTagKey, "", _tagLevel + 1, null, _gedcom, _isExpand, setChildSizeControl, deleteChild);
             tagControl.VerticalAlignment = VerticalAlignment.Top;
             _children.Add(tagControl);
 
@@ -322,7 +392,8 @@ namespace gedcom.viewer
 
             _childGrid.RowDefinitions.Add(rowDefinition);
             _childGrid.Children.Add(tagControl);
-            Grid.SetRow(tagControl, _tag.children.Count());
+            // Grid.SetRow(tagControl, _tag.children.Count());
+            Grid.SetRow(tagControl, _childGrid.Children.Count);
 
             // Request the parent resize the space for this control.
             _setParentHeight?.Invoke();
@@ -396,11 +467,12 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the add child tag button click.</summary>
         private void addChildTagButtonClick(object sender, RoutedEventArgs e)
         {
-            DialogSelectTag dialogSelectTag = new DialogSelectTag(_tag);
+            // DialogSelectTag dialogSelectTag = new DialogSelectTag(_tag);
+            DialogSelectTag dialogSelectTag = new DialogSelectTag(_tagKey, _tagValue, getChildrenAsKeys());
             if (dialogSelectTag.ShowDialog() == true)
             {
                 // Add the tag to this tag as a child.
-                _tag.children.add(dialogSelectTag.result);
+                // _tag.children.add(dialogSelectTag.result);
 
                 // Add a child control for this tag.
                 addChildControl(dialogSelectTag.result);
@@ -446,7 +518,7 @@ namespace gedcom.viewer
                 // Update the related control.
                 txtDate.Text = dateDialog.tagDate;
                 // Update the actual tag, (lost focus usually does this).
-                _tag.value = txtDate.Text;
+                _tagValue = txtDate.Text;
             }
         }
 
@@ -463,23 +535,23 @@ namespace gedcom.viewer
             // Loop through child tags to get values.
             foreach (TagControl tagControl in _children)
             {
-                if (tagControl._tag.key == "MAP")
+                if (tagControl.tagKey == "MAP")
                 {
                     // Search for longitude and latitude values.
                     foreach (TagControl mapTag in tagControl._children)
                     {
-                        if (mapTag._tag.key == "LATI")
+                        if (mapTag.tagKey == "LATI")
                         {
-                            double.TryParse(mapTag._tag.value.Substring(1), out latitude);
-                            if (mapTag._tag.value.Substring(0, 1) == "S")
+                            double.TryParse(mapTag.tagValue.Substring(1), out latitude);
+                            if (mapTag.tagValue.Substring(0, 1) == "S")
                             {
                                 latitude = -latitude;
                             }
                         }
-                        if (mapTag._tag.key == "LONG")
+                        if (mapTag.tagKey == "LONG")
                         {
-                            double.TryParse(mapTag._tag.value.Substring(1), out longitude);
-                            if (mapTag._tag.value.Substring(0, 1) == "W")
+                            double.TryParse(mapTag.tagValue.Substring(1), out longitude);
+                            if (mapTag.tagValue.Substring(0, 1) == "W")
                             {
                                 longitude = -longitude;
                             }
@@ -488,7 +560,7 @@ namespace gedcom.viewer
                 }
             }
 
-            PlaceDialog placeDialog = new PlaceDialog(_tag.gedcom);
+            PlaceDialog placeDialog = new PlaceDialog(_gedcom);
             placeDialog.tagPlace = txtPlace.Text;
             placeDialog.tagLatitude = latitude;
             placeDialog.tagLongitude = longitude;
@@ -498,7 +570,7 @@ namespace gedcom.viewer
                 // Update the related control.
                 txtPlace.Text = placeDialog.tagPlace;                
                 // Update the actual tag, (lost focus usually does this).
-                _tag.value = txtPlace.Text;
+                _tagValue = txtPlace.Text;
 
                 string mapLatitude = "";
                 string mapLongitude = "";
@@ -515,16 +587,16 @@ namespace gedcom.viewer
                     // Loop through child tags to set values and delete them.
                     foreach (TagControl tagControl in _children)
                 {
-                    if (tagControl._tag.key == "MAP")
+                    if (tagControl.tagKey == "MAP")
                     {
                         // Search for longitude and latitude values.
                         foreach (TagControl mapTag in tagControl._children)
                         {
-                            if (mapTag._tag.key == "LATI")
+                            if (mapTag.tagKey == "LATI")
                             {
                                 mapTag.setValue(mapLatitude);
                             }
-                            if (mapTag._tag.key == "LONG")
+                            if (mapTag.tagKey == "LONG")
                             {
                                 mapTag.setValue(mapLongitude);
                             }
@@ -543,9 +615,9 @@ namespace gedcom.viewer
             TextBox textBox = sender as TextBox;
             if (textBox != null)
             {
-                if (textBox.Text != _tag.value)
+                if (textBox.Text != _tagValue)
                 {
-                    _tag.value = textBox.Text;
+                    _tagValue = textBox.Text;
                 }
             }
         }

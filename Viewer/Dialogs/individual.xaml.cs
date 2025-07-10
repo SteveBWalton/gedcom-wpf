@@ -30,6 +30,9 @@ namespace gedcom.viewer
         /// <summary>The individual that the dialog is editting.</summary>
         private Individual _individual;
 
+        /// <summary>The collection of tag controls that make this individual.</summary>
+        private List<TagControl> _tagControls;
+
         #endregion
 
         #region Constructors
@@ -43,6 +46,7 @@ namespace gedcom.viewer
             // Save the parameters.
             _gedcom = gedcom;
             _individual = new Individual(gedcom);
+            _tagControls = new List<TagControl>();
         }
 
 
@@ -68,6 +72,7 @@ namespace gedcom.viewer
             {
                 TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSizeIndividual, askParentDelete);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
+                _tagControls.Add(tagControl);
 
                 RowDefinition rowDefinition = new RowDefinition();
                 rowDefinition.Height = new GridLength(tagControl.Height);
@@ -90,11 +95,33 @@ namespace gedcom.viewer
             }
         }
 
+
+
         /// <summary>The child tag control has requested to be deleted.</summary>
         /// <param name="tagControl">Specifies the child tag control that has requested to be deleted.</param>
         private void askParentDelete(TagControl tagControl)
         {
-            throw (new Exception("Not Implemented."));
+            int i = 0;
+            while (i < _tagControls.Count)
+            {
+                if (_tagControls[i] == tagControl)
+                {
+                    // Delete the row.
+                    // This doesn't change the row index of the other tag controls.
+                    _mainGrid.RowDefinitions.RemoveAt(i);
+
+                    // Delete control.
+                    tagControl.delete();
+
+                    // Remove from collection.
+                    _tagControls.RemoveAt(i);
+                }
+                else
+                {
+                    Grid.SetRow(_tagControls[i], i);
+                    i++;
+                }
+            }
         }
 
         #endregion
@@ -121,9 +148,34 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the OK button click.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Might sort these into a better order.
+            // Get the value of each tag control.
+            StringBuilder tagsAsText = new StringBuilder();
+            foreach(TagControl tagControl in _tagControls)
+            {
+                tagsAsText.Append(tagControl.ToString());
+            }
+
+            // Remove the existing tags.
+            _individual.tag.children.clear();
+
+            // Add the tags from the tag controls text.
+            using (System.IO.StringReader stringReader = new System.IO.StringReader(tagsAsText.ToString()))
+            {
+                string line;
+                while ((line = stringReader.ReadLine()) != null)
+                {
+                    if (line != "")
+                    {
+                        _individual.tag.add(line);
+                    }
+                }
+            }
+
             // Update the last changed tag.
             _individual.setLastChanged();
 
+            // Close the dialog with okay.
             this.DialogResult = true;
         }
 
@@ -136,11 +188,13 @@ namespace gedcom.viewer
             if (dialogSelectTag.ShowDialog() == true)
             {
                 // Add a new tag to the individual.                
-                _individual.tag.children.add(dialogSelectTag.result);
+                // _individual.tag.children.add(dialogSelectTag.result);
 
                 // Add a new tag control to the dialog.
-                TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSizeIndividual, askParentDelete);
+                // TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSizeIndividual, askParentDelete);
+                TagControl tagControl = new TagControl(dialogSelectTag.result, "", 1, null, _gedcom, false, setChildSizeIndividual, askParentDelete);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
+                _tagControls.Add(tagControl);
 
                 // Add a new row to the dialog.
                 RowDefinition rowDefinition = new RowDefinition();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -566,7 +566,7 @@ namespace gedcom.viewer
             foreach (string siblingIdx in siblingIdxes)
             {
                 Individual sibling = _gedcom.individuals.find(siblingIdx);
-                if (sibling.dob.approxDate >= individual.dob.approxDate)
+                if (sibling.dob == null || individual.dob == null || sibling.dob.approxDate >= individual.dob.approxDate)
                 {
                     // Younger siblings.
                     addIndividualAndPartners(2, sibling, false);
@@ -574,7 +574,7 @@ namespace gedcom.viewer
                 else
                 {
                     // Older siblings.
-                    addIndividualAndPartners(2, sibling, false, true, ref insertPoint);                    
+                    addIndividualAndPartners(2, sibling, false, true, ref insertPoint);
                     // _grid[2].Insert(0, "");
                     // _grid[2].Insert(0, siblingIdx);
                 }

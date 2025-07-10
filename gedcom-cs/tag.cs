@@ -280,9 +280,7 @@ namespace gedcom
 
 
 
-        /// <summary>
-        /// Compare function to sort tags by file order.
-        /// </summary>
+        /// <summary>Compare function to sort tags by file order.</summary>
         /// <param name="tag1">Specifies the first tag.</param>
         /// <param name="tag2">Specifies the second tag.</param>
         /// <returns></returns>

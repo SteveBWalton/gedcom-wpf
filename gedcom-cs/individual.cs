@@ -149,7 +149,7 @@ namespace gedcom
                     // Birthday in final year.
                     years++;
                 }
-                else if (endDate.Month == birthDate.approxDate.Month && DateTime.Now.Day >= birthDate.approxDate.Month)
+                else if (endDate.Month == birthDate.approxDate.Month && DateTime.Now.Day >= birthDate.approxDate.Day)
                 {
                     // Birthday in final month.
                     years++;
