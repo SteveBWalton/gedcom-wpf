@@ -151,7 +151,7 @@ namespace gedcom.viewer
                     isYearUnknown = false;
                     if (!int.TryParse(yearString, out year))
                     {
-                        year = 1990;
+                        year = DateTime.Now.Year;
                         isYearUnknown = true;
                     }
                 }
@@ -186,6 +186,12 @@ namespace gedcom.viewer
             /// <returns></returns>
             private string getDigits(string workingString, int position, int direction)
             {
+                // Check that there is some input.
+                if (workingString=="")
+                {
+                    return "";
+                }
+
                 // Find the starting position.
                 int startPosition = position;
                 while (!Char.IsDigit(workingString[startPosition]))
