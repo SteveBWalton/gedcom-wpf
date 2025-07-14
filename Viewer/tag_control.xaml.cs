@@ -582,26 +582,54 @@ namespace gedcom.viewer
                 {
                     mapLongitude = (placeDialog.tagLongitude > 0 ? "E" : "W") + (Math.Abs(placeDialog.tagLongitude).ToString("##0.000000"));
                 }
-                
 
-                    // Loop through child tags to set values and delete them.
-                    foreach (TagControl tagControl in _children)
+                // Loop through child tags to set values and delete them.
+                bool isMapPresent = false;
+                foreach (TagControl tagControl in _children)
                 {
                     if (tagControl.tagKey == "MAP")
                     {
-                        // Search for longitude and latitude values.
-                        foreach (TagControl mapTag in tagControl._children)
+                        if (mapLatitude == "" && mapLongitude == "")
                         {
-                            if (mapTag.tagKey == "LATI")
+                            // Delete the existing tag control.
+                            this.deleteChild(tagControl);
+                        }
+                        else
+                        {
+                            // Update the existing tag control.
+                            isMapPresent = true;
+                            // Search for longitude and latitude values.
+                            foreach (TagControl mapTag in tagControl._children)
                             {
-                                mapTag.setValue(mapLatitude);
-                            }
-                            if (mapTag.tagKey == "LONG")
-                            {
-                                mapTag.setValue(mapLongitude);
+                                if (mapTag.tagKey == "LATI")
+                                {
+                                    mapTag.setValue(mapLatitude);
+                                }
+                                if (mapTag.tagKey == "LONG")
+                                {
+                                    mapTag.setValue(mapLongitude);
+                                }
                             }
                         }
                     }
+                    // Delete any address tag child controls from now on.
+                    if (tagControl.tagKey == "ADDR")
+                    {
+                        // Delete the existing tag control.
+                        this.deleteChild(tagControl);
+                    }
+                }
+                if (!isMapPresent && mapLatitude != "" && mapLongitude != "")
+                {
+                    // Add a new tag control for the map details.
+                    this.addChildControl("MAP");
+                    TagControl tagControlMap = _children[_children.Count - 1];
+                    tagControlMap.addChildControl("LATI");
+                    TagControl tagControlLatitude = tagControlMap._children[tagControlMap._children.Count - 1];
+                    tagControlMap.addChildControl("LONG");
+                    TagControl tagControlLongitude = tagControlMap._children[tagControlMap._children.Count - 1];
+                    tagControlLatitude.setValue(mapLatitude);
+                    tagControlLongitude.setValue(mapLongitude);
                 }
             }
         }
