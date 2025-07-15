@@ -585,14 +585,17 @@ namespace gedcom.viewer
 
                 // Loop through child tags to set values and delete them.
                 bool isMapPresent = false;
-                foreach (TagControl tagControl in _children)
+                int index = 0;
+                while (index < _children.Count)
                 {
+                    TagControl tagControl = _children[index];
+                    bool isDelete = false;
                     if (tagControl.tagKey == "MAP")
                     {
                         if (mapLatitude == "" && mapLongitude == "")
                         {
                             // Delete the existing tag control.
-                            this.deleteChild(tagControl);
+                            isDelete = true;
                         }
                         else
                         {
@@ -616,7 +619,17 @@ namespace gedcom.viewer
                     if (tagControl.tagKey == "ADDR")
                     {
                         // Delete the existing tag control.
+                        isDelete = true;
+                    }
+                    if (isDelete)
+                    {
+                        // Actually delete the control.
                         this.deleteChild(tagControl);
+                    }
+                    else
+                    {
+                        // Move to the next control.
+                        index++;
                     }
                 }
                 if (!isMapPresent && mapLatitude != "" && mapLongitude != "")
