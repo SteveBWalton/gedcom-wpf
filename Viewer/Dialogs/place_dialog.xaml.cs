@@ -139,23 +139,60 @@ namespace gedcom.viewer
 
         #endregion
 
-        /// <summary>
-        /// Add the specified places to the existing places combo box.
-        /// </summary>
-        /// <param name="places">Specifies the places to add to the combobox.</param>
-        private void addExistingPlaces(Places places)
+        /// <summary>Add the child places to the current place.</summary>
+        private void addExistingPlaces()
         {
-            // Add the specified places to the combo box.
-            foreach(Place place in places)
-            {
-                // Add the place to the combobox.
-                _cboExistingPlaces.Items.Add(place.fullName);
+            // Disable combobox updates.
+            bool isNoUpdate = _isNoUpdate;
+            _isNoUpdate = true;
 
-                // Add the children of the place.
-                addExistingPlaces(place.children);
+            // No Selection in the combobox.
+            _cboExistingPlaces.SelectedIndex = -1;
+            _cboExistingPlaces.Items.Clear();
+
+            string placeString = _txtTagPlace.Text;
+            Place selectedPlace = _gedcom.places.getPlace(placeString);
+            if (selectedPlace != null)
+            {
+                // Add the specified places to the combo box.
+                foreach (Place place in selectedPlace.children)
+                {
+                    // Add the place to the combobox.
+                    _cboExistingPlaces.Items.Add(place.fullName);
+
+                }
+
+                if (selectedPlace.latitude == 0 && selectedPlace.longitude == 0)
+                {
+                    // Map information is not available.
+                    _txtLatitude.Text = "";
+                    _txtLongitude.Text = "";
+                }
+                else
+                {
+                    // Map information is available.
+                    _txtLatitude.Text = selectedPlace.latitude.ToString();
+                    _txtLongitude.Text = selectedPlace.longitude.ToString();
+                }
             }
-        }        
-        
+            else
+            {
+                // Add the countries.
+                foreach (Place place in _gedcom.places)
+                {
+                    // Add the place to the combobox.
+                    _cboExistingPlaces.Items.Add(place.fullName);
+                }
+
+                // Map information is not available.
+                _txtLatitude.Text = "";
+                _txtLongitude.Text = "";
+            }
+
+            // Restore combobox updates.
+            _isNoUpdate = isNoUpdate;
+        }
+
         #region Signal Handlers
 
         /// <summary>Signal handler for the window loaded event.</summary>
@@ -165,7 +202,7 @@ namespace gedcom.viewer
             _txtTagPlace.Text = _tagPlace;
 
             // Populate the existing places comobobox.            
-            addExistingPlaces(_gedcom.places);
+            addExistingPlaces();
 
             // Update the dialog.
             toDialog();
@@ -200,7 +237,7 @@ namespace gedcom.viewer
             _tagPlace = _txtTagPlace.Text;
 
             // Update the other controls on the dialog.
-            toDialog();
+            addExistingPlaces();
         }
 
 
@@ -234,24 +271,44 @@ namespace gedcom.viewer
                 return;
             }
 
+            // string placeString = (_tagPlace != "" ? tagPlace + ", " : "") + (string)_cboExistingPlaces.SelectedItem;
             string placeString = (string)_cboExistingPlaces.SelectedItem;
             Place selectedPlace = _gedcom.places.getPlace(placeString);
             if (selectedPlace != null)
             {
                 _txtTagPlace.Text = selectedPlace.fullName;
+                _tagPlace = _txtTagPlace.Text;
 
-                if (selectedPlace.latitude == 0 && selectedPlace.longitude == 0)
-                {
-                    // Map information is not available.
-                    _txtLatitude.Text = "";
-                    _txtLongitude.Text = "";
-                }
-                else
-                {
-                    // Map information is available.
-                    _txtLatitude.Text = selectedPlace.latitude.ToString();
-                    _txtLongitude.Text = selectedPlace.longitude.ToString();
-                }
+                // Add child locations.
+                addExistingPlaces();
+            }
+            else
+            {
+                // Remove all the child locations.
+                _cboExistingPlaces.Items.Clear();
+            }
+        }
+
+        private void buttonParentExistingPlacesClick(object sender, RoutedEventArgs e)
+        {
+            if (_tagPlace == "")
+            {
+                // Do nothing.
+            }
+            else if (_tagPlace.Contains(","))
+            {
+                int comma = _tagPlace.IndexOf(",");
+                _tagPlace = _tagPlace.Substring(comma + 1).Trim();
+                _txtTagPlace.Text = _tagPlace;
+
+                addExistingPlaces();
+            }
+            else
+            {
+                _tagPlace = "";
+                _txtTagPlace.Text = _tagPlace;
+
+                addExistingPlaces();
             }
         }
     }

@@ -568,7 +568,7 @@ namespace gedcom.viewer
             if (placeDialog.ShowDialog() == true)
             {
                 // Update the related control.
-                txtPlace.Text = placeDialog.tagPlace;                
+                txtPlace.Text = placeDialog.tagPlace;
                 // Update the actual tag, (lost focus usually does this).
                 _tagValue = txtPlace.Text;
 
