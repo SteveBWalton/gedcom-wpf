@@ -299,12 +299,13 @@ namespace gedcom
 
 
 
-        /// <summary>Compare function for sorting inidividuals by last changed.</summary>
+        /// <summary>Compare function for sorting inidividuals by last viewed.</summary>
         /// <param name="otherIndividual">Specifies the individual to compare with.</param>
-        /// <returns>The comparison of the last edit date of the two individuals.</returns>
+        /// <returns>The comparison of the last viewed date of the two individuals.</returns>
         public int CompareTo(Individual otherIndividual)
         {
-            return otherIndividual.lastChanged.CompareTo(lastChanged);
+            // return otherIndividual.lastChanged.CompareTo(lastChanged);
+            return otherIndividual.lastViewed.CompareTo(lastViewed);
         }
 
 
@@ -366,6 +367,7 @@ namespace gedcom
             // Return the array of siblings.
             return siblings;
         }
+
 
 
         /// <summary>Returns true if the individual has a connection to the specified place.</summary>

@@ -238,10 +238,11 @@ namespace gedcom
 
         /// <summary>Impliment a compare function for sorting.</summary>
         /// <param name="otherIndividual">Specifies the individual to compare with.</param>
-        /// <returns>The comparison of the last edit date of the two individuals.</returns>
+        /// <returns>The comparison of the last viewed date of the two familes.</returns>
         public int CompareTo(Family otherFamily)
         {
-            return otherFamily.lastChanged.CompareTo(lastChanged);
+            // return otherFamily.lastChanged.CompareTo(lastChanged);
+            return otherFamily.lastViewed.CompareTo(lastViewed);
         }
 
         #endregion

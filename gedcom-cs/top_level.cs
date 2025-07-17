@@ -14,16 +14,12 @@ namespace gedcom
         /// <summary>The tag that defined this top level element.</summary>
         protected Tag _tag;
 
+        /// <summary>The date time that this top level element was viewed.</summary>
+        protected DateTime _lastViewed;
+
         #endregion
 
         #region Class Constructors
-
-        // <summary>Empty class constructor.</summary>
-        //public TopLevel()
-        //{
-        //    _tag = new Tag();
-        //}
-
 
 
         /// <summary>Create a top level element in the specified gedcom.</summary>
@@ -31,6 +27,7 @@ namespace gedcom
         public TopLevel(Gedcom gedcom)
         {
             _tag = new Tag(gedcom);
+            _lastViewed = DateTime.MinValue;
         }
 
 
@@ -40,6 +37,7 @@ namespace gedcom
         public TopLevel(Tag tag)
         {
             _tag = tag;
+            _lastViewed = DateTime.MinValue;
         }
 
         #endregion
@@ -96,6 +94,26 @@ namespace gedcom
                     return DateTime.Parse(tagDate.value);
                 }
                 return DateTime.Parse(tagDate.value + " " + tagTime.value);
+            }
+        }
+
+
+
+        /// <summary>The datetime that this top level element was last viewed.</summary>
+        /// <remarks>Really only expecting set to be lastViewed = DateTime.Now.</remarks>
+        public DateTime lastViewed
+        {
+            get
+            {
+                if (_lastViewed == DateTime.MinValue)
+                {
+                    return lastChanged;
+                }
+                return _lastViewed;
+            }
+            set
+            {
+                _lastViewed = value;
             }
         }
 

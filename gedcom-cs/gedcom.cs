@@ -246,18 +246,16 @@ namespace gedcom
 
 
 
-        /// <summary>
-        /// Loop through all the tags and add the places
-        /// </summary>
+        /// <summary>Loop through all the tags and add the places.</summary>
         private void addPlaces()
         {
             // Loop through the individuals.
-            foreach(Individual individual in _individuals)
+            foreach (Individual individual in _individuals)
             {
                 Tag[] allTags = individual.tag.getAllTags();
-                foreach(Tag tag in allTags)
+                foreach (Tag tag in allTags)
                 {
-                    if (tag.key=="PLAC")
+                    if (tag.key == "PLAC")
                     {
                         _places.addTag(tag);
                     }

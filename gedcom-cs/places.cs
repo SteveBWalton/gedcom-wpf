@@ -151,7 +151,7 @@ namespace gedcom
         /// <summary>
         /// Might change this add tag???
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True for success, false otherwise.</returns>
         private bool addString(string text, bool isAddress, double latitude, double longitude)
         {
             Place place = getPlace(text);
@@ -181,7 +181,7 @@ namespace gedcom
                     // Add this single place to this collection.
                     place = new Place(_parent, text, isAddress, latitude, longitude);
                     add(place);
-                    Console.WriteLine(text + " at " + latitude.ToString() + ", " + longitude.ToString());
+                    // Console.WriteLine(text + " at " + latitude.ToString() + ", " + longitude.ToString());
                 }
             }
             else

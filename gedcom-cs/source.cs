@@ -33,16 +33,17 @@ namespace gedcom
 
         /// <summary>Impliment a compare function for sorting.</summary>
         /// <param name="otherSource">Specifies the source to compare with.</param>
-        /// <returns>The comparison of the last edit date of the two sources.</returns>
+        /// <returns>The comparison of the last viewed date of the two sources.</returns>
         public int CompareTo(Source otherSource)
         {
-            return otherSource.lastChanged.CompareTo(lastChanged);
+            // return otherSource.lastChanged.CompareTo(lastChanged);
+            return otherSource.lastViewed.CompareTo(lastViewed);
         }
 
         #endregion
 
         #region Properties
-        
+
         /// <summary>The name of the source.</summary>
         public string fullName
         {
