@@ -23,10 +23,10 @@
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="19" />
+                <RowDefinition Height="20" />
             </Grid.RowDefinitions>
-            <Button Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" Click="buttonPlusMinusClick" >
-                <Image x:Name="_imagePlusMinus" Source="/Resources/16/add.png" Height="16" Width="16"  />
+            <Button Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" Click="buttonPlusMinusClick">
+                <Image x:Name="_imagePlusMinus" Source="/Resources/16/box_plus.png" Height="16" Width="16"  />
             </Button>
             <Button Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="Transparent" Background="Transparent" ToolTip="Add child tag." Click="addChildTagButtonClick" >
                 <Image Source="/Resources/16/add.png" Height="16" Width="16"  />

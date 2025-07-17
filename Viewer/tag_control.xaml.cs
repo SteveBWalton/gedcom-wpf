@@ -21,7 +21,7 @@ namespace gedcom.viewer
         #region Member Variables
 
         /// <summary>The height for a single line of tag control.</summary>
-        private const int LINE_HEIGHT = 19;
+        private const int LINE_HEIGHT = 20;
 
         /// <summary>Delegate to a function to request the parent control resizes the space for this control.</summary>
         public delegate void SetParentHeight();
@@ -448,14 +448,14 @@ namespace gedcom.viewer
             if (_isExpand)
             {
                 // Show the children.
-                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/minus.png"));
+                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/box_minus.png"));
                 _childGrid.Visibility = Visibility.Visible;
                 this.Height = LINE_HEIGHT + _childGrid.Height;
             }
             else
             {
                 // Hide the children.
-                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/add.png"));
+                _imagePlusMinus.Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/box_plus.png"));
                 _childGrid.Visibility = Visibility.Collapsed;
                 _setParentHeight?.Invoke();
                 this.Height = LINE_HEIGHT;
