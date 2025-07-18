@@ -147,11 +147,10 @@ namespace gedcom.viewer
             _isNoUpdate = true;
 
             // No Selection in the combobox.
-            _cboExistingPlaces.SelectedIndex = -1;
             _cboExistingPlaces.Items.Clear();
 
-            string placeString = _txtTagPlace.Text;
-            Place selectedPlace = _gedcom.places.getPlace(placeString);
+            _tagPlace = _txtTagPlace.Text;
+            Place selectedPlace = _gedcom.places.getPlace(_tagPlace);
             if (selectedPlace != null)
             {
                 // Add the specified places to the combo box.
@@ -188,6 +187,9 @@ namespace gedcom.viewer
                 _txtLatitude.Text = "";
                 _txtLongitude.Text = "";
             }
+
+            // No selection in the combobox.
+            _cboExistingPlaces.SelectedIndex = -1;
 
             // Restore combobox updates.
             _isNoUpdate = isNoUpdate;
@@ -289,12 +291,21 @@ namespace gedcom.viewer
             }
         }
 
+
+
+        /// <summary>Signal handler for the parent button on the place helper dialog click.</summary>
+        /// <remarks>Move to the parent of the current place.</remarks>
         private void buttonParentExistingPlacesClick(object sender, RoutedEventArgs e)
         {
+            // This should not be necessary but does not do any harm.
+            _tagPlace = _txtTagPlace.Text;
+
+            // Check that there is a place.
             if (_tagPlace == "")
             {
                 // Do nothing.
             }
+            // Check the that the place has a parent.
             else if (_tagPlace.Contains(","))
             {
                 int comma = _tagPlace.IndexOf(",");

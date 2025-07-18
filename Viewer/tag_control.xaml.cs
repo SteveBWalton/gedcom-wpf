@@ -182,7 +182,11 @@ namespace gedcom.viewer
                 dateStackPanel.Children.Add(_textBoxValue);
                 // Add a button for additional date options.
                 Button dateButton = new Button();
-                dateButton.Content = "...";
+                dateButton.Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/calendar.png")),
+                    VerticalAlignment = VerticalAlignment.Center
+                };
                 dateButton.Width = BUTTON_WIDTH;
                 dateButton.VerticalAlignment = VerticalAlignment.Center;
                 dateButton.Tag = _textBoxValue;
@@ -207,7 +211,12 @@ namespace gedcom.viewer
                 placeStackPanel.Children.Add(_textBoxValue);
                 // Add a button for additional date options.
                 Button placeButton = new Button();
-                placeButton.Content = "...";
+                placeButton.Content = new Image
+                {
+                    Source = new BitmapImage(new Uri(@"pack://application:,,,/Resources/16/globe.png")),
+                    VerticalAlignment = VerticalAlignment.Center
+                };
+
                 placeButton.Width = BUTTON_WIDTH;
                 placeButton.VerticalAlignment = VerticalAlignment.Center;
                 placeButton.Tag = _textBoxValue;

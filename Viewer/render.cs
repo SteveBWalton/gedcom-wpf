@@ -492,6 +492,9 @@ namespace gedcom.viewer
                 pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.toText() + "</pre>");
             }
 
+            // Mark the individual as viewed.
+            individual.lastViewed = DateTime.Now;
+
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());
             return pageContent;
@@ -879,6 +882,9 @@ namespace gedcom.viewer
                 pageContent.html.Append("<pre>" + family.tag.display(0) + "</pre>");
             }
 
+            // Set the last viewed time.
+            family.lastViewed = DateTime.Now;
+
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());
             // Return the page content.
@@ -981,6 +987,9 @@ namespace gedcom.viewer
                 // Show the original gedcom.
                 pageContent.html.Append("<pre>" + source.tag.display(0) + "</pre>");
             }
+
+            // Set the last viewed time.
+            source.lastViewed = DateTime.Now;
 
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());
