@@ -257,19 +257,12 @@ namespace gedcom.viewer
             // The number of items to show in each category.
             const int NUM_ITEMS = 15;
 
-            // The width of individual section.
-            const int INDIVIDUAL_WIDTH = 300;
-            // The width of family section.
-            const int FAMILY_WIDTH = 400;
-            // The width of source section.
-            const int SOURCE_WIDTH = 300;
-
             PageContent pageContent = new PageContent();
 
             pageContent.html.AppendLine("<h1>" + _gedcom.fileName + "</h1>");
 
             // Display the individuals.
-            pageContent.html.Append("<fieldset style=\"width: " + INDIVIDUAL_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
             pageContent.html.AppendLine("<legend>Individuals</legend>");
             pageContent.html.AppendLine("<table>");
             int count = 0;
@@ -288,7 +281,7 @@ namespace gedcom.viewer
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the families.
-            pageContent.html.Append("<fieldset style=\"width: " + FAMILY_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
             pageContent.html.AppendLine("<legend>Families</legend>");
             pageContent.html.AppendLine("<table>");
             count = 0;
@@ -307,7 +300,7 @@ namespace gedcom.viewer
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the sources.
-            pageContent.html.Append("<fieldset style=\"width: " + SOURCE_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
             pageContent.html.AppendLine("<legend>Sources</legend>");
             pageContent.html.AppendLine("<table>");
             count = 0;
@@ -322,11 +315,11 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>Thexitere are " + _gedcom.sources.count.ToString() + " sources.");
+            pageContent.html.AppendLine("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the places.
-            pageContent.html.Append("<fieldset style=\"width: " + SOURCE_WIDTH.ToString() + "px; display: inline-block; vertical-align: top;\">");
+            pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
             pageContent.html.AppendLine("<legend>Places</legend>");
             pageContent.html.AppendLine("<table>");
             count = 0;
@@ -740,11 +733,17 @@ namespace gedcom.viewer
         /// <returns>A html description of the specified family.</returns>
         private PageContent getFamily(string query)
         {
+            // Start html page for family.
             PageContent pageContent = new PageContent();
             pageContent.html.Append("<p><a href=\"app://home\">Home</a></p>");
 
+            // Identify the family.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
+
+            // Setup the edit options.
+            pageContent.editForm = "family?id=" + idx;
+            pageContent.editGedomDirectly = "family?id=" + idx;
 
             Family family = _gedcom.families.find(idx);
             if (family == null)
@@ -900,10 +899,16 @@ namespace gedcom.viewer
         /// <returns>The requested source as html.</returns>
         private PageContent getSource(string query)
         {
+            // Start html page for source.
             PageContent pageContent = new PageContent();
 
+            // Identify the source.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
             string idx = queryParams.Get("id");
+
+            // Setup the edit options.
+            pageContent.editForm = "source?id=" + idx;
+            pageContent.editGedomDirectly = "source?id=" + idx;
 
             // Setup the edit options.
             pageContent.editForm = "source?id=" + idx;

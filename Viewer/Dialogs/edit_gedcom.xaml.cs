@@ -18,9 +18,14 @@ namespace gedcom.viewer
     /// <remarks>This can be a fall back editor when a specific editor is not available.</remarks>
     public partial class DialogEditGedcom : Window
     {
+        #region Member Variables
+
         /// <summary>The tag to edit.</summary>
         private Tag _tag;
 
+        #endregion
+
+        #region Class constructor
 
         /// <summary>Class constructor for the edit gedcom dialog.</summary>
         public DialogEditGedcom(Tag tag)
@@ -29,6 +34,8 @@ namespace gedcom.viewer
             _tag = tag;
             _statusTextBox.Text = tag.toText();
         }
+
+        #endregion
 
         #region Signal Handlers
 

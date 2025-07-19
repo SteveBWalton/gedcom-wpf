@@ -261,12 +261,20 @@ namespace gedcom
                     }
                 }
             }
+
+            // Loop through the families.
+            foreach (Family family in _families)
+            {
+                Tag[] allTags = family.tag.getAllTags();
+                foreach (Tag tag in allTags)
+                {
+                    if (tag.key == "PLAC")
+                    {
+                        _places.addTag(tag);
+                    }
+                }
+            }
         }
-
-
-
-
-
 
         #endregion
 

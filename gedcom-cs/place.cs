@@ -110,6 +110,15 @@ namespace gedcom
             set { _longitude = value; }
         }
 
+
+
+        /// <summary>True if this place is really just an address.</summary>
+        public bool isAddress
+        {
+            get => _isAddress;
+            set { _isAddress = value; }
+        }
+
         #endregion
 
         /// <summary>The total number of child places for this place.</summary>

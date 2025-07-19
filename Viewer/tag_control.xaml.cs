@@ -540,6 +540,7 @@ namespace gedcom.viewer
             TextBox txtPlace = (TextBox)buttonPlaceHelper.Tag;
             double latitude = 0.0;
             double longitude = 0.0;
+            string address = "";
 
             // Loop through child tags to get values.
             foreach (TagControl tagControl in _children)
@@ -567,12 +568,17 @@ namespace gedcom.viewer
                         }
                     }
                 }
+                if(tagControl.tagKey=="ADDR")
+                {
+                    address = tagControl.tagValue;
+                }
             }
 
             PlaceDialog placeDialog = new PlaceDialog(_gedcom);
             placeDialog.tagPlace = txtPlace.Text;
             placeDialog.tagLatitude = latitude;
             placeDialog.tagLongitude = longitude;
+            placeDialog.tagAddress = address;
             // We will need all the child tag values here.
             if (placeDialog.ShowDialog() == true)
             {
@@ -591,9 +597,11 @@ namespace gedcom.viewer
                 {
                     mapLongitude = (placeDialog.tagLongitude > 0 ? "E" : "W") + (Math.Abs(placeDialog.tagLongitude).ToString("##0.000000"));
                 }
+                address = placeDialog.tagAddress;
 
                 // Loop through child tags to set values and delete them.
                 bool isMapPresent = false;
+                bool isAddressPresent = false;
                 int index = 0;
                 while (index < _children.Count)
                 {
@@ -627,8 +635,16 @@ namespace gedcom.viewer
                     // Delete any address tag child controls from now on.
                     if (tagControl.tagKey == "ADDR")
                     {
-                        // Delete the existing tag control.
-                        isDelete = true;
+                        if (address == "")
+                        {
+                            // Delete the existing tag control.
+                            isDelete = true;
+                        }
+                        else
+                        {
+                            isAddressPresent = true;
+                            tagControl.tagValue = address;
+                        }
                     }
                     if (isDelete)
                     {
@@ -652,6 +668,13 @@ namespace gedcom.viewer
                     TagControl tagControlLongitude = tagControlMap._children[tagControlMap._children.Count - 1];
                     tagControlLatitude.setValue(mapLatitude);
                     tagControlLongitude.setValue(mapLongitude);
+                }
+                if (!isAddressPresent && address != "")
+                {
+                    // Add a new tag control for the map details.
+                    this.addChildControl("ADDR");
+                    TagControl tagControlAddr = _children[_children.Count - 1];
+                    tagControlAddr.tagValue = address;
                 }
             }
         }

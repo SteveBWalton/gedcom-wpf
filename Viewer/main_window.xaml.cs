@@ -316,6 +316,10 @@ namespace gedcom.viewer
                 topLevel = _gedcom.individuals.find(idx);
                 break;
 
+            case "family":
+                topLevel = _gedcom.families.find(idx);
+                break;
+
             case "source":
                 topLevel = _gedcom.sources.find(idx);
                 break;
@@ -329,6 +333,9 @@ namespace gedcom.viewer
                 {
                     // Mark the gedcom as dirty.
                     topLevel.gedcom.isDirty = true;
+
+                    // Mark the top level as changed.
+                    topLevel.setLastChanged();
 
                     // Show the actual page.
                     populateWindow(host, query);

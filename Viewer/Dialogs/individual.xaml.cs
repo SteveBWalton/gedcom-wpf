@@ -19,7 +19,7 @@ using System.Collections.Specialized;
 
 namespace gedcom.viewer
 {
-    /// <summary>Interaction logic for individual.xaml.</summary>
+    /// <summary>Class to represent the custom dialog to edit an individual.</summary>
     public partial class DialogIndividual : Window
     {
         #region Member Variables

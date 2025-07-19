@@ -34,6 +34,9 @@ namespace gedcom.viewer
         /// <summary>The latitude to use the gedcom file.</summary>
         private double _tagLatitude;
 
+        /// <summary>The address string to use in the gedcom file.</summary>
+        private string _tagAddress;
+
         /// <summary>True when the controls should not update the object or each other.</summary>
         private bool _isNoUpdate;
        
@@ -75,10 +78,7 @@ namespace gedcom.viewer
         public double tagLongitude
         {
             get => _tagLongitude;
-            set
-            {
-                _tagLongitude = value;
-            }
+            set { _tagLongitude = value; }
         }
 
 
@@ -87,11 +87,16 @@ namespace gedcom.viewer
         public double tagLatitude
         {
             get => _tagLatitude;
-            set
-            {
-                _tagLatitude = value;
-            }
+            set { _tagLatitude = value; }
         }
+
+        /// <summary>The address string to use in the gedcom file.</summary>
+        public string tagAddress
+        {
+            get => _tagAddress;
+            set { _tagAddress = value; }
+        }
+
 
         #endregion
 
@@ -108,6 +113,8 @@ namespace gedcom.viewer
 
             _txtLongitude.Text = _tagLongitude.ToString("##0.000000");
             _txtLatitude.Text = _tagLatitude.ToString("##0.000000");
+
+            _txtAddress.Text = _tagAddress;
 
             // Select the existing place (might not be available).
             _cboExistingPlaces.SelectedItem = _tagPlace;
@@ -129,6 +136,8 @@ namespace gedcom.viewer
             StringBuilder newDate = new StringBuilder();
 
             _tagPlace = _txtTagPlace.Text;
+
+            _tagAddress = _txtAddress.Text;
 
             double.TryParse(_txtLongitude.Text, out _tagLongitude);
             double.TryParse(_txtLatitude.Text, out _tagLatitude);

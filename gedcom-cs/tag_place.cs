@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,6 +38,22 @@ namespace gedcom
             get
             {
                 string place = _tag.value;
+
+                // Check for an address.
+                Tag tagAddress = _tag.children.findOne("ADDR");
+                if (tagAddress != null)
+                {
+                    string address = tagAddress.value;
+                    if (place.StartsWith(address))
+                    {
+                        place = place.Substring(address.Length);
+                        if (place.StartsWith(","))
+                        {
+                            place = place.Substring(1).Trim();
+                        }
+                    }
+                }
+                
                 int commaLoc = place.IndexOf(",");
                 if (commaLoc > 0)
                 {

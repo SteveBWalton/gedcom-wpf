@@ -185,6 +185,5 @@ namespace gedcom
             // Return the new tag status.
             return isNewTag;
         }
-
     }
 }
