@@ -348,7 +348,15 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'File' -> 'Save' menu point click.</summary>
         private void menuFileSaveClick(object sender, RoutedEventArgs e)
         {
-
+            if (_gedcom.fileName == "")
+            {
+                // No filename so save as
+                menuFileSaveAsClick(sender, e);
+            }
+            else
+            {
+                _gedcom.save(_gedcom.fileName);
+            }
         }
 
 

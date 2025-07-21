@@ -64,14 +64,14 @@
             </Menu>
             <ToolBarTray>
                 <ToolBar>
+                    <Button Click="menuViewHomeClick">
+                        <Image Source="/Resources/24/home.png" Height="24"/>
+                    </Button>
                     <Button ToolTip="Start a new document." Click="menuFileNewClick">
                         <Image Source="/Resources/24/file_new.png" Height="24" />
                     </Button>
                     <Button ToolTip="Open a gedcom document." Click="menuFileOpenClick">
                         <Image Source="/Resources/24/file_open.png" Height="24"/>
-                    </Button>
-                    <Button Click="menuViewHomeClick">
-                        <Image Source="/Resources/24/home.png" Height="24"/>
                     </Button>
                     <Separator/>
                     <Button Click="menuEditEditClick" x:Name="_toolbarEdit">

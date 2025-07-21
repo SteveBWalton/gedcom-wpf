@@ -240,6 +240,9 @@ namespace gedcom
                 streamWriter.WriteLine("0 TRLR");
             }
 
+            // Clear the dirty flag.
+            _isDirty = false;
+
             // Return success.
             return true;
         }
