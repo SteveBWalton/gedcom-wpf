@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gedcom
 {
-    /// <summary>Class to represent a source in a gedcom file.</summary>
+    /// <summary>Class to represent a source, 'SOUR', in a gedcom file.</summary>
     public class Source : TopLevel, IComparable<Source>
     {
         #region Member Variables
@@ -21,8 +21,7 @@ namespace gedcom
         //}
 
         /// <summary>Create an source from the specified tag.</summary>
-        /// <param name="tag">Specifies the tag to build the source from.</param>
-        /// <param name="gedcom">Specifies the gedcom that contains this top level element.</param>
+        /// <param name="tag">Specifies the tag to build the source from.  This is expected to be a 'SOUR' tag.</param>
         public Source(Tag tag) : base(tag)
         {
         }

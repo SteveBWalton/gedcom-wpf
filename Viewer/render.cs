@@ -318,6 +318,43 @@ namespace gedcom.viewer
             pageContent.html.AppendLine("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
             pageContent.html.AppendLine("</fieldset>");
 
+            // Display the media objects.
+            pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
+            pageContent.html.AppendLine("<legend>Media Objects</legend>");
+            pageContent.html.AppendLine("<table>");
+            count = 0;
+            MediaObject[] mediaObjectsInDateOrder = _gedcom.mediaObjects.inDateOrder();
+            foreach (MediaObject mediaObject in mediaObjectsInDateOrder)
+            {
+                pageContent.html.AppendLine("<tr><td>" + htmlMediaObject(mediaObject) + "</td></tr>");
+                count++;
+                if (count >= NUM_ITEMS)
+                {
+                    break;
+                }
+            }
+            pageContent.html.AppendLine("</table>");
+            pageContent.html.AppendLine("<p>There are " + _gedcom.mediaObjects.count.ToString() + " media objects.");
+            pageContent.html.AppendLine("</fieldset>");
+
+            // Display the repositories.
+            pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
+            pageContent.html.AppendLine("<legend>Repositories</legend>");
+            pageContent.html.AppendLine("<table>");
+            count = 0;
+            Repository[] repositoriesInDateOrder = _gedcom.repositories.inDateOrder();
+            foreach (Repository repository in repositoriesInDateOrder)
+            {
+                pageContent.html.AppendLine("<tr><td>" + htmlRepository(repository) + "</td></tr>");
+                count++;
+                if (count >= NUM_ITEMS)
+                {
+                    break;
+                }
+            }
+            pageContent.html.AppendLine("</table>");
+            pageContent.html.AppendLine("<p>There are " + _gedcom.repositories.count.ToString() + " repositories.");
+            pageContent.html.AppendLine("</fieldset>");
             // Display the places.
             pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
             pageContent.html.AppendLine("<legend>Places</legend>");
@@ -1010,6 +1047,30 @@ namespace gedcom.viewer
         private string htmlSource(Source source)
         {
             return "<a href=\"app://source?id=" + source.idx + "\">" + source.fullName + "</a>";
+        }
+
+        #endregion
+
+        #region Media Object
+
+        /// <summary>Returns the title for the media object with a link in html.</summary>
+        /// <param name="mediaObject">Specifies the media object to display.</param>
+        /// <returns>The title for the media object with a link in html.</returns>
+        private string htmlMediaObject(MediaObject mediaObject)
+        {
+            return mediaObject.title;
+        }
+
+        #endregion
+
+        #region Repository
+
+        /// <summary>Returns the name for the repository with a link in html.</summary>
+        /// <param name="repository">Specifies the repository to display.</param>
+        /// <returns>The name for the repository with a link in html.</returns>
+        private string htmlRepository(Repository repository)
+        {
+            return repository.name;
         }
 
         #endregion

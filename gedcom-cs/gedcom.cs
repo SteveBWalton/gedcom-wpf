@@ -17,12 +17,16 @@ namespace gedcom
 
         /// <summary>The filename of this gedcom file.</summary>
         private string _fileName;
-        /// <summary>The individuals in this gedcom.</summary>
+        /// <summary>The individuals in this gedcom (INDI).</summary>
         private readonly Individuals _individuals;
-        /// <summary>The families in this gedcom.</summary>
+        /// <summary>The families in this gedcom (FAM).</summary>
         private readonly Families _families;
-        /// <summary>The sources in this gedcom.</summary>
+        /// <summary>The sources in this gedcom (SOUR).</summary>
         private readonly Sources _sources;
+        /// <summary>The media objects in this gedom (OBJE).</summary>
+        private readonly MediaObjects _mediaObjects;
+        /// <summary>The repositories in this gedom (REPO).</summary>
+        private readonly Repositories _repostories;
         /// <summary>True if the gedcom has changed since the last change.</summary>
         private bool _isDirty;
 
@@ -39,6 +43,8 @@ namespace gedcom
             _individuals = new Individuals();
             _families = new Families();
             _sources = new Sources();
+            _mediaObjects = new MediaObjects();
+            _repostories = new Repositories();
             _places = new Places(null);
             clear();
             _isDirty = false;
@@ -53,6 +59,8 @@ namespace gedcom
             _individuals.clear();
             _families.clear();
             _sources.clear();
+            _mediaObjects.clear();
+            _repostories.clear();
             _places.clear();
             _isDirty = false;
         }
@@ -89,6 +97,22 @@ namespace gedcom
         public Sources sources
         {
             get => _sources;
+        }
+
+
+
+        /// <summary>The media objects in this gedcom.</summary>
+        public MediaObjects mediaObjects
+        {
+            get => _mediaObjects;
+        }
+
+
+
+        /// <summary>The repositories in this gedcom.</summary>
+        public Repositories repositories
+        {
+            get => _repostories;
         }
 
 
@@ -164,6 +188,16 @@ namespace gedcom
                                     Source source = new Source(tag);
                                     _sources.add(source);
                                 }
+                                else if (tag.line.EndsWith("OBJE"))
+                                {
+                                    MediaObject mediaObject = new MediaObject(tag);
+                                    _mediaObjects.add(mediaObject);
+                                }
+                                else if (tag.line.EndsWith("REPO"))
+                                {
+                                    Repository repository = new Repository(tag);
+                                    _repostories.add(repository);
+                                }
                             }
 
                             // Start a new top level tag.
@@ -233,8 +267,18 @@ namespace gedcom
                 }
 
                 // Write the media objects.
-                
+                foreach (MediaObject mediaObject in _mediaObjects)
+                {
+                    // The toText() includes a line feed.
+                    streamWriter.Write(mediaObject.tag.toText());
+                }
+
                 // Write the repositories.
+                foreach (Repository repository in _repostories)
+                {
+                    // The toText() includes a line feed.
+                    streamWriter.Write(repository.tag.toText());
+                }
 
                 // Write the gedcom file footer.
                 streamWriter.WriteLine("0 TRLR");

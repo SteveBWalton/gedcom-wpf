@@ -8,22 +8,22 @@ using System.Collections;
 
 namespace gedcom
 {
-    /// <summary>Class to represent a collection of media objects in a gedcom.</summary>
-    public class MediaObjects : IEnumerable<MediaObject>
+    /// <summary>Class to represent a collection of repositories in a gedcom.</summary>
+    public class Repositories : IEnumerable<Repository>
     {
         #region Member Variables
 
         /// <summary>The collection of individuals.</summary>
-        private readonly List<MediaObject> _mediaObjects;
+        private readonly List<Repository> _repositories;
 
         #endregion
 
         #region Constructors
 
         /// <summary>Empty class constructor.</summary>
-        public MediaObjects()
+        public Repositories()
         {
-            _mediaObjects = new List<MediaObject>();            
+            _repositories = new List<Repository>();            
         }
 
         #endregion
@@ -34,7 +34,7 @@ namespace gedcom
         /// <returns>True for success, false otherwise.</returns>
         public bool clear()
         {
-            _mediaObjects.Clear();
+            _repositories.Clear();
             return true;
         }
 
@@ -43,7 +43,7 @@ namespace gedcom
         /// <summary>The numbers of individuals in the collection.</summary>
         public int count
         {
-            get { return _mediaObjects.Count; }
+            get { return _repositories.Count; }
         }
 
 
@@ -51,9 +51,9 @@ namespace gedcom
         /// <summary>Add an individual to the collection.</summary>
         /// <param name="tag">Specifies the individual to add to the collection.</param>
         /// <returns>True for success, false otherwise.</returns>
-        public bool add(MediaObject mediaObject)
+        public bool add(Repository repository)
         {
-            _mediaObjects.Add(mediaObject);
+            _repositories.Add(repository);
             return true;
         }
 
@@ -62,14 +62,14 @@ namespace gedcom
         /// <summary>An indexer for this class.</summary>
         /// <param name="idx">Specifies the index of the individual [0..count-1].</param>
         /// <returns>The individual at the specified position.</returns>
-        public MediaObject this[int idx]
+        public Repository this[int idx]
         {
-            get { return (MediaObject)_mediaObjects[idx]; }
+            get { return (Repository)_repositories[idx]; }
         }
 
         #endregion
 
-        #region IEnumerable<MediaObject>
+        #region IEnumerable<Repository>
 
 
 
@@ -80,11 +80,11 @@ namespace gedcom
 
 
 
-        public IEnumerator<MediaObject> GetEnumerator()
+        public IEnumerator<Repository> GetEnumerator()
         {
-            for (int idx = 0; idx < _mediaObjects.Count; idx++)
+            for (int idx = 0; idx < _repositories.Count; idx++)
             {
-                yield return (MediaObject)_mediaObjects[idx];
+                yield return (Repository)_repositories[idx];
             }
         }
 
@@ -95,13 +95,13 @@ namespace gedcom
         /// <summary>Return the individual with the specified index.</summary>
         /// <param name="idx">Specifies the index to search for.</param>
         /// <returns>The individual with the specified index or null.</returns>
-        public MediaObject find(string idx)
+        public Repository find(string idx)
         {
-            foreach (MediaObject mediaObject in this)
+            foreach (Repository repository in this)
             {
-                if (mediaObject.idx == idx)
+                if (repository.idx == idx)
                 {
-                    return mediaObject;
+                    return repository;
                 }
             }
             return null;
@@ -109,10 +109,10 @@ namespace gedcom
 
 
 
-        public MediaObject[] inDateOrder()
+        public Repository[] inDateOrder()
         {
-            // Get an array of the individuals.
-            MediaObject[] array = (MediaObject[])_mediaObjects.ToArray();
+            // Get an array of the repositories.
+            Repository[] array = (Repository[])_repositories.ToArray();
 
             // Sort the array.
             Array.Sort(array);

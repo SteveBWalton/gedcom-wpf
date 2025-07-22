@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace gedcom
 {
-    /// <summary>Class to represent a family in a gedcom file.</summary>
+    /// <summary>Class to represent a family, 'FAM', in a gedcom file.</summary>
     public class Family : TopLevel, IComparable<Family>
     {
         #region Member Variables
@@ -15,13 +15,8 @@ namespace gedcom
 
         #region Class Constructors
 
-        // <summary>Empty class constructor.</summary>
-        //public Family()
-        //{
-        //}
-
         /// <summary>Create an individual from the specified tag.</summary>
-        /// <param name="tag">Specifies the tag to build the individual from.</param>
+        /// <param name="tag">Specifies the tag to build the individual from.  This is expected to be a 'FAM' tag.</param>
         public Family(Tag tag) : base(tag)
         {
         }

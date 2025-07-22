@@ -8,23 +8,14 @@ using System.Collections;
 
 namespace gedcom
 {
-    /// <summary>Class to represent an individual in a gedcom.</summary>
+    /// <summary>Class to represent an individual, 'INDI', in a gedcom.</summary>
     public class Individual : TopLevel, IComparable<Individual>
     {
         #region Member Variables
 
         #endregion
 
-        #region Class Constructors
-
-
-
-        // <summary>Empty class constructor.</summary>
-        //public Individual()
-        //{
-        //}
-
-
+        #region Constructors
 
         /// <summary>Empty class constructor.</summary>
         public Individual(Gedcom gedcom) : base(gedcom)
@@ -39,7 +30,7 @@ namespace gedcom
 
 
         /// <summary>Create an individual from the specified tag.</summary>
-        /// <param name="tag">Specifies the tag to build the individual from.</param>
+        /// <param name="tag">Specifies the tag to build the individual from.  This is expected to be a 'INDI' tag.</param>
         public Individual(Tag tag) : base(tag)
         {
         }
