@@ -225,27 +225,25 @@ namespace gedcom.viewer
         /// <returns>The requested page as html.</returns>
         public PageContent getContent(string host, string query)
         {
-            if (host == "home")
+            switch (host)
             {
+            case "home":
                 return getHome();
-            }
-            else if (host == "individual")
-            {
+            case "individual":
                 return getIndividual(query);
-            }
-            else if (host == "family")
-            {
+            case "family":
                 return getFamily(query);
-            }
-            else if (host == "source")
-            {
+            case "source":
                 return getSource(query);
-            }
-            else if (host =="place")
-            {
+            case "media":
+                return getMediaObject(query);
+            case "repository":            
+                return getRepository(query);
+            case "place":
                 return getPlace(query);
+            default:
+                return getError(host, query);
             }
-            return getError(host, query);
         }
 
 
@@ -947,10 +945,6 @@ namespace gedcom.viewer
             pageContent.editForm = "source?id=" + idx;
             pageContent.editGedomDirectly = "source?id=" + idx;
 
-            // Setup the edit options.
-            pageContent.editForm = "source?id=" + idx;
-            pageContent.editGedomDirectly = "source?id=" + idx;
-
             Source source = _gedcom.sources.find(idx);
             if (source == null)
             {
@@ -1053,24 +1047,123 @@ namespace gedcom.viewer
 
         #region Media Object
 
+        /// <summary>Render the requested media object as html.</summary>
+        /// <param name="query">Specifies the request query for this media object.</param>
+        /// <returns>The requested media object as html.</returns>
+        private PageContent getMediaObject(string query)
+        {
+            // Start html page for source.
+            PageContent pageContent = new PageContent();
+
+            // Identify the source.
+            NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
+            string idx = queryParams.Get("id");
+
+            // Setup the edit options.
+            // pageContent.editForm = "media?id=" + idx;
+            pageContent.editGedomDirectly = "media?id=" + idx;
+
+            MediaObject mediaObject = _gedcom.mediaObjects.find(idx);
+            if (mediaObject == null)
+            {
+                pageContent.html.Append("<h1>Media Object</h1>");
+                pageContent.html.Append("<p>query is '" + query + "'</p>");
+                pageContent.html.Append("<p>Can't find '" + idx + "'.</p>");
+                pageContent.html.Append(idx + " not found!");
+            }
+            else
+            {
+                // Remember which keys are dealt with.
+                List<String> dealtWith = new List<String>();
+
+                // Title for the source.
+                pageContent.html.Append("<h1>" + mediaObject.title + " (" + mediaObject.idx + ")</h1>");
+                dealtWith.Add("TITL");
+
+                // Show the remaining tags.
+                dealtWith.Add("CHAN");
+                addRemainingTags(pageContent.html, mediaObject.tag.children, dealtWith);
+
+                // Show the last changed information.
+                pageContent.html.Append("<p>Last Changed " + mediaObject.lastChanged.ToString() + "</p>");
+
+                // Show the original gedcom.
+                pageContent.html.Append("<pre>" + mediaObject.tag.display(0) + "</pre>");
+            }
+
+            // Return the built page.
+            return pageContent;
+        }
+
+
         /// <summary>Returns the title for the media object with a link in html.</summary>
         /// <param name="mediaObject">Specifies the media object to display.</param>
         /// <returns>The title for the media object with a link in html.</returns>
         private string htmlMediaObject(MediaObject mediaObject)
         {
-            return mediaObject.title;
+            return "<a href=\"app://media?id=" + mediaObject.idx + "\">" + mediaObject.title + "</a>";
         }
 
         #endregion
 
         #region Repository
 
+        /// <summary>Render the requested repository as html.</summary>
+        /// <param name="query">Specifies the request query for this repository.</param>
+        /// <returns>The requested repostiory as html.</returns>
+        private PageContent getRepository(string query)
+        {
+            // Start html page for source.
+            PageContent pageContent = new PageContent();
+
+            // Identify the source.
+            NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
+            string idx = queryParams.Get("id");
+
+            // Setup the edit options.
+            // pageContent.editForm = "repository?id=" + idx;
+            pageContent.editGedomDirectly = "repository?id=" + idx;
+
+            Repository repository = _gedcom.repositories.find(idx);
+            if (repository == null)
+            {
+                pageContent.html.Append("<h1>Repository</h1>");
+                pageContent.html.Append("<p>query is '" + query + "'</p>");
+                pageContent.html.Append("<p>Can't find '" + idx + "'.</p>");
+                pageContent.html.Append(idx + " not found!");
+            }
+            else
+            {
+                // Remember which keys are dealt with.
+                List<String> dealtWith = new List<String>();
+
+                // Title for the source.
+                pageContent.html.Append("<h1>" + repository.name + " (" + repository.idx + ")</h1>");
+                dealtWith.Add("NAME");
+
+                // Show the remaining tags.
+                dealtWith.Add("CHAN");
+                addRemainingTags(pageContent.html, repository.tag.children, dealtWith);
+
+                // Show the last changed information.
+                pageContent.html.Append("<p>Last Changed " + repository.lastChanged.ToString() + "</p>");
+
+                // Show the original gedcom.
+                pageContent.html.Append("<pre>" + repository.tag.display(0) + "</pre>");
+            }
+
+            // Return the built page.
+            return pageContent;
+        }
+
+
+
         /// <summary>Returns the name for the repository with a link in html.</summary>
         /// <param name="repository">Specifies the repository to display.</param>
         /// <returns>The name for the repository with a link in html.</returns>
         private string htmlRepository(Repository repository)
         {
-            return repository.name;
+            return "<a href=\"app://repository?id=" + repository.idx + "\">" + repository.name + "</a>";
         }
 
         #endregion
