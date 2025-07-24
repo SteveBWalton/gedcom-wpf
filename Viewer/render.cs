@@ -1089,6 +1089,23 @@ namespace gedcom.viewer
 
                 // Show the original gedcom.
                 pageContent.html.Append("<pre>" + mediaObject.tag.display(0) + "</pre>");
+
+                // Show the individuals with a connection to this media object.
+                int count = 0;
+                pageContent.html.AppendLine("<fieldset><legend>Individuals</legend>");
+                pageContent.html.AppendLine("<table>");
+                Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
+                foreach (Individual individual in individualsInDateOrder)
+                {
+                    if (individual.hasConnection(mediaObject))
+                    {
+                        pageContent.html.AppendLine("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
+                        count++;
+                    }
+                }
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine("<p>There are " + count.ToString() + " individuals with a connection to this media object.");
+                pageContent.html.AppendLine("</fieldset>");
             }
 
             // Return the built page.
@@ -1150,6 +1167,22 @@ namespace gedcom.viewer
 
                 // Show the original gedcom.
                 pageContent.html.Append("<pre>" + repository.tag.display(0) + "</pre>");
+
+                // Show the sources with a connection to this repository.
+                int count = 0;
+                pageContent.html.AppendLine("<fieldset><legend>Sources</legend>");
+                pageContent.html.AppendLine("<table>");
+                foreach (Source source in _gedcom.sources)
+                {
+                    if (source.hasConnection(repository))
+                    {
+                        pageContent.html.AppendLine("<tr><td>" + htmlSource(source) + "</td><tr>");
+                        count++;
+                    }
+                }
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine("<p>There are " + count.ToString() + " sources with a connection to " + repository.name + ".");
+                pageContent.html.AppendLine("</fieldset>");
             }
 
             // Return the built page.

@@ -70,5 +70,28 @@ namespace gedcom
             return fullName;
         }
 
+
+
+        /// <summary>Returns true if this source has a connection to the specified repository.</summary>
+        /// <param name="repository">Specifies the repository to test for a connection.</param>
+        /// <returns>True if this source has a connection to the specified repository, false otherwise..</returns>
+        public bool hasConnection(Repository repository)
+        {
+            // The repository will be a level 1 tag.
+            foreach (Tag tag in _tag.children)
+            {
+                if (tag.key == "REPO")
+                {
+                    if (tag.value == repository.tag.key)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // No connection was found.
+            return false;
+        }
+
     }
 }

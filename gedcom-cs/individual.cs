@@ -361,6 +361,29 @@ namespace gedcom
 
 
 
+        /// <summary>Returns true if the individual has a connection to the specified media object.</summary>
+        /// <param name="mediaObject">Specifies the media object.</param>
+        /// <returns>True if the individual has a connection to the specified media object, false otherwise.</returns>
+        public bool hasConnection(MediaObject mediaObject)
+        {
+            // The media object will be a level 1 tag.
+            foreach (Tag tag in _tag.children)
+            {
+                if (tag.key == "OBJE")
+                {
+                    if (tag.value == mediaObject.tag.key)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // No connection was found.
+            return false;
+        }
+
+
+
         /// <summary>Returns true if the individual has a connection to the specified place.</summary>
         /// <param name="place">Specifies the place.</param>
         /// <returns>True if the individual has a connection to the specified place, false otherwise.</returns>
