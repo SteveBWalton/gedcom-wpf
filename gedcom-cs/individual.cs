@@ -361,6 +361,29 @@ namespace gedcom
 
 
 
+        /// <summary>Returns true if the individual has a connection to the specified source.</summary>
+        /// <param name="source"></param>
+        /// <returns>True if the individual has a connection to the specified source, false otherwise.</returns>
+        public bool hasConnection(Source source)
+        {
+            // Loop through all the tags.
+            Tag[] allTags = _tag.getAllTags();
+            foreach (Tag tag in allTags)
+            {
+                if (tag.key == "SOUR")
+                {
+                    if (tag.value == source.tag.key)
+                    {
+                        return true;
+                    }
+                }
+            }
+            // No connection was found.
+            return false;
+        }
+
+
+
         /// <summary>Returns true if the individual has a connection to the specified media object.</summary>
         /// <param name="mediaObject">Specifies the media object.</param>
         /// <returns>True if the individual has a connection to the specified media object, false otherwise.</returns>

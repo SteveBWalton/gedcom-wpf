@@ -1020,6 +1020,25 @@ namespace gedcom.viewer
                 // Show the last changed information.
                 pageContent.html.Append("<p>Last Changed " + source.lastChanged.ToString() + "</p>");
 
+                // Show the individuals with a connection to this media object.
+                int count = 0;
+                pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
+                pageContent.html.AppendLine("<legend>Connected Individuals</legend>");
+                pageContent.html.AppendLine("<table>");
+                Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
+                foreach (Individual individual in individualsInDateOrder)
+                {
+                    if (individual.hasConnection(source))
+                    {
+                        pageContent.html.AppendLine("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
+                        count++;
+                    }
+                }
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine("<p>There are " + count.ToString() + " individuals with a connection to this source.");
+                pageContent.html.AppendLine("</fieldset>");
+
+
                 // Show the original gedcom.
                 pageContent.html.Append("<pre>" + source.tag.display(0) + "</pre>");
             }
@@ -1092,7 +1111,7 @@ namespace gedcom.viewer
 
                 // Show the individuals with a connection to this media object.
                 int count = 0;
-                pageContent.html.AppendLine("<fieldset><legend>Individuals</legend>");
+                pageContent.html.AppendLine("<fieldset><legend>Connected Individuals</legend>");
                 pageContent.html.AppendLine("<table>");
                 Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
                 foreach (Individual individual in individualsInDateOrder)
@@ -1261,7 +1280,7 @@ namespace gedcom.viewer
 
                 // Show individuals with connection to this place.
                 pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
-                pageContent.html.AppendLine("<legend>Individuals</legend>");
+                pageContent.html.AppendLine("<legend>Connected Individuals</legend>");
                 pageContent.html.AppendLine("<table>");
 
                 int count = 0;
