@@ -323,6 +323,14 @@ namespace gedcom.viewer
             case "source":
                 topLevel = _gedcom.sources.find(idx);
                 break;
+
+            case "media":
+                topLevel = _gedcom.mediaObjects.find(idx);
+                break;
+
+            case "repository":
+                topLevel = _gedcom.repositories.find(idx);
+                break;
             }
 
             // Let the user edit the top level tag.
