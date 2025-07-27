@@ -277,6 +277,7 @@ namespace gedcom.viewer
 
 
         /// <summary>Signal handler for the 'Edit' -> 'Edit' menu point click.</summary>
+        /// <remarks>Edit the top level item with a custom dialog.</remarks>>
         private void menuEditEditClick(object sender, RoutedEventArgs e)
         {
             string[] splitUri = _pageContent.editForm.Split('?');
@@ -297,6 +298,7 @@ namespace gedcom.viewer
 
 
         /// <summary>Signal handler for the 'Edit' -> 'Edit Gedcom' menu point click.</summary>
+        /// <remarks>Edit the top level item as a gedcom text.</remarks>
         private void menuEditEditGedcomClick(object sender, RoutedEventArgs e)
         {
             // Split the edit gedcom string into host and query.
