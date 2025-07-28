@@ -892,6 +892,19 @@ namespace gedcom.viewer
                     pageContent.html.Append(". ");
                 }
 
+                // Deal with any level 1 sources.
+                dealtWith.Add("SOUR");
+                Tag[] tagSources = family.tag.children.findAll("SOUR");
+                if (tagSources!=null)
+                {
+                    foreach(Tag tagSource in tagSources)
+                    {
+                        string sourceIdx = Tag.toIdx(tagSource.value);
+                        Source source = _gedcom.sources.find(sourceIdx);
+                        int refIdx = htmlSources.add(source);
+                    }
+                }
+
                 // Show the remaining tags.
                 dealtWith.Add("CHAN");
                 addRemainingTags(pageContent.html, family.tag.children, dealtWith);
