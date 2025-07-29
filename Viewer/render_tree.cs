@@ -112,10 +112,24 @@ namespace gedcom.viewer
         /// <returns>A tree in svg format.</returns>
         public string getTree()
         {
+            return getTree(0, 5);
+        }
+        /// <summary>Converts the specified grid into a small tree of parents and children only in svg format.</summary>
+        /// <returns>A tree in svg format.</returns>
+        public string getSmallTree()
+        {
+            return getTree(2, 4);
+        }
+        /// <summary>Converts the specified rows of the grid into a tree in svg format.</summary>
+        /// <param name="startRow">Specifies the starting row of the grid.  For the full grid specify 0.</param>
+        /// <param name="endRow">Specifies the ending row of the grid.  This row is not displayed.  For the full grid specify 5.</param>
+        /// <returns>A tree in svg format.</returns>
+        private string getTree(int startRow, int endRow)
+        {
             StringBuilder html = new StringBuilder();
 
             int maxPeople = 1;
-            for (int row = 0; row < 5; row++)
+            for (int row = startRow; row < endRow; row++)
             {
                 int people = (1 + _grid[row].Count) / 2;
                 if (people > maxPeople)
@@ -125,15 +139,15 @@ namespace gedcom.viewer
             }
 
             // Calculate the height and width.
-            int height = ROW_HEIGHT * 5;
-            int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * (maxPeople-1) + INDIVIDUAL_WIDTH;
+            int height = ROW_HEIGHT * (endRow - startRow - 1) + INDIVIDUAL_HEIGHT;
+            int width = (INDIVIDUAL_WIDTH + FAMILY_WIDTH) * (maxPeople - 1) + INDIVIDUAL_WIDTH;
 
             html.AppendLine("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"  width=\"" + width.ToString() + "\" height=\"" + height.ToString() + "\" style=\"text-alignment: center; border: 1px solid black;\">");
 
             int y = 0;
             int x = 0;
 
-            for (int row = 0; row < 5; row++)
+            for (int row = startRow; row < endRow; row++)
             {
                 x = 0;
                 for (int col = 0; col < _grid[row].Count; col++)
@@ -155,7 +169,7 @@ namespace gedcom.viewer
             }
 
             // Calculate the connecting lines.
-            for (int row = 1; row < 5; row++)
+            for (int row = startRow + 1; row < endRow; row++)
             {
                 x = 0;
                 for (int col = 0; col < _grid[row].Count; col += 2)
@@ -240,7 +254,7 @@ namespace gedcom.viewer
 
             // Adjust overlapping connecting lines.
             const int DEBUG_ROW = 111;
-            for (int row = 0; row < 5; row++)
+            for (int row = startRow; row < endRow; row++)
             {
                 if (row >= DEBUG_ROW)
                 {
@@ -296,7 +310,7 @@ namespace gedcom.viewer
 
             // Draw the connecting lines.
             y = INDIVIDUAL_HEIGHT;
-            for (int row = 0; row < 5; row++)
+            for (int row = startRow; row < endRow; row++)
             {
                 foreach(TreeFamilyLine familyTree in _familyLines[row])
                 {
@@ -783,7 +797,7 @@ namespace gedcom.viewer
             foreach (Individual child in children)
             {
                 // Add child's husbands.
-                if (child.isFemale)
+                if (child.isFemale && level < 4)
                 {
                     string[] familyIdxes = child.getFamilyIdxes();
                     foreach (string familyIdx in familyIdxes)
@@ -805,7 +819,7 @@ namespace gedcom.viewer
                 _grid[level].Add(child.idx);
 
                 // Add the child's wives.
-                if (child.isMale)
+                if (child.isMale && level < 4)
                 {
                     string[] familyIdxes = child.getFamilyIdxes();
                     foreach (string familyIdx in familyIdxes)
@@ -850,14 +864,22 @@ namespace gedcom.viewer
                 _higherLines[i] = 0;
             }
 
-            // Add the wife.
-            _grid[2].Insert(0, family.wifeIdx);
+            // Add the husband.
+            _grid[2].Add(family.husbandIdx);
 
             // Add the family.
-            _grid[2].Insert(0, family.idx);
+            _grid[2].Add(family.idx);
 
-            // Add the husband.
-            _grid[2].Insert(0, family.husbandIdx);
+            // Add the wife.
+            _grid[2].Add(family.wifeIdx);
+
+            // Add the children.
+            Individual[] children = family.getChildren();
+            foreach(Individual child in children)
+            {
+                _grid[3].Add(child.idx);
+                _grid[3].Add("");
+            }
         }
 
 

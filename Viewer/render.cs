@@ -801,6 +801,7 @@ namespace gedcom.viewer
                 // Little family tree control for this family.
                 RenderTree renderTree = new RenderTree(family);
                 pageContent.html.Append(renderTree.getTree());
+                pageContent.html.Append(renderTree.getSmallTree());
 
                 // Initialise the sources referenced in this family.
                 HtmlSources htmlSources = new HtmlSources();
