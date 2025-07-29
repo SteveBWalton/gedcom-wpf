@@ -434,7 +434,7 @@ namespace gedcom.viewer
                 pageContent.html.AppendLine("<h1>" + fullName + " (" + individual.idx + ")</h1>");
 
                 // Little family tree control.
-                RenderTree renderTree = new RenderTree(individual, _gedcom);
+                RenderTree renderTree = new RenderTree(individual);
                 pageContent.html.Append(renderTree.getTree());
 
                 // Initialise the sources referenced in this individual.
@@ -797,6 +797,10 @@ namespace gedcom.viewer
                 pageContent.html.Append("<h1>" + family.fullName + " (" + family.idx + ")</h1>");
                 dealtWith.Add("HUSB");
                 dealtWith.Add("WIFE");
+
+                // Little family tree control for this family.
+                RenderTree renderTree = new RenderTree(family);
+                pageContent.html.Append(renderTree.getTree());
 
                 // Initialise the sources referenced in this family.
                 HtmlSources htmlSources = new HtmlSources();

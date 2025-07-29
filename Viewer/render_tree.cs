@@ -74,18 +74,31 @@ namespace gedcom.viewer
 
         #endregion
 
-        #region Class Constructors
+        #region Constructors
 
-        /// <summary>Class constructor to generate a tree for an individual.</summary>
+        /// <summary>Constructor to generate a tree for an individual.</summary>
         /// <param name="individual">Specifies the individual to render the tree for.</param>
-        /// <param name="gedcom">Specifies the gedcom data.</param>
-        public RenderTree(Individual individual, Gedcom gedcom)
+        public RenderTree(Individual individual)
         {
-            // Store the paramters.
-            _gedcom = gedcom;
+            // Store the parameters.
+            _gedcom = individual.gedcom;
 
             // Generate the grid.
             getIndividualTree(individual);
+        }
+
+
+
+        /// <summary>Constructor to generate a tree for a family.</summary>
+        /// <remarks>This is a much similer tree compared to an individual, just the immediate family members.</remarks>
+        /// <param name="family">Specifies the family to render the tree for.</param>
+        public RenderTree(Family  family)
+        {
+            // Store the gedcom.
+            _gedcom = family.gedcom;
+
+            // Generate the grid.
+            getFamilyTree(family);
         }
 
         #endregion
@@ -817,6 +830,37 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Build Tree for Family
 
+        /// <summary>Returns a little tree for the specified family as a svg graphic.</summary>
+        /// <param name="family">Specifies the family to draw the tree for.</param>
+        /// <returns>A little tree for the specified family as a svg graphic.</returns>
+        private void getFamilyTree(Family family)
+        {
+            // Create an empty grid.
+            _grid = new List<string>[5];
+            _familyLines = new List<TreeFamilyLine>[5];
+            _lowerLines = new int[5];
+            _higherLines = new int[5];
+            for (int i = 0; i < 5; i++)
+            {
+                _grid[i] = new List<string>();
+                _familyLines[i] = new List<TreeFamilyLine>();
+                _lowerLines[i] = 0;
+                _higherLines[i] = 0;
+            }
+
+            // Add the wife.
+            _grid[2].Insert(0, family.wifeIdx);
+
+            // Add the family.
+            _grid[2].Insert(0, family.idx);
+
+            // Add the husband.
+            _grid[2].Insert(0, family.husbandIdx);
+        }
+
+
+        #endregion
     }
 }
