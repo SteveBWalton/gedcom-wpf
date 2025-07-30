@@ -149,6 +149,11 @@ namespace gedcom.viewer
                 DialogIndividual dialogIndividual = new DialogIndividual(_gedcom, query);
                 dialogIndividual.ShowDialog();
                 break;
+
+            case "family":
+                DialogFamily dialogFamily = new DialogFamily(_gedcom, query);
+                dialogFamily.ShowDialog();
+                break;
             }
 
             // Build the content within the application.
