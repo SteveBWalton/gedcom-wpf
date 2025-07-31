@@ -15,6 +15,18 @@ namespace gedcom
 
         #region Class Constructors
 
+        /// <summary>Empty class constructor.</summary>
+        public Family(Gedcom gedcom) : base(gedcom)
+        {
+            // Create an key for the individual.
+            string newKey = "@F" + (gedcom.families.Count() + 1).ToString("0000") + "@";
+
+            // An empty family top level tag.
+            _tag = new Tag(gedcom, newKey, "FAM");
+        }
+
+
+
         /// <summary>Create an individual from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the individual from.  This is expected to be a 'FAM' tag.</param>
         public Family(Tag tag) : base(tag)

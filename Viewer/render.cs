@@ -800,11 +800,13 @@ namespace gedcom.viewer
 
                 // Little family tree control for this family.
                 RenderTree renderTree = new RenderTree(family);
-                pageContent.html.Append(renderTree.getTree());
+                // pageContent.html.Append(renderTree.getTree());
                 pageContent.html.Append(renderTree.getSmallTree());
 
                 // Initialise the sources referenced in this family.
                 HtmlSources htmlSources = new HtmlSources();
+
+                pageContent.html.AppendLine("<p>");
 
                 Tag tagMarriage = family.tag.children.findOne("MARR");
                 dealtWith.Add("MARR");
@@ -896,6 +898,8 @@ namespace gedcom.viewer
 
                     pageContent.html.Append(". ");
                 }
+
+                pageContent.html.AppendLine("</p>");
 
                 // Deal with any level 1 sources.
                 dealtWith.Add("SOUR");
