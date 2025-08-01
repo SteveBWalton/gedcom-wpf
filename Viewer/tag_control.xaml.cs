@@ -108,6 +108,75 @@ namespace gedcom.viewer
             // Add a control for the tag value.
             switch (_tagKey)
             {
+            case "CHIL":
+                // Add a combobox for all individuals.
+                ComboBox individualComboBox = new ComboBox();
+                individualComboBox.Width = valueWidth;
+                {
+                    Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
+                    string individualIdx = gedcom.Tag.toIdx(_tagValue);
+                    foreach (Individual individual in individualsInDateOrder)
+                    {
+                        individualComboBox.Items.Add(individual);
+                        if (individual.idx == individualIdx)
+                        {
+                            individualComboBox.SelectedIndex = individualComboBox.Items.Count - 1;
+                        }
+                    }
+                }
+                _mainGrid.Children.Add(individualComboBox);
+                Grid.SetRow(individualComboBox, 0);
+                Grid.SetColumn(individualComboBox, 2);
+                break;
+
+            case "HUSB":
+                // Add a combobox for all male individuals.
+                ComboBox malesComboBox = new ComboBox();
+                malesComboBox.Width = valueWidth;
+                {
+                    Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
+                    string individualIdx = gedcom.Tag.toIdx(_tagValue);
+                    foreach (Individual individual in individualsInDateOrder)
+                    {
+                        if (individual.isMale)
+                        {
+                            malesComboBox.Items.Add(individual);
+                            if (individual.idx == individualIdx)
+                            {
+                                malesComboBox.SelectedIndex = malesComboBox.Items.Count - 1;
+                            }
+                        }
+                    }
+                }
+                _mainGrid.Children.Add(malesComboBox);
+                Grid.SetRow(malesComboBox, 0);
+                Grid.SetColumn(malesComboBox, 2);
+                break;
+
+            case "WIFE":
+                // Add a combobox for all female individuals.
+                ComboBox femaleComboBox = new ComboBox();
+                femaleComboBox.Width = valueWidth;
+                {
+                    Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
+                    string individualIdx = gedcom.Tag.toIdx(_tagValue);
+                    foreach (Individual individual in individualsInDateOrder)
+                    {
+                        if (individual.isFemale)
+                        {
+                            femaleComboBox.Items.Add(individual);
+                            if (individual.idx == individualIdx)
+                            {
+                                femaleComboBox.SelectedIndex = femaleComboBox.Items.Count - 1;
+                            }
+                        }
+                    }
+                }
+                _mainGrid.Children.Add(femaleComboBox);
+                Grid.SetRow(femaleComboBox, 0);
+                Grid.SetColumn(femaleComboBox, 2);
+                break;
+
             case "SOUR":
                 // Add a combobox for the source.
                 ComboBox sourceComboBox = new ComboBox();

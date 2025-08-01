@@ -303,6 +303,31 @@ namespace gedcom
 
         #endregion
 
+
+
+        /// <summary>Return the full name of the individual with the years.</summary>
+        /// <returns>The full name of the individual with the years.</returns>
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder(fullName);
+            TagDate birthDate = dob;            
+            if (birthDate != null)
+            {
+                result.Append(" (");
+                result.Append(birthDate.approxDate.Year.ToString());
+                result.Append("-");
+                TagDate deathDate = dod;
+                if (deathDate!=null)
+                {
+                    result.Append(deathDate.approxDate.Year.ToString());
+                }
+                result.Append(")");
+            }
+            // Return the built string.
+            return result.ToString();
+        }
+
+
         /// <summary>Get an array of indexes for families that this individual has created.</summary>
         /// <returns>An array of families that this person created.</returns>
         public string[] getFamilyIdxes()
