@@ -157,12 +157,12 @@ namespace gedcom
             {
                 // Add a new tag.
                 isNewTag = true;
-                tagTime = new Tag(tagDate, "TIME", DateTime.Now.ToString("hh:mm"));
+                tagTime = new Tag(tagDate, "TIME", DateTime.Now.ToString("HH:mm"));
                 tagDate.children.add(tagTime);
             }
             else
             {
-                tagTime.value = DateTime.Now.ToString("hh:mm");
+                tagTime.value = DateTime.Now.ToString("HH:mm");
             }
 
             // Get the changed by tag.
