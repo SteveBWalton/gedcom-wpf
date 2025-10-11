@@ -49,6 +49,8 @@ namespace gedcom
                 {
                 case "INDI":
                     return "Individual";
+                case "FAM":
+                    return "Family";
                 case "SOUR":
                     return "Source";
                 case "DATE":
@@ -89,6 +91,14 @@ namespace gedcom
                     return "Latitude";
                 case "LONG":
                     return "Longitude";
+                case "HUSB":
+                    return "Husband";
+                case "WIFE":
+                    return "Wife";
+                case "CHIL":
+                    return "Child";
+                case "MARR":
+                    return "Marriage";
                 case "_TODO":
                     return "To Do";
                 }
@@ -115,6 +125,7 @@ namespace gedcom
                 case "NOTE":
                 case "OBJE":
                 case "_TODO":
+                case "CHIL":
                     return true;
 
                 case "DATE":
@@ -128,10 +139,13 @@ namespace gedcom
                 case "SURN":
                 case "GIVN":
                 case "CHAN":
+                case "HUSB":
+                case "WIFE":
+                case "MARR":
                     return false;
                 }
 
-                // Not more what to have as the default!
+                // Not sure what to have as the default!
                 return true;
             }
         }
@@ -148,10 +162,13 @@ namespace gedcom
                 {
                 // These should be towards the start of the top level tag.
                 case "NAME":
+                case "HUSB":
                     return 10;
                 case "SEX":
+                case "WIFE":
                     return 20;
                 case "BIRT":
+                case "MARR":
                     return 30;
                 case "DEAT":
                     return 40;
@@ -159,6 +176,7 @@ namespace gedcom
                     return 50;
 
                 case "FAMS":
+                case "CHIL":
                     return 100;
                 case "EDUC":
                     return 110;
@@ -228,6 +246,12 @@ namespace gedcom
                 children.Add(new TagType("NOTE"));
                 children.Add(new TagType("_TODO"));
                 children.Add(new TagType("CHAN"));
+                break;
+            case "FAM":
+                children.Add(new TagType("HUSB"));
+                children.Add(new TagType("WIFE"));
+                children.Add(new TagType("CHIL"));
+                children.Add(new TagType("MARR"));
                 break;
             case "NAME":
                 children.Add(new TagType("GIVN"));
