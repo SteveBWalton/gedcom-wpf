@@ -92,7 +92,6 @@ namespace gedcom.viewer
                     keys.Add(child.key);
                 }
                 _childKeys = keys.ToArray();
-
             }
             else
             {

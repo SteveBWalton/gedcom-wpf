@@ -139,6 +139,17 @@ namespace gedcom.viewer
 
         }
 
-        #endregion
+
+        /// <summary>Signal handler for the add tag button click.</summary>
+        private void addTagButtonClick(object sender, RoutedEventArgs e)
+        {
+            DialogSelectTag dialogSelectTag = new DialogSelectTag(_family);
+            if (dialogSelectTag.ShowDialog() == true)
+            {
+
+            }
+
+            #endregion
+        }
     }
 }
