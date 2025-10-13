@@ -574,6 +574,10 @@ namespace gedcom.viewer
             // Find the family tag.
             string familyIdx = Tag.toIdx(parentsTag.value);
             Family family = _gedcom.families.find(familyIdx);
+            if (family== null)
+            {
+                return "error unknown family";
+            }
             Tag tag = family.tag;
 
             // Build a long description of the tag.
@@ -616,6 +620,10 @@ namespace gedcom.viewer
         {
             // Find the family tag.
             Family family = _gedcom.families.find(familyIdx);
+            if (family == null)
+            {
+                return "error unknown family";
+            }
             Tag tag = family.tag;
 
             bool isBothPartnersKnown = true;

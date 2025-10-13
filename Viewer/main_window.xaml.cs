@@ -408,6 +408,22 @@ namespace gedcom.viewer
             }
         }
 
+
+
+        /// <summary>Signal handler for the 'Edit' -> 'Add Family' menu point.</summary>
+        private void menuEditAddFamilyClick(object sender, RoutedEventArgs e)
+        {
+            DialogFamily dialogFamily = new DialogFamily(_gedcom);
+            if (dialogFamily.ShowDialog()==true)
+            {
+                // Add the family to the gedcom.
+                // _gedcom.families.add(dialogFamily.family);
+
+                // Update the display.
+                populateWindow("home", "");
+            }
+        }
+
         #endregion
 
     }

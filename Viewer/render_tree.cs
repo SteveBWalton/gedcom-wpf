@@ -677,7 +677,7 @@ namespace gedcom.viewer
                 foreach (string familyIdx in familyIdxes.Reverse())
                 {
                     Family family = _gedcom.families.find(familyIdx);
-                    if (family.wifeIdx != "")
+                    if (family != null && family.wifeIdx != "")
                     {
                         if (isInsert)
                         {
@@ -792,6 +792,13 @@ namespace gedcom.viewer
         /// <param name="grid">Specifies the grid to add the children to.</param>
         private void addChildrenTreeGrid(int level, Family family)
         {
+            // Validate the inputs.
+            if (family == null)
+            {
+                return;
+            }
+
+            // Find the children.
             Individual[] children = family.getChildren();
 
             foreach (Individual child in children)
