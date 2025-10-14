@@ -50,7 +50,7 @@
                     </MenuItem>
                     <MenuItem Header="Add Family..." Click="menuEditAddFamilyClick">
                         <MenuItem.Icon>
-                            <Image Source="/Resources/16/person.png" />
+                            <Image Source="/Resources/16/people.png" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>

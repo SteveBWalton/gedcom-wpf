@@ -140,13 +140,27 @@ namespace gedcom.viewer
         }
 
 
+
         /// <summary>Signal handler for the add tag button click.</summary>
         private void addTagButtonClick(object sender, RoutedEventArgs e)
         {
+            // Allow the user to select the tag to add to the dialog.
             DialogSelectTag dialogSelectTag = new DialogSelectTag(_family);
             if (dialogSelectTag.ShowDialog() == true)
             {
+                // Add a new tag control to the dialog.
+                TagControl tagControl = new TagControl(dialogSelectTag.result, "", 1, null, _gedcom, false, setChildSizeIndividual, askParentDelete);
+                tagControl.VerticalAlignment = VerticalAlignment.Top;
+                _tagControls.Add(tagControl);
 
+                // Add a new row to the dialog.
+                RowDefinition rowDefinition = new RowDefinition();
+                rowDefinition.Height = new GridLength(tagControl.Height);
+
+                // Add the new tag control to the new row.
+                _gridTags.RowDefinitions.Add(rowDefinition);
+                _gridTags.Children.Add(tagControl);
+                Grid.SetRow(tagControl, _gridTags.RowDefinitions.Count);
             }
 
             #endregion
