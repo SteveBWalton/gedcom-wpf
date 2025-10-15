@@ -70,7 +70,7 @@ namespace gedcom.viewer
             // Create rows for the tags.
             for (int i = 0; i < _individual.tag.children.count; i++)
             {
-                TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSizeIndividual, askParentDelete);
+                TagControl tagControl = new TagControl(_individual.tag.children[i], false, setChildSizeIndividual, askParentDelete, null);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
                 _tagControls.Add(tagControl);
 
@@ -188,9 +188,8 @@ namespace gedcom.viewer
             DialogSelectTag dialogSelectTag = new DialogSelectTag(_individual);
             if (dialogSelectTag.ShowDialog() == true)
             {
-                // Add a new tag control to the dialog.
-                // TagControl tagControl = new TagControl(dialogSelectTag.result, false, setChildSizeIndividual, askParentDelete);
-                TagControl tagControl = new TagControl(dialogSelectTag.result, "", 1, null, _gedcom, false, setChildSizeIndividual, askParentDelete);
+                // Add a new tag control to the dialog.                
+                TagControl tagControl = new TagControl(dialogSelectTag.result, "", 1, null, _gedcom, false, setChildSizeIndividual, askParentDelete, null);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
                 _tagControls.Add(tagControl);
 

@@ -52,16 +52,7 @@ namespace gedcom.viewer
 
         #endregion
 
-        /*
-        private void dispatcherTimerTick(object sender, EventArgs e)
-        {
-            if (_newUrl != "")
-            {
-                _webBrowser.NavigateToString(_render.getContent(_newUrl));
-                _newUrl = "";
-            }
-        }
-        */
+        #region Miscellaneous Functions
 
         /// <summary>Returns true if the current document is saved or okay to delete.</summary>
         /// <returns>True if the current document is saved or okay to delete.</returns>
@@ -160,6 +151,8 @@ namespace gedcom.viewer
             populateWindow(host, query);
         }
 
+        #endregion
+
         #region Signal Handlers
 
         /// <summary>Signal handler for the main window loaded signal.</summary>
@@ -214,7 +207,9 @@ namespace gedcom.viewer
             return;
         }
 
+        #region Main Window Menus
 
+        #region File Menu
 
         /// <summary>Signal handler for the 'File' -> 'Exit' menu point click.</summary>
         private void menuFileExitClick(object sender, RoutedEventArgs e)
@@ -272,6 +267,41 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Signal handler for the 'File' -> 'Save' menu point click.</summary>
+        private void menuFileSaveClick(object sender, RoutedEventArgs e)
+        {
+            if (_gedcom.fileName == "")
+            {
+                // No filename so save as
+                menuFileSaveAsClick(sender, e);
+            }
+            else
+            {
+                _gedcom.save(_gedcom.fileName);
+            }
+        }
+
+
+
+        /// <summary>Signal handler for the 'File' -> 'Save As' menu point click.</summary>
+        private void menuFileSaveAsClick(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Gedom (*.ged)|*.ged",
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                // Save the file in the specified file.
+                string fileName = saveFileDialog.FileName;
+                _gedcom.save(fileName);
+            }
+        }
+
+        #endregion
+
+        #region View Menu
+
         /// <summary>Signal handler for the 'View' -> 'Home' menu point click.</summary>
         private void menuViewHomeClick(object sender, RoutedEventArgs e)
         {
@@ -279,7 +309,9 @@ namespace gedcom.viewer
             populateWindow("home", "");
         }
 
+        #endregion
 
+        #region Edit Menu
 
         /// <summary>Signal handler for the 'Edit' -> 'Edit' menu point click.</summary>
         /// <remarks>Edit the top level item with a custom dialog.</remarks>>
@@ -360,39 +392,6 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>Signal handler for the 'File' -> 'Save' menu point click.</summary>
-        private void menuFileSaveClick(object sender, RoutedEventArgs e)
-        {
-            if (_gedcom.fileName == "")
-            {
-                // No filename so save as
-                menuFileSaveAsClick(sender, e);
-            }
-            else
-            {
-                _gedcom.save(_gedcom.fileName);
-            }
-        }
-
-
-
-        /// <summary>Signal handler for the 'FIle' -> 'Save As' menu point click.</summary>
-        private void menuFileSaveAsClick(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.SaveFileDialog saveFileDialog = new Microsoft.Win32.SaveFileDialog
-            {
-                Filter = "Gedom (*.ged)|*.ged",
-            };
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                // Save the file in the specified file.
-                string fileName = saveFileDialog.FileName;
-                _gedcom.save(fileName);
-            }
-        }
-
-
-
         /// <summary>Signal handler for the 'Edit' -> 'Add Individual' menu point.</summary>
         private void menuEditAddIndividualClick(object sender, RoutedEventArgs e)
         {
@@ -414,7 +413,7 @@ namespace gedcom.viewer
         private void menuEditAddFamilyClick(object sender, RoutedEventArgs e)
         {
             DialogFamily dialogFamily = new DialogFamily(_gedcom);
-            if (dialogFamily.ShowDialog()==true)
+            if (dialogFamily.ShowDialog() == true)
             {
                 // Add the family to the gedcom.
                 // _gedcom.families.add(dialogFamily.family);
@@ -423,6 +422,10 @@ namespace gedcom.viewer
                 populateWindow("home", "");
             }
         }
+
+        #endregion
+
+        #endregion
 
         #endregion
 

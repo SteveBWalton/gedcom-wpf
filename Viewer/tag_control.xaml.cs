@@ -29,6 +29,11 @@ namespace gedcom.viewer
         /// <summary>Delegate to a function to request the parent control to delete this control.</summary>
         public delegate void AskParentDelete(TagControl child);
 
+        /// <summary>Delegate to a function to tell the parent control that the value of a child tag has changed.</summary>
+        /// <param name="tagKey">The key of the tag that has changed.</param>
+        /// <param name="tagValue">The new value of the tag that has changed.</param>
+        public delegate void TellParentValueChanged(string tagKey, string tagValue);
+
         /// <summary>The key of the tag.</summary>
         /// <remarks>Originally the tag control stored the tag but I do not want to change the value of the original tag.</remarks>
         private string _tagKey;
@@ -38,7 +43,7 @@ namespace gedcom.viewer
         /// <summary>The level of the tag.</summary>
         /// <remarks>Originally the tag control stored the tag but I do not want to change the value of the original tag.</remarks>
         private int _tagLevel;
-        private  readonly Gedcom _gedcom;
+        private readonly Gedcom _gedcom;
         /// <summary>True if the child tags are expanded, false otherwise.</summary>
         private bool _isExpand;
 
@@ -57,6 +62,9 @@ namespace gedcom.viewer
         /// <summary>A function to request the parent control to delete this control.</summary>
         private AskParentDelete _askParentDelete;
 
+        /// <summary>A function to tell the parent control that a child tag control has changed value.</summary>
+        private TellParentValueChanged _tellParentValueChanged;
+
         #endregion
 
         #region Constructors
@@ -65,13 +73,18 @@ namespace gedcom.viewer
         /// <param name="tag">Specifies the tag to edit.</param>
         /// <param name="isExpand">Specifies true to show the tag initially expanded.</param>
         /// <param name="setParentHeight">Specifies a function to resize the parent container.</param>
-        public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete) : this(tag.key, tag.value, tag.level, tag.children, tag.gedcom, isExpand, setParentHeight, askParentDelete)
+        public TagControl(Tag tag, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete, TellParentValueChanged tellParentValueChanged) : this(tag.key, tag.value, tag.level, tag.children, tag.gedcom, isExpand, setParentHeight, askParentDelete, tellParentValueChanged)
         {
         }
 
-        public TagControl(string tagKey, string tagValue, int tagLevel, Tags children, Gedcom thisGedcom, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete)
+        public TagControl(string tagKey, string tagValue, int tagLevel, Tags children, Gedcom thisGedcom, bool isExpand, SetParentHeight setParentHeight, AskParentDelete askParentDelete, TellParentValueChanged tellParentValueChanged)
         {
             InitializeComponent();
+
+            if (tagKey == "GIVN")
+            {
+                int i = 10;
+            }
 
             // Record the parameters.
             _tagKey = tagKey;
@@ -80,7 +93,8 @@ namespace gedcom.viewer
             _gedcom = thisGedcom;
             _isExpand = isExpand;
             _setParentHeight = setParentHeight;
-            _askParentDelete = askParentDelete;
+            _askParentDelete = askParentDelete;            
+            _tellParentValueChanged = tellParentValueChanged;
             _children = new List<TagControl>();
 
             // Controls that might hold the value.
@@ -325,7 +339,7 @@ namespace gedcom.viewer
                 // Show the children.
                 for (int i = 0; i < children.count; i++)
                 {
-                    TagControl tagControl = new TagControl(children[i], _isExpand, setChildSizeControl, deleteChild);
+                    TagControl tagControl = new TagControl(children[i], _isExpand, setChildSizeControl, deleteChild, childTagChanged);
                     tagControl.VerticalAlignment = VerticalAlignment.Top;
                     _children.Add(tagControl);
 
@@ -365,6 +379,9 @@ namespace gedcom.viewer
             get => _tagKey;
         }
 
+
+
+        /// <summary>The value of the tag that this tag control represents.</summary>
         public string tagValue
         {
             get => _tagValue;
@@ -461,7 +478,7 @@ namespace gedcom.viewer
         {
             _imagePlusMinus.Visibility = Visibility.Visible;
 
-            TagControl tagControl = new TagControl(childTagKey, "", _tagLevel + 1, null, _gedcom, _isExpand, setChildSizeControl, deleteChild);
+            TagControl tagControl = new TagControl(childTagKey, "", _tagLevel + 1, null, _gedcom, _isExpand, setChildSizeControl, deleteChild, childTagChanged);
             tagControl.VerticalAlignment = VerticalAlignment.Top;
             _children.Add(tagControl);
 
@@ -516,6 +533,15 @@ namespace gedcom.viewer
             }            
         }
 
+
+
+        /// <summary>A child tag control has changed value.</summary>
+        /// <param name="tagKey">The key of the child tag control that has changed.</param>
+        /// <param name="tagValue">The new value of the child tag control that has changed.</param>
+        public void childTagChanged(string tagKey, string tagValue)
+        {
+            Console.WriteLine("I am " + _tagKey + " and " + tagKey + " has changed to " + tagValue);
+        }
 
         #region Signal Handlers
 
@@ -637,7 +663,7 @@ namespace gedcom.viewer
                         }
                     }
                 }
-                if(tagControl.tagKey=="ADDR")
+                if (tagControl.tagKey == "ADDR")
                 {
                     address = tagControl.tagValue;
                 }
@@ -759,7 +785,11 @@ namespace gedcom.viewer
             {
                 if (textBox.Text != _tagValue)
                 {
-                    _tagValue = textBox.Text;
+                    if (_tagValue != textBox.Text)
+                    {
+                        _tagValue = textBox.Text;
+                        _tellParentValueChanged?.Invoke(_tagKey, _tagValue);
+                    }
                 }
             }
         }

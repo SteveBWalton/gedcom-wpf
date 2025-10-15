@@ -68,7 +68,7 @@ namespace gedcom.viewer
             // Create rows for the tags.
             for (int i = 0; i < _family.tag.children.count; i++)
             {
-                TagControl tagControl = new TagControl(_family.tag.children[i], false, setChildSizeIndividual, askParentDelete);
+                TagControl tagControl = new TagControl(_family.tag.children[i], false, setChildSizeIndividual, askParentDelete, null);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
                 _tagControls.Add(tagControl);
 
@@ -79,6 +79,16 @@ namespace gedcom.viewer
                 _gridTags.Children.Add(tagControl);
                 Grid.SetRow(tagControl, i);
             }
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>The family that this dialig is editting.</summary>
+        public Family family
+        {
+            get => _family;
         }
 
         #endregion
@@ -149,7 +159,7 @@ namespace gedcom.viewer
             if (dialogSelectTag.ShowDialog() == true)
             {
                 // Add a new tag control to the dialog.
-                TagControl tagControl = new TagControl(dialogSelectTag.result, "", 1, null, _gedcom, false, setChildSizeIndividual, askParentDelete);
+                TagControl tagControl = new TagControl(dialogSelectTag.result, "", 1, null, _gedcom, false, setChildSizeIndividual, askParentDelete, null);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
                 _tagControls.Add(tagControl);
 
