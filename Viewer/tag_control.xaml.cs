@@ -81,11 +81,6 @@ namespace gedcom.viewer
         {
             InitializeComponent();
 
-            if (tagKey == "GIVN")
-            {
-                int i = 10;
-            }
-
             // Record the parameters.
             _tagKey = tagKey;
             _tagValue = tagValue;
@@ -540,7 +535,31 @@ namespace gedcom.viewer
         /// <param name="tagValue">The new value of the child tag control that has changed.</param>
         public void childTagChanged(string tagKey, string tagValue)
         {
-            Console.WriteLine("I am " + _tagKey + " and " + tagKey + " has changed to " + tagValue);
+            // Console.WriteLine("I am " + _tagKey + " and " + tagKey + " has changed to " + tagValue);
+            switch (_tagKey)
+            {
+            case "NAME":
+                // Update the name based on the child given and family name tags.
+                string givenName = "";
+                string familyName = "";
+                foreach (TagControl child in _children)
+                {
+                    if (child.tagKey == "GIVN")
+                    {
+                        givenName = child.tagValue;
+                    }
+                    if (child.tagKey == "SURN")
+                    {
+                        familyName = child.tagValue;
+                    }
+                }
+                _tagValue = givenName + " /" + familyName + "/";
+                if (_textblockValue != null)
+                {
+                    _textblockValue.Text = _tagValue;
+                }
+                break;
+            }
         }
 
         #region Signal Handlers
