@@ -270,7 +270,7 @@ namespace gedcom
             foreach (Tag tag in tags)
             {
                 Individual child = _tag.gedcom.individuals.find(Tag.toIdx(tag.value));
-                if (child!=null)
+                if (child != null)
                 {
                     children.Add(child);
                 }
@@ -281,6 +281,92 @@ namespace gedcom
         }
 
 
+
+        /// <summary>Apply the changes in the family object to the individuals in the gedcom.</summary>
+        /// <returns>The number of changes made to individuals.</returns>
+        public int commitChanges()
+        {
+            int numChanges = 0;
+
+            // Identify this family.
+            string keyThis = Tag.toKey(_tag.key);
+
+            // Identify the all the children in this family.
+            Individual[] familyChildren = getChildren();
+            List<string> childrenKeys = new List<string>();
+            foreach(Individual individual in familyChildren)
+            {
+                childrenKeys.Add(individual.idx);
+            }
+
+            // Loop through the individuals.
+            foreach(Individual individual in _tag.gedcom.individuals)
+            {
+                // Check for parents.
+                if (individual.idx == husbandIdx || individual.idx == wifeIdx)
+                {
+                    // Force this individual to have a family tag to this family.
+                    bool isHasTag = false;
+                    Tag[] families = individual.tag.children.findAll("FAMS");
+                    foreach (Tag family in families)
+                    {
+                        if (family.value == keyThis)
+                        {
+                            isHasTag = true;
+                        }
+                    }
+                    if (!isHasTag)
+                    {
+                        // Add a tag to this individual.
+                        Tag tag = new Tag(individual.tag, "FAMS", keyThis);
+                        individual.tag.children.add(tag);
+                    }
+                }
+                else
+                {
+                    // Force this individual to not have a family tag to this family.
+                    bool isHasTag = false;
+                    Tag[] families = individual.tag.children.findAll("FAMS");
+                    foreach (Tag family in families)
+                    {
+                        if (family.value == keyThis)
+                        {
+                            individual.tag.children.remove(family);
+                        }
+                    }
+                }
+
+                // Check for children.
+                if (childrenKeys.Contains(individual.idx))
+                {
+                    // Force this individual to have this family as parents.
+                    Tag parents = individual.tag.children.findOne("FAMC");
+                    if (parents == null)
+                    {
+                        // Add a parents tag.
+                        Tag tag = new Tag(_tag.gedcom, "FAMC", keyThis);
+                        individual.tag.children.add(tag);
+                    }
+                    else if (parents.value != keyThis)
+                    {
+                        // Update the existing parents tag.
+                        parents.value = keyThis;
+                    }
+                }
+                else
+                {
+                    // Force this individual to not have this family as parents.
+                    Tag parents = individual.tag.children.findOne("FAMC");
+                    if (parents != null && parents.value == keyThis)
+                    {
+                        individual.tag.children.remove(parents);
+                    }
+                }
+            }
+
+            // Return the number of changes.
+            return numChanges;
+        }
 
         #endregion
 

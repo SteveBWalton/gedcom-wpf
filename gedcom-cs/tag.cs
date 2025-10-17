@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace gedcom
 {
     /// <summary>Class to represent a gedcom tag.</summary>
-    public class Tag
+    public class Tag : IComparable<Tag>
     {
         #region Member Variables
 
@@ -26,6 +26,8 @@ namespace gedcom
         private string _key;
         /// <summary>The value of the tag.</summary>
         private string _value;
+        /// <summary>The type of the key of the tag.</summary>
+        private TagType _tagType;
 
         #endregion
 
@@ -42,6 +44,7 @@ namespace gedcom
             _children = new Tags();
             _key = "";
             _value = "";
+            _tagType = null;
         }
 
 
@@ -143,8 +146,47 @@ namespace gedcom
             get => _level;
         }
 
+
+
+        /// <summary>The tag type of the key.</summary>
+        /// <remarks>This assumes that the key does not change after this property is first used.</remarks>
+        public TagType tagType
+        {
+            get
+            {
+                if (_tagType == null)
+                {
+                    _tagType = new TagType(_key);
+                }
+                return _tagType;
+            }
+        }
+
         #endregion
 
+        #region IComparable Interface
+
+        /// <summary>Define a sort order for tags.</summary>
+        /// <remarks>This allows a list of tags to be sorted.</remarks>
+        /// <param name="other">Specifies another tag to compare against.</param>
+        /// <returns>+1 if this should be before other, -1 if this should after other and zero is this should be level with other.</returns>
+        public int CompareTo(Tag other)
+        {
+            // Validate the inputs.
+            if (other == null)
+            {
+                return 1;
+            }
+            // If the tags are the same then use dates with the tags.
+            if (_key == other.key)
+            {
+                // Do something more complex with dates inside the tags.
+            }
+            // Sort on the sort orders of the tag types.
+            return tagType.sortOrder.CompareTo(other.tagType.sortOrder);
+        }
+
+        #endregion
 
         /// <summary>Returns the specified key as an index string.</summary>
         /// <param name="key">Specifies the key to convert to an index string.</param>

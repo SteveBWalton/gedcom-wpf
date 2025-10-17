@@ -133,6 +133,7 @@ namespace gedcom.viewer
                         }
                     }
                 }
+                individualComboBox.SelectionChanged += comboBoxIndividualSelectionChanged;
                 _mainGrid.Children.Add(individualComboBox);
                 Grid.SetRow(individualComboBox, 0);
                 Grid.SetColumn(individualComboBox, 2);

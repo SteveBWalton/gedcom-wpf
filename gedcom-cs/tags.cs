@@ -57,10 +57,19 @@ namespace gedcom
         public bool add(Tag tag)
         {
             _tags.Add(tag);
+            _tags.Sort();
             return true;
         }
 
 
+
+        /// <summary>Remove the specified tag from the collection.</summary>
+        /// <param name="tag">Specifies the tag to remove from the collection.</param>
+        /// <returns>True if the tag is remove, false otherwise including not found.</returns>
+        public bool remove(Tag tag)
+        {
+            return _tags.Remove(tag);            
+        }
 
         /// <summary>An indexer for this class.</summary>
         /// <param name="idx">Specifies the index of the tag [0..count-1].</param>

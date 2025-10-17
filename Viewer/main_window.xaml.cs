@@ -143,7 +143,11 @@ namespace gedcom.viewer
 
             case "family":
                 DialogFamily dialogFamily = new DialogFamily(_gedcom, query);
-                dialogFamily.ShowDialog();
+                if (dialogFamily.ShowDialog() == true)
+                {
+                    // Update the individuals with changes in this family.
+                    dialogFamily.family.commitChanges();
+                }
                 break;
             }
 
@@ -417,6 +421,9 @@ namespace gedcom.viewer
             {
                 // Add the family to the gedcom.
                 _gedcom.families.add(dialogFamily.family);
+
+                // Update the individuals for this family.
+                dialogFamily.family.commitChanges();
 
                 // Update the display.
                 populateWindow("home", "");
