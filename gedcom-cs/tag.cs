@@ -66,6 +66,7 @@ namespace gedcom
             _key = tagKey;
             _value = tagValue;
             _level = 0;
+            _line = "0 " + tagKey + " " + tagValue;
         }
 
 
@@ -147,6 +148,7 @@ namespace gedcom
 
         /// <summary>Returns the specified key as an index string.</summary>
         /// <param name="key">Specifies the key to convert to an index string.</param>
+        /// <returns>The specified key as an index string.</returns>
         public static string toIdx(string key)
         {
             // Really expect this to be true.
@@ -156,6 +158,22 @@ namespace gedcom
             }
             // Don't really expect this.
             return key;
+        }
+
+
+
+        /// <summary>Returns the specified index as a key string.</summary>
+        /// <param name="idx">Specifies the index string to convert to an key string.</param>
+        /// <returns>The specified index as a key string.</returns>
+        public static string toKey(string idx)
+        {
+            // Really expect this to be false.
+            if (idx.StartsWith("@") && idx.EndsWith("@"))
+            {
+                return idx;
+            }
+            // Return the index as a key.
+            return "@" + idx + "@";
         }
 
 

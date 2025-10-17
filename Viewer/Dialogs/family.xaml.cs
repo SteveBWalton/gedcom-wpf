@@ -137,6 +137,33 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the OK button click.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Might sort these into a better order.
+            // Get the value of each tag control.
+            StringBuilder tagsAsText = new StringBuilder();
+            foreach (TagControl tagControl in _tagControls)
+            {
+                tagsAsText.Append(tagControl.ToString());
+            }
+
+            // Remove the existing tags.
+            _family.tag.children.clear();
+
+            // Add the tags from the tag controls text.
+            using (System.IO.StringReader stringReader = new System.IO.StringReader(tagsAsText.ToString()))
+            {
+                string line;
+                while ((line = stringReader.ReadLine()) != null)
+                {
+                    if (line != "")
+                    {
+                        _family.tag.add(line);
+                    }
+                }
+            }
+
+            // Update the last changed tag.
+            _family.setLastChanged();
+
             // Close the dialog with okay.
             this.DialogResult = true;
         }

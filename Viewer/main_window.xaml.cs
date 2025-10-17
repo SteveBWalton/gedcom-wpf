@@ -416,7 +416,7 @@ namespace gedcom.viewer
             if (dialogFamily.ShowDialog() == true)
             {
                 // Add the family to the gedcom.
-                // _gedcom.families.add(dialogFamily.family);
+                _gedcom.families.add(dialogFamily.family);
 
                 // Update the display.
                 populateWindow("home", "");

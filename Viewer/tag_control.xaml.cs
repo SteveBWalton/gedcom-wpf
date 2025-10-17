@@ -157,6 +157,7 @@ namespace gedcom.viewer
                         }
                     }
                 }
+                malesComboBox.SelectionChanged += comboBoxIndividualSelectionChanged;
                 _mainGrid.Children.Add(malesComboBox);
                 Grid.SetRow(malesComboBox, 0);
                 Grid.SetColumn(malesComboBox, 2);
@@ -181,6 +182,7 @@ namespace gedcom.viewer
                         }
                     }
                 }
+                femaleComboBox.SelectionChanged += comboBoxIndividualSelectionChanged;
                 _mainGrid.Children.Add(femaleComboBox);
                 Grid.SetRow(femaleComboBox, 0);
                 Grid.SetColumn(femaleComboBox, 2);
@@ -811,6 +813,24 @@ namespace gedcom.viewer
                     }
                 }
             }
+        }
+
+
+
+        /// <summary>The default handler for a combobox holding individual changing selection.</summary>
+        private void comboBoxIndividualSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox != null)
+            {
+                Individual selectedIndividual = comboBox.SelectedItem as Individual;
+                string key = gedcom.Tag.toKey(selectedIndividual.idx);
+                if (_tagValue != key)
+                {
+                    _tagValue = key;
+                    _tellParentValueChanged?.Invoke(_tagKey, _tagValue);
+                }
+            }            
         }
 
         #endregion
