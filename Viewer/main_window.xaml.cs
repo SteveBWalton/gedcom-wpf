@@ -46,8 +46,16 @@ namespace gedcom.viewer
             //_dispatcherTimer = new DispatcherTimer();
             //_dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             //_dispatcherTimer.Tick += dispatcherTimerTick;
-            
+
+            _gedcom.dirtyChanged += gedcomDirtyChanged;
+
+
             InitializeComponent();
+        }
+
+        private void gedcomDirtyChanged(object sender, EventArgs eventArgs)
+        {
+            setWindowTitle(); 
         }
 
         #endregion
@@ -116,15 +124,22 @@ namespace gedcom.viewer
             }
 
             // Set window title.
+            setWindowTitle();
+
+            // Return success.
+            return true;
+        }
+
+
+
+        private void setWindowTitle()
+        {
             string fileName = System.IO.Path.GetFileName(_gedcom.fileName);
             if (fileName == "")
             {
                 fileName = "New Document";
             }
             Title = fileName + (_gedcom.isDirty ? "*" : "") + " - Gedom Viewer WPF";
-
-            // Return success.
-            return true;
         }
 
 

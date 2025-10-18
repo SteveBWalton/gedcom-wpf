@@ -15,6 +15,9 @@ namespace gedcom
     {
         #region Member Variables
 
+        /// <summary>Delegate the dirty changed event.</summary>
+        public delegate void DirtyChangedEventHandler(object sender, EventArgs eventArgs);
+
         /// <summary>The filename of this gedcom file.</summary>
         private string _fileName;
         /// <summary>The individuals in this gedcom (INDI).</summary>
@@ -68,6 +71,11 @@ namespace gedcom
         #endregion
 
         #region Properties
+
+        /// <summary>Event to signal dirty changed events.</summary>
+        public event DirtyChangedEventHandler dirtyChanged;
+
+
 
         /// <summary>The file name of this gedcom file.</summary>
         public string fileName

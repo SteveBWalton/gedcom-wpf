@@ -178,9 +178,12 @@ namespace gedcom
             }
             else
             {
-                // Updatea the existing tag.
+                // Update the existing tag.
                 tagEditBy.value = userName;
             }
+
+            // Mark the gedcom as dirty.
+            _tag.gedcom.isDirty = true;
 
             // Return the new tag status.
             return isNewTag;

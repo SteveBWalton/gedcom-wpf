@@ -257,7 +257,7 @@ namespace gedcom.viewer
 
             PageContent pageContent = new PageContent();
 
-            pageContent.html.AppendLine("<h1>" + _gedcom.fileName + "</h1>");
+            pageContent.html.AppendLine("<h1>" + _gedcom.fileName + (_gedcom.isDirty ? " (*)" : "") + "</h1>");            
 
             // Display the individuals.
             pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
