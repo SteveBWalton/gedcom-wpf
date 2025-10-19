@@ -200,7 +200,7 @@ namespace gedcom.viewer
                 // Add the new tag control to the new row.
                 _mainGrid.RowDefinitions.Add(rowDefinition);
                 _mainGrid.Children.Add(tagControl);
-                Grid.SetRow(tagControl, _mainGrid.RowDefinitions.Count); //  _individual.tag.children.count
+                Grid.SetRow(tagControl, _mainGrid.RowDefinitions.Count - 1);
             }
         }
 
