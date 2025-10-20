@@ -133,7 +133,11 @@ namespace gedcom
             {
                 if (value)
                 {
-                    _isDirty = true;
+                    if (isDirty != value)
+                    {
+                        dirtyChanged?.Invoke(this, null);
+                        _isDirty = true;
+                    }
                 }
                 else
                 {
@@ -293,7 +297,11 @@ namespace gedcom
             }
 
             // Clear the dirty flag.
-            _isDirty = false;
+            if (_isDirty)
+            {
+                _isDirty = false;
+                dirtyChanged?.Invoke(this, null);
+            }
 
             // Return success.
             return true;
