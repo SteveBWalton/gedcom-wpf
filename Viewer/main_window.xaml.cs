@@ -55,7 +55,7 @@ namespace gedcom.viewer
 
         private void gedcomDirtyChanged(object sender, EventArgs eventArgs)
         {
-            setWindowTitle(); 
+            setWindowTitle();
         }
 
         #endregion
@@ -164,6 +164,11 @@ namespace gedcom.viewer
                     dialogFamily.family.commitChanges();
                 }
                 break;
+
+            case "source":
+                DialogSource dialogSource = new DialogSource();
+                dialogSource.ShowDialog();
+                break;
             }
 
             // Build the content within the application.
@@ -270,7 +275,7 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>Signal handler for the 'File' -> 'New' menu point click.</summary>        
+        /// <summary>Signal handler for the 'File' -> 'New' menu point click.</summary>
         private void menuFileNewClick(object sender, RoutedEventArgs e)
         {
             // Check that the current gedcom does not need saving.

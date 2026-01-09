@@ -80,6 +80,9 @@
     <Compile Include="Dialogs\family.xaml.cs">
       <DependentUpon>family.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\source.xaml.cs">
+      <DependentUpon>source.xaml</DependentUpon>
+    </Compile>
     <Compile Include="html_source.cs" />
     <Compile Include="html_sources.cs" />
     <Compile Include="Dialogs\individual.xaml.cs">
@@ -114,6 +117,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\family.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\source.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
