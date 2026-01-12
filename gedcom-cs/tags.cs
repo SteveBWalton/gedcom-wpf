@@ -68,7 +68,7 @@ namespace gedcom
         /// <returns>True if the tag is remove, false otherwise including not found.</returns>
         public bool remove(Tag tag)
         {
-            return _tags.Remove(tag);            
+            return _tags.Remove(tag);
         }
 
         /// <summary>An indexer for this class.</summary>

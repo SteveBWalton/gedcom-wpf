@@ -1,3 +1,6 @@
+#
+# Folders to ignore.
+#
 .vs/
 bin/
 obj/

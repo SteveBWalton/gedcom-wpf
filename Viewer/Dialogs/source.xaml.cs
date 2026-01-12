@@ -22,5 +22,21 @@ namespace gedcom.viewer
         {
             InitializeComponent();
         }
+
+        private void buttonOkClick(object sender, RoutedEventArgs e)
+        {
+            // Close the dialog with okay.
+            this.DialogResult = true;
+        }
+
+        private void buttonCancelClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addTagButtonClick(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
