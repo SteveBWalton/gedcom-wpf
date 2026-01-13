@@ -12,11 +12,28 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
+            <RowDefinition Height="100" />
             <RowDefinition Height="*" />
             <RowDefinition Height="42" />
         </Grid.RowDefinitions>
-        <GroupBox Header="Source"></GroupBox>
-        <GroupBox Header="Other Tags" Grid.Column="0" Grid.Row="1">
+        <GroupBox Header="Source">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Type" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Title" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Date" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Special" Grid.Column="0" Grid.Row="1"></GroupBox>
+        <GroupBox Header="Other Tags" Grid.Column="0" Grid.Row="2">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                 <Grid x:Name="_gridTags">
                     <Grid.ColumnDefinitions>
@@ -25,10 +42,10 @@
                 </Grid>
             </ScrollViewer>
         </GroupBox>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="3">
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Click="buttonCancelClick" IsCancel="True" Width="100" Height="31">Cancel</Button>
             <Button x:Name="buttonOK" Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick" Width="100" Height="31">OK</Button>
         </StackPanel>
-        <Button Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5" Width="100" Height="31" Click="addTagButtonClick" Content="Add Tag" Margin="10,0,0,0" />
+        <Button Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5" Width="100" Height="31" Click="addTagButtonClick" Content="Add Tag" Margin="10,0,0,0" />
     </Grid>
 </Window>
