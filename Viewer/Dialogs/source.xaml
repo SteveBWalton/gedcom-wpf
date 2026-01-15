@@ -30,9 +30,16 @@
                 <TextBlock Grid.Column="0" Grid.Row="0" Text="Type" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="Title" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Date" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <ComboBox Grid.Column="1" Grid.Row="0" Width="200" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <ComboBoxItem Content="General" />
+                    <ComboBoxItem Content="Birth Certificate" />
+                    <ComboBoxItem Content="Marriage Certificate" />
+                    <ComboBoxItem Content="Death Certificate" />
+                </ComboBox>
+                <TextBox Grid.Column="1" Grid.Row="1" Width="200" VerticalAlignment="Center" HorizontalAlignment="Left" />
                 <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <TextBox Width="100" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                    <Button Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Width="22" Height="22" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <Button.Content>
                             <Image Source="/Resources/16/calendar.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Button.Content>
