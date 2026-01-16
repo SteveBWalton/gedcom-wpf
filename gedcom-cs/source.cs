@@ -15,10 +15,17 @@ namespace gedcom
 
         #region Class Constructors
 
-        // <summary>Empty class constructor.</summary>
-        //public Source()
-        //{
-        //}
+        // <summary>Constructor to make a new source.</summary>
+        public Source(Gedcom gedcom) : base(gedcom)
+        {
+            // Create an key for the source.
+            string newKey = "@S" + (gedcom.sources.Count() + 1).ToString("0000") + "@";
+
+            // An empty source top level tag.
+            _tag = new Tag(gedcom, newKey, "SOUR");
+        }
+
+
 
         /// <summary>Create an source from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the source from.  This is expected to be a 'SOUR' tag.</param>

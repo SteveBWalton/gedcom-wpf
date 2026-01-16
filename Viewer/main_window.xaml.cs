@@ -166,7 +166,7 @@ namespace gedcom.viewer
                 break;
 
             case "source":
-                DialogSource dialogSource = new DialogSource();
+                DialogSource dialogSource = new DialogSource(_gedcom, query);
                 dialogSource.ShowDialog();
                 break;
             }

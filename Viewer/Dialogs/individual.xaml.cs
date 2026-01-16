@@ -188,7 +188,7 @@ namespace gedcom.viewer
             DialogSelectTag dialogSelectTag = new DialogSelectTag(_individual);
             if (dialogSelectTag.ShowDialog() == true)
             {
-                // Add a new tag control to the dialog.                
+                // Add a new tag control to the dialog.
                 TagControl tagControl = new TagControl(dialogSelectTag.result, "", 1, null, _gedcom, false, setChildSizeIndividual, askParentDelete, null);
                 tagControl.VerticalAlignment = VerticalAlignment.Top;
                 _tagControls.Add(tagControl);
