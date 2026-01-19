@@ -76,6 +76,11 @@ namespace gedcom.viewer
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
             // Populate the dialog with the source.
+            Tag tagDate = _source.tag.children.findOne("DATE");
+            if (tagDate != null)
+            {
+                _txtDate.Text = tagDate.value;
+            }
         }
 
 
