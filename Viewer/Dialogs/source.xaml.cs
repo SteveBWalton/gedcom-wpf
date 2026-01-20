@@ -81,6 +81,18 @@ namespace gedcom.viewer
             {
                 _txtDate.Text = tagDate.value;
             }
+            Tag tagTitle = _source.tag.children.findOne("TITL");
+            if (tagTitle != null)
+            {
+                string sourceType = "";
+                string title = tagTitle.value;
+                if (title.IndexOf(":") != -1)
+                {
+                    sourceType = title.Substring(0, title.IndexOf(":"));
+                    title = title.Substring(title.IndexOf(":") + 1).Trim();
+                }
+                _txtTitle.Text = title;
+            }
         }
 
 
