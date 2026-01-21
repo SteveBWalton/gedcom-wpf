@@ -92,6 +92,24 @@ namespace gedcom.viewer
                     title = title.Substring(title.IndexOf(":") + 1).Trim();
                 }
                 _txtTitle.Text = title;
+
+                // Try to match the source type.
+                bool isMatchFound = false;
+                for (int i = 0; i < _cboSourceType.Items.Count; i++)
+                {
+                    ComboBoxItem comboBoxItem = _cboSourceType.Items[i] as ComboBoxItem;
+                    string itemValue =  (string)comboBoxItem.Content.ToString();
+                    Console.WriteLine(itemValue);
+                    if (sourceType == itemValue)
+                    {
+                        _cboSourceType.SelectedIndex = i;
+                        isMatchFound = true;
+                    }
+                }
+                if (!isMatchFound)
+                {
+                    _cboSourceType.SelectedIndex = 0;
+                }
             }
         }
 
