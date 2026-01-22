@@ -98,7 +98,7 @@ namespace gedcom.viewer
                 for (int i = 0; i < _cboSourceType.Items.Count; i++)
                 {
                     ComboBoxItem comboBoxItem = _cboSourceType.Items[i] as ComboBoxItem;
-                    string itemValue =  (string)comboBoxItem.Content.ToString();
+                    string itemValue = (string)comboBoxItem.Content.ToString();
                     Console.WriteLine(itemValue);
                     if (sourceType == itemValue)
                     {
@@ -118,6 +118,46 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the OK button click event.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Get the tags from the dialog as a string.
+            StringBuilder tagsAsText = new StringBuilder();
+            // Add a title.
+            if (_cboSourceType.SelectedIndex > 0)
+            {
+                // Add the type and the title.
+                ComboBoxItem comboBoxItem = _cboSourceType.SelectedItem as ComboBoxItem;
+                tagsAsText.AppendLine("01 TITL " + (string)comboBoxItem.Content.ToString() + ": " + _txtTitle.Text);
+            }
+            else
+            {
+                // No type information just the title.
+                tagsAsText.AppendLine("01 TITL " + _txtTitle.Text);
+            }
+            // Add a date.
+            tagsAsText.AppendLine("01 DATE " + _txtDate.Text);
+
+
+            // Add a repository
+            tagsAsText.AppendLine("01 REPO @R0001@");
+
+            // Clear the existing tags.
+            _source.tag.children.clear();
+
+            // Add the tags from the tag controls text.
+            using (System.IO.StringReader stringReader = new System.IO.StringReader(tagsAsText.ToString()))
+            {
+                string line;
+                while ((line = stringReader.ReadLine()) != null)
+                {
+                    if (line != "")
+                    {
+                        _source.tag.add(line);
+                    }
+                }
+            }
+
+            // Update the last changed tag.
+            _source.setLastChanged();
+
             // Close the dialog with okay.
             this.DialogResult = true;
         }

@@ -151,7 +151,7 @@ namespace gedcom.viewer
             // Might sort these into a better order.
             // Get the value of each tag control.
             StringBuilder tagsAsText = new StringBuilder();
-            foreach(TagControl tagControl in _tagControls)
+            foreach (TagControl tagControl in _tagControls)
             {
                 tagsAsText.Append(tagControl.ToString());
             }
