@@ -66,9 +66,63 @@ namespace gedcom.viewer
             {
                 throw (new Exception("No source found for '" + idx + "'"));
             }
+
+            // Create rows for the tags.
+            for (int i = 0; i < _source.tag.children.count; i++)
+            {
+                TagControl tagControl = new TagControl(_source.tag.children[i], false, setChildSizeIndividual, askParentDelete, null);
+                tagControl.VerticalAlignment = VerticalAlignment.Top;
+                _tagControls.Add(tagControl);
+
+                RowDefinition rowDefinition = new RowDefinition();
+                rowDefinition.Height = new GridLength(tagControl.Height);
+
+                _gridTags.RowDefinitions.Add(rowDefinition);
+                _gridTags.Children.Add(tagControl);
+                Grid.SetRow(tagControl, i);
+            }
         }
 
         #endregion
+
+        /// <summary>Resize the space for each child row.</summary>
+        /// <remarks>This is intended so that the children can inform this control when they change size.</remarks>
+        private void setChildSizeIndividual()
+        {
+            foreach (RowDefinition rowDefinition in _gridTags.RowDefinitions)
+            {
+                rowDefinition.Height = new GridLength(0, GridUnitType.Auto);
+            }
+        }
+
+
+
+        /// <summary>The child tag control has requested to be deleted.</summary>
+        /// <param name="tagControl">Specifies the child tag control that has requested to be deleted.</param>
+        private void askParentDelete(TagControl tagControl)
+        {
+            int i = 0;
+            while (i < _tagControls.Count)
+            {
+                if (_tagControls[i] == tagControl)
+                {
+                    // Delete the row.
+                    // This doesn't change the row index of the other tag controls.
+                    _gridTags.RowDefinitions.RemoveAt(i);
+
+                    // Delete control.
+                    tagControl.delete();
+
+                    // Remove from collection.
+                    _tagControls.RemoveAt(i);
+                }
+                else
+                {
+                    Grid.SetRow(_tagControls[i], i);
+                    i++;
+                }
+            }
+        }
 
         #region Signal Handlers
 

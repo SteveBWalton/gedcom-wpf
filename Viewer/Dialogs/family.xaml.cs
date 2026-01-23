@@ -49,6 +49,8 @@ namespace gedcom.viewer
             _tagControls = new List<TagControl>();
         }
 
+
+
         /// <summary>Constructor for the edit family dialog to edit an existing family.</summary>
         /// <param name="gedcom">Specifies the gedcom that contains the family.</param>
         /// <param name="query">Specifies a query that contains an ID to identify the family.</param>
