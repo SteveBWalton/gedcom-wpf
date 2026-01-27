@@ -53,6 +53,11 @@
                             <Image Source="/Resources/16/people.png" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="Add Source..." Click="menuEditAddSourceClick">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/16/card_file.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator/>
                     <MenuItem Header="_Options..."/>
                 </MenuItem>

@@ -450,11 +450,20 @@ namespace gedcom.viewer
             }
         }
 
-        #endregion
+
+
+        /// <summary>Signal handler for the 'Edit' -> 'Add Source' menu point.</summary>
+        private void menuEditAddSourceClick(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         #endregion
 
         #endregion
+
+        #endregion
+
 
     }
 }
