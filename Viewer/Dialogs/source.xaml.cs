@@ -85,6 +85,16 @@ namespace gedcom.viewer
 
         #endregion
 
+        #region Properties
+
+        /// <summary>The source that the dialog is editting.</summary>
+        public Source source
+        {
+            get => _source;
+        }
+
+        #endregion
+
         /// <summary>Resize the space for each child row.</summary>
         /// <remarks>This is intended so that the children can inform this control when they change size.</remarks>
         private void setChildSizeIndividual()

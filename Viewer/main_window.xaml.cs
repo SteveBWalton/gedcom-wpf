@@ -455,7 +455,15 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'Edit' -> 'Add Source' menu point.</summary>
         private void menuEditAddSourceClick(object sender, RoutedEventArgs e)
         {
+            DialogSource dialogSource = new DialogSource(_gedcom);
+            if (dialogSource.ShowDialog() == true)
+            {
+                // Add the source to the gedcom.
+                _gedcom.sources.add(dialogSource.source);
 
+                // Update the display.
+                populateWindow("home", "");
+            }
         }
 
         #endregion
