@@ -19,7 +19,10 @@ namespace gedcom
         public Source(Gedcom gedcom) : base(gedcom)
         {
             // Create an key for the source.
-            string newKey = "@S" + (gedcom.sources.Count() + 1).ToString("0000") + "@";
+
+            // This does not work because early sources might be deleted.
+            // string newKey = "@S" + (gedcom.sources.Count() + 1).ToString("0000") + "@";
+            string newKey = "@S" + gedcom.sources.getNextIndex() + "@";
 
             // An empty source top level tag.
             _tag = new Tag(gedcom, newKey, "SOUR");

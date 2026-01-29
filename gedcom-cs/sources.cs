@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -127,6 +127,24 @@ namespace gedcom
 
             // Return the sorted array.
             return array;
+        }
+
+
+
+        /// <summary>Return the next index to use on the collection of sources.</summary>
+        /// <returns>The next index to use on the collection of sources.</returns>
+        public string getNextIndex()
+        {
+            string maxIndex = "R";
+            foreach (Source source in _sources)
+            {
+                if (maxIndex.CompareTo(source.idx) < 0)
+                {
+                    maxIndex = source.idx;
+                }
+            }
+            int newIndex = int.Parse(maxIndex.Substring(1)) + 1;
+            return "S" + newIndex.ToString("0000");
         }
     }
 }
