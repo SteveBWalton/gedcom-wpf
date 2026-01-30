@@ -40,7 +40,7 @@ namespace gedcom
                 {
                     tagTitle = tagFile.children.findOne("TITL");
                 }
-                if (tagTitle==null)
+                if (tagTitle == null)
                 {
                     return _tag.key;
                 }

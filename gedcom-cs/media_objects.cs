@@ -8,22 +8,22 @@ using System.Collections;
 
 namespace gedcom
 {
-    /// <summary>Class to represent a collection of individuals in a gedcom.</summary>
-    public class Individuals : IEnumerable<Individual>
+    /// <summary>Class to represent a collection of media objects in a gedcom.</summary>
+    public class MediaObjects : IEnumerable<MediaObject>
     {
         #region Member Variables
 
         /// <summary>The collection of individuals.</summary>
-        private readonly List<Individual> _individuals;
+        private readonly List<MediaObject> _mediaObjects;
 
         #endregion
 
         #region Constructors
 
         /// <summary>Empty class constructor.</summary>
-        public Individuals()
+        public MediaObjects()
         {
-            _individuals = new List<Individual>();            
+            _mediaObjects = new List<MediaObject>();
         }
 
         #endregion
@@ -33,8 +33,8 @@ namespace gedcom
         /// <summary>Empty the collection.</summary>
         /// <returns>True for success, false otherwise.</returns>
         public bool clear()
-        {            
-            _individuals.Clear();
+        {
+            _mediaObjects.Clear();
             return true;
         }
 
@@ -43,7 +43,7 @@ namespace gedcom
         /// <summary>The numbers of individuals in the collection.</summary>
         public int count
         {
-            get { return _individuals.Count; }
+            get { return _mediaObjects.Count; }
         }
 
 
@@ -51,9 +51,9 @@ namespace gedcom
         /// <summary>Add an individual to the collection.</summary>
         /// <param name="tag">Specifies the individual to add to the collection.</param>
         /// <returns>True for success, false otherwise.</returns>
-        public bool add(Individual individual)
+        public bool add(MediaObject mediaObject)
         {
-            _individuals.Add(individual);
+            _mediaObjects.Add(mediaObject);
             return true;
         }
 
@@ -62,14 +62,14 @@ namespace gedcom
         /// <summary>An indexer for this class.</summary>
         /// <param name="idx">Specifies the index of the individual [0..count-1].</param>
         /// <returns>The individual at the specified position.</returns>
-        public Individual this[int idx]
+        public MediaObject this[int idx]
         {
-            get { return (Individual)_individuals[idx]; }
+            get { return (MediaObject)_mediaObjects[idx]; }
         }
 
         #endregion
 
-        #region IEnumerable<Individual>
+        #region IEnumerable<MediaObject>
 
 
 
@@ -80,11 +80,11 @@ namespace gedcom
 
 
 
-        public IEnumerator<Individual> GetEnumerator()
+        public IEnumerator<MediaObject> GetEnumerator()
         {
-            for (int idx = 0; idx < _individuals.Count; idx++)
+            for (int idx = 0; idx < _mediaObjects.Count; idx++)
             {
-                yield return (Individual)_individuals[idx];
+                yield return (MediaObject)_mediaObjects[idx];
             }
         }
 
@@ -95,13 +95,13 @@ namespace gedcom
         /// <summary>Return the individual with the specified index.</summary>
         /// <param name="idx">Specifies the index to search for.</param>
         /// <returns>The individual with the specified index or null.</returns>
-        public Individual find(string idx)
+        public MediaObject find(string idx)
         {
-            foreach (Individual individual in this)
+            foreach (MediaObject mediaObject in this)
             {
-                if (individual.idx == idx)
+                if (mediaObject.idx == idx)
                 {
-                    return individual;
+                    return mediaObject;
                 }
             }
             return null;
@@ -109,11 +109,10 @@ namespace gedcom
 
 
 
-        public Individual[] inDateOrder()
+        public MediaObject[] inDateOrder()
         {
             // Get an array of the individuals.
-            // Individual[] array = (Individual[])_individuals.ToArray(typeof(Individual));
-            Individual[] array = (Individual[])_individuals.ToArray();
+            MediaObject[] array = (MediaObject[])_mediaObjects.ToArray();
 
             // Sort the array.
             Array.Sort(array);
@@ -122,5 +121,27 @@ namespace gedcom
             return array;
         }
 
+
+
+        /// <summary>Return the next index to use on this collection of media objects.</summary>
+        /// <returns>The next index to use on the next media object in this collection.</returns>
+        public string getNextIndex()
+        {
+            const string NO_RECORDS = "A";
+            string maxIndex = NO_RECORDS;
+            foreach(MediaObject mediaObject in _mediaObjects)
+            {
+                if (maxIndex.CompareTo(mediaObject.idx) < 0)
+                {
+                    maxIndex = mediaObject.idx;
+                }
+            }
+            int newIndex = 1;
+            if (maxIndex != NO_RECORDS)
+            {
+                newIndex = int.Parse(maxIndex.Substring(1)) + 1;
+            }
+            return "M" + newIndex.ToString("0000");
+        }
     }
 }
