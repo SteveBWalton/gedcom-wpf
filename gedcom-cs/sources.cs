@@ -135,7 +135,8 @@ namespace gedcom
         /// <returns>The next index to use on the collection of sources.</returns>
         public string getNextIndex()
         {
-            string maxIndex = "R";
+            const string NO_RECORDS = "A";
+            string maxIndex = NO_RECORDS;
             foreach (Source source in _sources)
             {
                 if (maxIndex.CompareTo(source.idx) < 0)
@@ -143,7 +144,11 @@ namespace gedcom
                     maxIndex = source.idx;
                 }
             }
-            int newIndex = int.Parse(maxIndex.Substring(1)) + 1;
+            int newIndex = 1;
+            if (maxIndex != NO_RECORDS)
+            {
+                newIndex = int.Parse(maxIndex.Substring(1)) + 1;
+            }
             return "S" + newIndex.ToString("0000");
         }
     }
