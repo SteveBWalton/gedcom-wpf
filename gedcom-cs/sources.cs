@@ -131,8 +131,8 @@ namespace gedcom
 
 
 
-        /// <summary>Return the next index to use on the collection of sources.</summary>
-        /// <returns>The next index to use on the collection of sources.</returns>
+        /// <summary>Return the next index to use on the next source in this collection of sources.</summary>
+        /// <returns>The next index to use on the next source in this collection of sources.</returns>
         public string getNextIndex()
         {
             const string NO_RECORDS = "A";

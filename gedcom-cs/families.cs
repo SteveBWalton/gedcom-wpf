@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -130,6 +130,27 @@ namespace gedcom
         }
 
 
+
+        /// <summary>Return the next index to use on the next family in this collection of families.</summary>
+        /// <returns>The next index to use on the next family in this collection of families.</returns>
+        public string getNextIndex()
+        {
+            const string NO_RECORDS = "A";
+            string maxIndex = NO_RECORDS;
+            foreach (Family family in _families)
+            {
+                if (maxIndex.CompareTo(family.idx) < 0)
+                {
+                    maxIndex = family.idx;
+                }
+            }
+            int newIndex = 1;
+            if (maxIndex != NO_RECORDS)
+            {
+                newIndex = int.Parse(maxIndex.Substring(1)) + 1;
+            }
+            return "F" + newIndex.ToString("0000");
+        }
 
     }
 }
