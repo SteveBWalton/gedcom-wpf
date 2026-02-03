@@ -21,7 +21,7 @@ namespace gedcom
         public Individual(Gedcom gedcom) : base(gedcom)
         {
             // Create an key for the individual.
-            string newKey = "@I" + (gedcom.individuals.Count() + 1).ToString("0000") + "@";
+            string newKey = "@I" + gedcom.individuals.getNextIndex() + "@";
 
             // An empty individual top level tag.
             _tag = new Tag(gedcom, newKey, "INDI");
@@ -310,7 +310,7 @@ namespace gedcom
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(fullName);
-            TagDate birthDate = dob;            
+            TagDate birthDate = dob;
             if (birthDate != null)
             {
                 result.Append(" (");

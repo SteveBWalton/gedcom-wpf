@@ -19,7 +19,7 @@ namespace gedcom
         public Family(Gedcom gedcom) : base(gedcom)
         {
             // Create an key for the individual.
-            string newKey = "@F" + (gedcom.families.Count() + 1).ToString("0000") + "@";
+            string newKey = "@F" + gedcom.families.getNextIndex() + "@";
 
             // An empty family top level tag.
             _tag = new Tag(gedcom, newKey, "FAM");
@@ -191,7 +191,7 @@ namespace gedcom
                 return null;
             }
         }
-    
+
 
 
         /// <summary>True if the relationship has a divorce.</summary>
