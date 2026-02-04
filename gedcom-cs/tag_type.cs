@@ -77,6 +77,8 @@ namespace gedcom
                     return "Occupation";
                 case "NOTE":
                     return "Note";
+                case "CONT":
+                    return "Continue";
                 case "SURN":
                     return "Surname";
                 case "GIVN":
@@ -123,6 +125,7 @@ namespace gedcom
                 case "EDUC":
                 case "OCCU":
                 case "NOTE":
+                case "CONT":
                 case "OBJE":
                 case "_TODO":
                 case "CHIL":
@@ -161,6 +164,7 @@ namespace gedcom
                 switch (_tagKey)
                 {
                 // These should be towards the start of the top level tag.
+                case "TITL":
                 case "NAME":
                 case "HUSB":
                     return 10;
@@ -185,7 +189,9 @@ namespace gedcom
                 case "NOTE":
                     return 130;
 
-                // These are sub tags that rary appear at level 1.
+                // These are sub tags that rarely appear at level 1.
+                case "CONT":    // This never appears at level 1.  But should be the first tag under it's parent.
+                    return 10;
                 case "DATE":
                     return 300;
                 case "TIME":
