@@ -66,21 +66,6 @@ namespace gedcom.viewer
             {
                 throw (new Exception("No source found for '" + idx + "'"));
             }
-
-            // Create rows for the tags.
-            for (int i = 0; i < _source.tag.children.count; i++)
-            {
-                TagControl tagControl = new TagControl(_source.tag.children[i], false, setChildSizeIndividual, askParentDelete, null);
-                tagControl.VerticalAlignment = VerticalAlignment.Top;
-                _tagControls.Add(tagControl);
-
-                RowDefinition rowDefinition = new RowDefinition();
-                rowDefinition.Height = new GridLength(tagControl.Height);
-
-                _gridTags.RowDefinitions.Add(rowDefinition);
-                _gridTags.Children.Add(tagControl);
-                Grid.SetRow(tagControl, i);
-            }
         }
 
         #endregion
@@ -175,6 +160,37 @@ namespace gedcom.viewer
                     _cboSourceType.SelectedIndex = 0;
                 }
             }
+
+            // Create rows for the tags.
+            int row = 0;
+            for (int i = 0; i < _source.tag.children.count; i++)
+            {
+                switch (_source.tag.children[i].key)
+                {
+                case "TITL":
+                case "DATE":
+                    // These tags are dealt with on the main dialog.
+                    // Do nothing here.
+                    break;
+
+                default:
+                    // Add this tag to the control.
+
+                    TagControl tagControl = new TagControl(_source.tag.children[i], false, setChildSizeIndividual, askParentDelete, null);
+                    tagControl.VerticalAlignment = VerticalAlignment.Top;
+                    _tagControls.Add(tagControl);
+
+                    RowDefinition rowDefinition = new RowDefinition();
+                    rowDefinition.Height = new GridLength(tagControl.Height);
+
+                    _gridTags.RowDefinitions.Add(rowDefinition);
+                    _gridTags.Children.Add(tagControl);
+                    Grid.SetRow(tagControl, row);
+                    row++;
+                    break;
+                }
+            }
+
         }
 
 
@@ -189,19 +205,25 @@ namespace gedcom.viewer
             {
                 // Add the type and the title.
                 ComboBoxItem comboBoxItem = _cboSourceType.SelectedItem as ComboBoxItem;
-                tagsAsText.AppendLine("01 TITL " + (string)comboBoxItem.Content.ToString() + ": " + _txtTitle.Text);
+                tagsAsText.AppendLine("1 TITL " + (string)comboBoxItem.Content.ToString() + ": " + _txtTitle.Text);
             }
             else
             {
                 // No type information just the title.
-                tagsAsText.AppendLine("01 TITL " + _txtTitle.Text);
+                tagsAsText.AppendLine("1 TITL " + _txtTitle.Text);
             }
             // Add a date.
-            tagsAsText.AppendLine("01 DATE " + _txtDate.Text);
+            tagsAsText.AppendLine("1 DATE " + _txtDate.Text);
 
+            // Might sort these into a better order.
+            // Get the value of each tag control.
+            foreach (TagControl tagControl in _tagControls)
+            {
+                tagsAsText.Append(tagControl.ToString());
+            }
 
             // Add a repository
-            tagsAsText.AppendLine("01 REPO @R0001@");
+            tagsAsText.AppendLine("1 REPO @R0001@");
 
             // Clear the existing tags.
             _source.tag.children.clear();
@@ -221,6 +243,9 @@ namespace gedcom.viewer
 
             // Update the last changed tag.
             _source.setLastChanged();
+
+            // Sort the tags into a better order.
+            _source.tag.children.sort();
 
             // Close the dialog with okay.
             this.DialogResult = true;

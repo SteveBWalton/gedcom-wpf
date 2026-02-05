@@ -186,17 +186,17 @@ namespace gedcom
                     return 110;
                 case "OCCU":
                     return 120;
-                case "NOTE":
-                    return 130;
+                case "NOTE": // This should appear after date and place in sources.
+                    return 500;
 
                 // These are sub tags that rarely appear at level 1.
                 case "CONT":    // This never appears at level 1.  But should be the first tag under it's parent.
                     return 10;
-                case "DATE":
+                case "DATE":    // Level 1 in sources.
                     return 300;
                 case "TIME":
                     return 310;
-                case "PLAC":
+                case "PLAC":    // Level 1 in sources.
                     return 320;
                 case "GIVN":
                     return 210;
@@ -207,6 +207,7 @@ namespace gedcom
                 case "OBJE":
                     return 1400;
                 case "SOUR":
+                case "REPO":
                     return 1500;
                 case "_TODO":
                     return 1600;

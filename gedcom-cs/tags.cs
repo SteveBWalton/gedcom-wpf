@@ -57,7 +57,7 @@ namespace gedcom
         public bool add(Tag tag)
         {
             _tags.Add(tag);
-            _tags.Sort();
+            //_tags.Sort();
             return true;
         }
 
@@ -70,6 +70,27 @@ namespace gedcom
         {
             return _tags.Remove(tag);
         }
+
+
+
+        /// <summary>Sort the tags into their default order.</summary>
+        /// <returns>True for success, false otherwise.</returns>
+        public bool sort()
+        {
+            // Sort the tags under each element.
+            foreach (Tag childTag in _tags)
+            {
+                childTag.children.sort();
+            }
+
+            // Sort these elements.
+            _tags.Sort();
+
+            // Return success.
+            return true;
+        }
+
+
 
         /// <summary>An indexer for this class.</summary>
         /// <param name="idx">Specifies the index of the tag [0..count-1].</param>
