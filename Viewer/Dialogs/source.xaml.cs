@@ -169,6 +169,8 @@ namespace gedcom.viewer
                 {
                 case "TITL":
                 case "DATE":
+                case "REPO":
+                case "CHAN":
                     // These tags are dealt with on the main dialog.
                     // Do nothing here.
                     break;
