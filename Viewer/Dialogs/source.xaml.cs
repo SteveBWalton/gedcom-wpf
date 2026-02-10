@@ -124,6 +124,12 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the window loaded event.</summary>
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
+            // Populate the repository combobox.
+            foreach (gedcom.Repository repository in _gedcom.repositories)
+            {
+                _cboRepository.Items.Add(repository);
+            }
+
             // Populate the dialog with the source.
             Tag tagDate = _source.tag.children.findOne("DATE");
             if (tagDate != null)

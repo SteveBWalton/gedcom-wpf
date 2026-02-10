@@ -16,7 +16,7 @@ namespace gedcom
         #endregion
 
         #region Constructors
-          
+
         /// <summary>Create an repository from the specified tag.</summary>
         /// <param name="tag">Specifies the tag to build the repository from.  This is expected to be a 'REPO' tag.</param>
         public Repository(Tag tag) : base(tag)
@@ -55,5 +55,13 @@ namespace gedcom
 
         #endregion
 
+
+
+        /// <summary>Show the name.</summary>
+        /// <returns>The name of the repository.</returns>
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }
