@@ -31,6 +31,7 @@ namespace gedcom
         /// <param name="tag">Specifies the tag to build the individual from.  This is expected to be a 'FAM' tag.</param>
         public Family(Tag tag) : base(tag)
         {
+            // Base class does everything!
         }
 
         #endregion

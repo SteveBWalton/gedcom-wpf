@@ -49,7 +49,7 @@ namespace gedcom
         /// <summary>The top level tag that defined this top level element.</summary>
         public Tag tag
         {
-            get { return _tag; }
+            get => _tag;
         }
 
 
@@ -57,10 +57,7 @@ namespace gedcom
         /// <summary>The index of this top level element.</summary>
         public string idx
         {
-            get
-            {
-                return Tag.toIdx(_tag.key);
-            }
+            get => Tag.toIdx(_tag.key);
         }
 
 
@@ -68,7 +65,7 @@ namespace gedcom
         /// <summary>The gedcom that contains this top level element.</summary>
         public Gedcom gedcom
         {
-            get { return _tag.gedcom; }
+            get => _tag.gedcom;
         }
 
 

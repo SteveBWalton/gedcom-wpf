@@ -33,6 +33,7 @@ namespace gedcom
         /// <param name="tag">Specifies the tag to build the individual from.  This is expected to be a 'INDI' tag.</param>
         public Individual(Tag tag) : base(tag)
         {
+            // Base class does everything!
         }
 
         #endregion

@@ -34,6 +34,7 @@ namespace gedcom
         /// <param name="tag">Specifies the tag to build the source from.  This is expected to be a 'SOUR' tag.</param>
         public Source(Tag tag) : base(tag)
         {
+            // Base class does everything!
         }
 
         #endregion

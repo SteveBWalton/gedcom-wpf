@@ -21,6 +21,7 @@ namespace gedcom
         /// <param name="tag">Specifies the tag to build the repository from.  This is expected to be a 'REPO' tag.</param>
         public Repository(Tag tag) : base(tag)
         {
+            // Base class does everything!
         }
 
         #endregion

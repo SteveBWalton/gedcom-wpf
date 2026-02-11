@@ -23,6 +23,7 @@ namespace gedcom
         /// <param name="tag">Specifies the tag to build the media object from.  This is expected to be a 'OBJE' tag.</param>
         public MediaObject(Tag tag) : base(tag)
         {
+            // Base class does everything!
         }
 
         #endregion
