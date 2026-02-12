@@ -124,10 +124,24 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the window loaded event.</summary>
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
+            // Find the repository for the source.
+            Tag tag = _source.tag.children.findOne("REPO");
+            string tagIdx = "";
+            if (tag != null)
+            {
+                tagIdx = gedcom.Tag.toIdx(tag.value);
+            }
+
             // Populate the repository combobox.
+            int count = 0;
             foreach (gedcom.Repository repository in _gedcom.repositories)
             {
                 _cboRepository.Items.Add(repository);
+                if (repository.idx == tagIdx)
+                {
+                    _cboRepository.SelectedIndex = count;
+                }
+                count++;
             }
 
             // Populate the dialog with the source.

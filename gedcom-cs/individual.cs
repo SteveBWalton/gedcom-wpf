@@ -318,7 +318,7 @@ namespace gedcom
                 result.Append(birthDate.approxDate.Year.ToString());
                 result.Append("-");
                 TagDate deathDate = dod;
-                if (deathDate!=null)
+                if (deathDate != null)
                 {
                     result.Append(deathDate.approxDate.Year.ToString());
                 }
