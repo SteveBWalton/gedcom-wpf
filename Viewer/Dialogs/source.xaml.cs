@@ -133,15 +133,15 @@ namespace gedcom.viewer
             }
 
             // Populate the repository combobox.
-            int count = 0;
+            _cboRepository.Items.Add("None");
+            _cboRepository.SelectedIndex = 0;
             foreach (gedcom.Repository repository in _gedcom.repositories)
             {
                 _cboRepository.Items.Add(repository);
                 if (repository.idx == tagIdx)
                 {
-                    _cboRepository.SelectedIndex = count;
+                    _cboRepository.SelectedIndex = _cboRepository.Items.Count - 1;
                 }
-                count++;
             }
 
             // Populate the dialog with the source.
@@ -245,15 +245,15 @@ namespace gedcom.viewer
             }
 
             // Add a repository
-            if (_cboRepository.SelectedIndex >= 0)
+            if (_cboRepository.SelectedIndex > 0)
             {
                 Repository repository = (Repository)_cboRepository.SelectedItem;
                 tagsAsText.AppendLine("1 REPO " + gedcom.Tag.toKey(repository.idx));
             }
-            else
-            {
-                tagsAsText.AppendLine("1 REPO @R0001@");
-            }
+            //else
+            //{
+            //    // Repository None.
+            //}
 
             // Clear the existing tags.
             _source.tag.children.clear();
