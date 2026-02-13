@@ -245,7 +245,15 @@ namespace gedcom.viewer
             }
 
             // Add a repository
-            tagsAsText.AppendLine("1 REPO @R0001@");
+            if (_cboRepository.SelectedIndex >= 0)
+            {
+                Repository repository = (Repository)_cboRepository.SelectedItem;
+                tagsAsText.AppendLine("1 REPO " + gedcom.Tag.toKey(repository.idx));
+            }
+            else
+            {
+                tagsAsText.AppendLine("1 REPO @R0001@");
+            }
 
             // Clear the existing tags.
             _source.tag.children.clear();
