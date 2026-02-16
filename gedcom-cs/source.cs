@@ -11,6 +11,15 @@ namespace gedcom
     {
         #region Member Variables
 
+        /// <summary>The special types of source documents.</summary>
+        public enum SourceType
+        {
+            BIRTH_CERTIFICATE,
+            MARRIAGE_CERTIFICATE,
+            DEATH_CERTIFICATE,
+            GENERAL
+        }
+
         #endregion
 
         #region Class Constructors
@@ -67,6 +76,22 @@ namespace gedcom
 
                 // Return the name of the source.
                 return tagName.value;
+            }
+        }
+
+
+
+        /// <summary>The type of this source.</summary>
+        public SourceType sourceType
+        {
+            get
+            {
+                string title = fullName;
+                if (title.StartsWith("Marriage Certificate"))
+                {
+                    return SourceType.MARRIAGE_CERTIFICATE;
+                }
+                return SourceType.GENERAL;
             }
         }
 

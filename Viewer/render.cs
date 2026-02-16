@@ -20,7 +20,7 @@ namespace gedcom.viewer
         private Gedcom _gedcom;
         /// <summary>The user options.</summary>
         private UserOptions _userOptions;
-        
+
         #endregion
 
         #region Class Constructors
@@ -29,7 +29,7 @@ namespace gedcom.viewer
         /// <param name="gedcom">Specifies the gedcom that this will render.</param>
         public Render(Gedcom gedcom,UserOptions userOptions)
         {
-            _gedcom = gedcom;        
+            _gedcom = gedcom;
             _userOptions = userOptions;
         }
 
@@ -114,7 +114,7 @@ namespace gedcom.viewer
                 html.Append(Convert.ToChar('A' + refIdx));
                 html.Append("</sup>");
             }
-            
+
             // Return the source references.
             return html.ToString();
         }
@@ -173,7 +173,7 @@ namespace gedcom.viewer
                 html.Append(" ");
                 html.Append(proNoun);
             }
-            else 
+            else
             {
                 html.Append(firstCaps(proNoun));
             }
@@ -200,7 +200,7 @@ namespace gedcom.viewer
 
             // Finish the long description.
             html.Append(". ");
-            
+
             // Return the long description.
             return html.ToString();
         }
@@ -237,7 +237,7 @@ namespace gedcom.viewer
                 return getSource(query);
             case "media":
                 return getMediaObject(query);
-            case "repository":            
+            case "repository":
                 return getRepository(query);
             case "place":
                 return getPlace(query);
@@ -257,7 +257,7 @@ namespace gedcom.viewer
 
             PageContent pageContent = new PageContent();
 
-            pageContent.html.AppendLine("<h1>" + _gedcom.fileName + (_gedcom.isDirty ? " (*)" : "") + "</h1>");            
+            pageContent.html.AppendLine("<h1>" + _gedcom.fileName + (_gedcom.isDirty ? " (*)" : "") + "</h1>");
 
             // Display the individuals.
             pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
@@ -358,7 +358,7 @@ namespace gedcom.viewer
             pageContent.html.AppendLine("<legend>Places</legend>");
             pageContent.html.AppendLine("<table>");
             count = 0;
-            foreach(Place place in _gedcom.places)            
+            foreach(Place place in _gedcom.places)
             {
                 int totalCount = place.getTotalCount();
                 pageContent.html.AppendLine("<tr><td><a href=\"app://place?id=" + place.name + "\">" + place.name + "</a> (" + totalCount.ToString() + ")</td></tr>");
@@ -995,28 +995,48 @@ namespace gedcom.viewer
                 // Initialise the sources referenced in this source.  Really expect this to be empty.
                 HtmlSources htmlSources = new HtmlSources();
 
-                // Deal with the note tags.
+                // Deal with the note grid tag.
                 dealtWith.Add("NOTE");
                 Tag[] tagNotes = source.tag.children.findAll("NOTE");
-                foreach(Tag tagNote in tagNotes)
+                foreach (Tag tagNote in tagNotes)
                 {
                     if (tagNote.value.StartsWith("GRID:"))
                     {
-                        // Grid value.
-                        pageContent.html.Append("<table style=\"border: 2px solid black;\">");
-                        string[][] grid = tagNote.getGridValue();
-                        foreach (string[] row in grid)
+                        switch (source.sourceType)
                         {
-                            pageContent.html.Append("<tr>");
-                            foreach (string cell in row)
+                        case Source.SourceType.MARRIAGE_CERTIFICATE:
+                            pageContent.html.Append(showMarriageCertificate(source, tagNote, dealtWith));
+                            break;
+
+                        default:
+                            // Grid value.
+                            pageContent.html.Append("<table style=\"border: 2px solid black;\">");
+                            string[][] grid = tagNote.getGridValue();
+                            foreach (string[] row in grid)
                             {
-                                pageContent.html.Append("<td>");
-                                pageContent.html.Append(cell);
-                                pageContent.html.Append("</td>");
+                                pageContent.html.Append("<tr>");
+                                foreach (string cell in row)
+                                {
+                                    pageContent.html.Append("<td>");
+                                    pageContent.html.Append(cell);
+                                    pageContent.html.Append("</td>");
+                                }
+                                pageContent.html.Append("</tr>");
                             }
-                            pageContent.html.Append("</tr>");
+                            pageContent.html.Append("</table>");
+                            break;
                         }
-                        pageContent.html.Append("</table>");
+                    }
+                }
+
+
+                // Deal with the other note tags.
+                dealtWith.Add("NOTE");
+                foreach (Tag tagNote in tagNotes)
+                {
+                    if (tagNote.value.StartsWith("GRID:"))
+                    {
+                        // Already dealt with.
                     }
                     else
                     {
@@ -1039,7 +1059,7 @@ namespace gedcom.viewer
                         pageContent.html.Append("</p>");
                     }
                 }
-                
+
                 // Show the remaining tags.
                 dealtWith.Add("CHAN");
                 addRemainingTags(pageContent.html, source.tag.children, dealtWith);
@@ -1082,7 +1102,43 @@ namespace gedcom.viewer
             return pageContent;
         }
 
+        private string showMarriageCertificate(Source source, Tag tagNote, List<string> dealtWith)
+        {
+            StringBuilder pageContent = new StringBuilder();
 
+            // Grid value.
+            pageContent.Append("<table style=\"background-color: #ccff99; border: 1px solid black;\" cellpadding=\"5\" cellspacing=\"0\" >");
+            string[][] grid = tagNote.getGridValue();
+
+            pageContent.Append("<tr><td colspan=\"7\">1997 <span class=\"marriage\">Marriage solemnized at</span> church, place</td></tr>");
+            pageContent.Append("<tr>");
+            pageContent.Append("<td><span class=\"marriage\">When Married</span></td>");
+            pageContent.Append("<td><span class=\"marriage\">Name</span></td>");
+            pageContent.Append("<td><span class=\"marriage\">Age</span></td>");
+            pageContent.Append("<td><span class=\"marriage\">Rank or Profession</span></td>");
+            pageContent.Append("<td><span class=\"marriage\">Residence at the time of marriage</span></td>");
+            pageContent.Append("<td><span class=\"marriage\">Father's Name</span></td>");
+            pageContent.Append("<td><span class=\"marriage\">Rank of Profession of Father</span></td>");
+            pageContent.Append("</tr>");
+
+
+
+            foreach (string[] row in grid)
+            {
+                pageContent.Append("<tr>");
+                foreach (string cell in row)
+                {
+                    pageContent.Append("<td>");
+                    pageContent.Append(cell);
+                    pageContent.Append("</td>");
+                }
+                pageContent.Append("</tr>");
+            }
+            pageContent.Append("</table>");
+
+            // Return the html for a marriage cerificate.
+            return pageContent.ToString();
+        }
 
         /// <summary>Returns the full name of the source with a link in html.</summary>
         /// <param name="source">Specifies the source to display.</param>
@@ -1364,7 +1420,7 @@ namespace gedcom.viewer
                 // Split the place desription.
                 int lastPos = placeDescription.IndexOf(",");
                 string right = placeDescription.Substring(lastPos + 1).Trim();
-                string left = placeDescription.Substring(0, lastPos).Trim();                
+                string left = placeDescription.Substring(0, lastPos).Trim();
                 return "<a href=\"app://place?id=" + placeDescription + "\">" + left + "</a>, " + htmlPlace(right);
             }
             else
