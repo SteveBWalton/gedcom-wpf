@@ -53,7 +53,7 @@ namespace gedcom
                         }
                     }
                 }
-                
+
                 int commaLoc = place.IndexOf(",");
                 if (commaLoc > 0)
                 {
@@ -64,6 +64,22 @@ namespace gedcom
         }
 
         #endregion
+
+
+        public override string ToString()
+        {
+            // Check for an address.
+            Tag tagAddress = _tag.children.findOne("ADDR");
+            if (tagAddress != null)
+            {
+                // Return the address and the place.
+                string address = tagAddress.value;
+                return address + ", " + _tag.value;
+            }
+
+            // Return the place.
+            return _tag.value;
+        }
 
     }
 }

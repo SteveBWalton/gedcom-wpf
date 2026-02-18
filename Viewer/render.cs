@@ -1117,11 +1117,16 @@ namespace gedcom.viewer
             dealtWith.Add("DATE");
             TagDate tagDate = new TagDate(tag);
 
+            // Get the place of the source.
+            Tag tagPlac = source.tag.children.findOne("PLAC");
+            dealtWith.Add("PLAC");
+            TagPlace tagPlace = new TagPlace(tagPlac);
+
             // Grid value.
             pageContent.Append("<table style=\"background-color: #ccff99; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
             string[][] grid = tagNote.getGridValue();
 
-            pageContent.Append("<tr><td colspan=\"7\">" + tagDate.yearDisplay + " <span class=\"marriage\">Marriage solemnized at</span> church, place</td></tr>");
+            pageContent.Append("<tr><td colspan=\"7\">" + tagDate.yearDisplay + " <span class=\"marriage\">Marriage solemnized at</span> " + tagPlace.ToString() + "</td></tr>");
             pageContent.Append("<tr>");
             pageContent.Append("<td><span class=\"marriage\">When Married</span></td>");
             pageContent.Append("<td><span class=\"marriage\">Name</span></td>");
