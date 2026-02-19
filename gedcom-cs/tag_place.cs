@@ -37,6 +37,7 @@ namespace gedcom
         {
             get
             {
+                // Get the full places.
                 string place = _tag.value;
 
                 // Check for an address.
@@ -54,6 +55,7 @@ namespace gedcom
                     }
                 }
 
+                // Return the first part of the address.
                 int commaLoc = place.IndexOf(",");
                 if (commaLoc > 0)
                 {
@@ -66,6 +68,8 @@ namespace gedcom
         #endregion
 
 
+        /// <summary>The long one line description of the place, including the address, if available.</summary>
+        /// <returns>The long one line description of the place, including the address, if available.</returns>
         public override string ToString()
         {
             // Check for an address.
@@ -77,7 +81,7 @@ namespace gedcom
                 return address + ", " + _tag.value;
             }
 
-            // Return the place.
+            // Return the full place.
             return _tag.value;
         }
 

@@ -23,7 +23,7 @@ namespace gedcom
         /// <summary>Empty class constructor.</summary>
         public Repositories()
         {
-            _repositories = new List<Repository>();            
+            _repositories = new List<Repository>();
         }
 
         #endregion
@@ -92,9 +92,9 @@ namespace gedcom
 
         #endregion
 
-        /// <summary>Return the individual with the specified index.</summary>
+        /// <summary>Return the repository with the specified index.</summary>
         /// <param name="idx">Specifies the index to search for.</param>
-        /// <returns>The individual with the specified index or null.</returns>
+        /// <returns>The repository with the specified index or null.</returns>
         public Repository find(string idx)
         {
             foreach (Repository repository in this)

@@ -124,29 +124,32 @@ namespace gedcom.viewer
         public string toHtml()
         {
             StringBuilder html = new StringBuilder();
-            html.AppendLine("<table class=\"sourceref\">");
-            int idx = 0;
-            foreach (HtmlSource htmlSource in this)
+            if (this.count > 0)
             {
-                html.Append("<tr>");
-                html.Append("<td>" + Convert.ToChar('A' + idx) + "</td>");
-                if (htmlSource.source != null)
+                html.AppendLine("<table class=\"sourceref\">");
+                int idx = 0;
+                foreach (HtmlSource htmlSource in this)
                 {
-                    html.Append("<td><a href=\"app://source?id=" + htmlSource.source.idx + "\">" + htmlSource.source.fullName + "</a></td>");
+                    html.Append("<tr>");
+                    html.Append("<td>" + Convert.ToChar('A' + idx) + "</td>");
+                    if (htmlSource.source != null)
+                    {
+                        html.Append("<td><a href=\"app://source?id=" + htmlSource.source.idx + "\">" + htmlSource.source.fullName + "</a></td>");
+                    }
+                    else
+                    {
+                        html.Append("<td>Error!</td>");
+                    }
+                    html.AppendLine("<tr>");
+                    idx++;
                 }
-                else
-                {
-                    html.Append("<td>Error!</td>");
-                }
-                html.AppendLine("<tr>");
-                idx++;
+                html.AppendLine("</table>");
             }
-            html.AppendLine("</table>");
             // Return the built html.
             return html.ToString();
         }
 
-        
+
 
     }
 }

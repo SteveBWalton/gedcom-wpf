@@ -1028,7 +1028,6 @@ namespace gedcom.viewer
                     }
                 }
 
-
                 // Deal with the other note tags.
                 dealtWith.Add("NOTE");
                 foreach (Tag tagNote in tagNotes)
@@ -1056,6 +1055,27 @@ namespace gedcom.viewer
                             pageContent.html.Append(line);
                         }
                         pageContent.html.Append("</p>");
+                    }
+                }
+
+                // Deal with the REPO tag.
+                Tag tagRepo = source.tag.children.findOne("REPO");
+                dealtWith.Add("REPO");
+                if (tagRepo == null)
+                {
+                    pageContent.html.Append("<p>This source is not in a repository.</p>");
+                }
+                else
+                {
+                    string repositoryIdx = Tag.toIdx(tagRepo.value);
+                    Repository repository = _gedcom.repositories.find(repositoryIdx);
+                    if (repository == null)
+                    {
+                        pageContent.html.Append("<p>This source is in the {ERROR: " + repositoryIdx + "} repository.</p>");
+                    }
+                    else
+                    {
+                        pageContent.html.Append("<p>This source is in the " + repository.name + " repository.</p>");
                     }
                 }
 

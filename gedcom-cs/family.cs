@@ -326,7 +326,7 @@ namespace gedcom
                 else
                 {
                     // Force this individual to not have a family tag to this family.
-                    bool isHasTag = false;
+                    // bool isHasTag = false;
                     Tag[] families = individual.tag.children.findAll("FAMS");
                     foreach (Tag family in families)
                     {
