@@ -72,6 +72,11 @@ namespace gedcom
         /// <returns>The long one line description of the place, including the address, if available.</returns>
         public override string ToString()
         {
+            if (_tag is null)
+            {
+                return "Error: Missing Tag";
+            }
+
             // Check for an address.
             Tag tagAddress = _tag.children.findOne("ADDR");
             if (tagAddress != null)

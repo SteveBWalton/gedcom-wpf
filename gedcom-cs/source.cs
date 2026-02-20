@@ -91,6 +91,10 @@ namespace gedcom
                 {
                     return SourceType.MARRIAGE_CERTIFICATE;
                 }
+                if (title.StartsWith("Birth Certificate"))
+                {
+                    return SourceType.BIRTH_CERTIFICATE;
+                }
                 return SourceType.GENERAL;
             }
         }
