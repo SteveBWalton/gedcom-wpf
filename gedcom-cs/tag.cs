@@ -83,7 +83,7 @@ namespace gedcom
             _parent = parent;
             _level = parent.level + 1;
         }
-  
+
         #endregion
 
         #region Properties
@@ -116,7 +116,7 @@ namespace gedcom
         public string value
         {
             get { return _value; }
-            set 
+            set
             {
                 if (_value != value)
                 {
@@ -444,7 +444,7 @@ namespace gedcom
             // Build  a list of all the child tag.
             List<Tag> allTags = new List<Tag>();
 
-            // Add this tag to 
+            // Add this tag to
             allTags.Add(this);
 
             // Add all the children tags.

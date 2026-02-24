@@ -59,6 +59,7 @@
     <Compile Include="tag.cs" />
     <Compile Include="tags.cs" />
     <Compile Include="tag_date.cs" />
+    <Compile Include="tag_note_grid.cs" />
     <Compile Include="tag_place.cs" />
     <Compile Include="tag_type.cs" />
     <Compile Include="top_level.cs" />
