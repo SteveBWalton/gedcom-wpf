@@ -14,7 +14,6 @@ namespace gedcom
         /// <summary>A jagged array to hold the grid.</summary>
         List<string[]> _grid;
 
-
         #endregion
 
         #region Constructors
@@ -43,5 +42,14 @@ namespace gedcom
         }
 
         #endregion
+
+        /// <summary>Return the contents of the cell at x and y.</summary>
+        /// <param name="x">Specifies the x position of the required cell.</param>
+        /// <param name="y">Specifies the y position of the required cell.</param>
+        /// <returns></returns>
+        public string getCell(int x, int y)
+        {
+            return _grid[x][y];
+        }
     }
 }
