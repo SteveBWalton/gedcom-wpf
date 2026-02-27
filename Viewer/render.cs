@@ -1014,18 +1014,8 @@ namespace gedcom.viewer
                         default:
                             // Grid value.
                             pageContent.html.Append("<table style=\"border: 2px solid black;\">");
-                            string[][] grid = tagNote.getGridValue();
-                            foreach (string[] row in grid)
-                            {
-                                pageContent.html.Append("<tr>");
-                                foreach (string cell in row)
-                                {
-                                    pageContent.html.Append("<td>");
-                                    pageContent.html.Append(cell);
-                                    pageContent.html.Append("</td>");
-                                }
-                                pageContent.html.Append("</tr>");
-                            }
+                            TagNoteGrid grid = tagNote.getGridValue();
+                            grid.toHtml();
                             pageContent.html.Append("</table>");
                             break;
                         }
@@ -1151,7 +1141,7 @@ namespace gedcom.viewer
             pageContent.Append("<table style=\"background-color: #ccff99; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
 
             // The grid of values in the note grid tag.
-            string[][] grid = tagNote.getGridValue();
+            TagNoteGrid grid = tagNote.getGridValue();
             pageContent.Append("<tr><td colspan=\"7\">" + tagDate.yearDisplay + " <span class=\"marriage\">Marriage solemnized at</span> " + tagPlace.ToString() + "</td></tr>");
             pageContent.Append("<tr>");
             pageContent.Append("<td><span class=\"marriage\">When Married</span></td>");
@@ -1164,23 +1154,23 @@ namespace gedcom.viewer
             pageContent.Append("</tr>");
             pageContent.Append("<tr>");
             pageContent.Append("<td rowspan=\"2\">" + tagDate.getShortDate() + "</td>");
-            pageContent.Append("<td>" + grid[1][1] + "</td>");
-            pageContent.Append("<td>" + grid[1][3] + "</td>");
-            pageContent.Append("<td>" + grid[1][4] + "</td>");
-            pageContent.Append("<td>" + grid[1][5] + "</td>");
-            pageContent.Append("<td>" + grid[3][1] + "</td>");
-            pageContent.Append("<td>" + grid[3][3] + "</td>");
+            pageContent.Append("<td>" + grid.getCell(1,1) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(1,3) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(1,4) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(1,5) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(3,1) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(3,3) + "</td>");
             pageContent.Append("</tr>");
             pageContent.Append("<tr>");
-            pageContent.Append("<td>" + grid[2][1] + "</td>");
-            pageContent.Append("<td>" + grid[2][3] + "</td>");
-            pageContent.Append("<td>" + grid[2][4] + "</td>");
-            pageContent.Append("<td>" + grid[2][5] + "</td>");
-            pageContent.Append("<td>" + grid[4][1] + "</td>");
-            pageContent.Append("<td>" + grid[4][3] + "</td>");
+            pageContent.Append("<td>" + grid.getCell(2,1) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(2,3) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(2,4) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(2,5) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(4,1) + "</td>");
+            pageContent.Append("<td>" + grid.getCell(4,3) + "</td>");
             pageContent.Append("</tr>");
-            pageContent.Append("<tr><td colspan=\"7\"><span class=\"marriage\">in the Presence of us,</span> " + grid[5][1] + "</td></tr>");
-            pageContent.Append("<tr><td colspan=\"7\" style=\"text-align: center;\"><span class=\"marriage\">GRO Reference</span> " + grid[0][1] + "</td></tr>");
+            pageContent.Append("<tr><td colspan=\"7\"><span class=\"marriage\">in the Presence of us,</span> " + grid.getCell(5,1) + "</td></tr>");
+            pageContent.Append("<tr><td colspan=\"7\" style=\"text-align: center;\"><span class=\"marriage\">GRO Reference</span> " + grid.getCell(0,1) + "</td></tr>");
 
             //foreach (string[] row in grid)
             //{
@@ -1222,8 +1212,8 @@ namespace gedcom.viewer
             pageContent.Append("<table style=\"background-color: mistyrose; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
 
             // The grid of values in the note grid tag.
-            string[][] grid = tagNote.getGridValue();
-            pageContent.Append("<tr><td colspan=\"8\">" + tagDate.yearDisplay + " <span class=\"birth\"> Birth in the registration district of </span> " + grid[1][1] + "</td></tr>");
+            TagNoteGrid grid = tagNote.getGridValue();
+            pageContent.Append("<tr><td colspan=\"8\">" + tagDate.yearDisplay + " <span class=\"birth\"> Birth in the registration district of </span> " + grid.getCell(1,1) + "</td></tr>");
             pageContent.Append("<tr>");
             pageContent.Append("<td><span class=\"birth\">When and<br/>Where Born</span></td>");
             pageContent.Append("<td><span class=\"birth\">Name</span></td>");
@@ -1235,20 +1225,10 @@ namespace gedcom.viewer
             pageContent.Append("<td><span class=\"birth\">When Registered</span></td>");
             pageContent.Append("</tr>");
 
-            pageContent.Append("<tr><td colspan=\"7\" style=\"text-align: center;\"><span class=\"birth\">GRO Reference</span> " + grid[0][1] + "</td></tr>");
+            pageContent.Append("<tr><td colspan=\"7\" style=\"text-align: center;\"><span class=\"birth\">GRO Reference</span> " + grid.getCell(0,1) + "</td></tr>");
 
+            pageContent.Append(grid.toHtml());
 
-            foreach (string[] row in grid)
-            {
-                pageContent.Append("<tr>");
-                foreach (string cell in row)
-                {
-                    pageContent.Append("<td>");
-                    pageContent.Append(cell);
-                    pageContent.Append("</td>");
-                }
-                pageContent.Append("</tr>");
-            }
             pageContent.Append("</table>");
 
             // Return the html for a marriage cerificate.

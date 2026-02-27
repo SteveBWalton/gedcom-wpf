@@ -379,8 +379,12 @@ namespace gedcom
 
         /// <summary>Return the value and any continations as a jagged array of strings.</summary>
         /// <returns>The compelete continued value as a grid.</returns>
-        public string [][] getGridValue()
+        public TagNoteGrid getGridValue()
         {
+            TagNoteGrid tagNoteGrid = new TagNoteGrid(this);
+            return tagNoteGrid;
+
+            /*
             // Create a jagged array to hold the grid.
             List<string[]> grid = new List<string[]>();
 
@@ -401,6 +405,7 @@ namespace gedcom
 
             // Return the calculated list.
             return grid.ToArray();
+            */
         }
 
 

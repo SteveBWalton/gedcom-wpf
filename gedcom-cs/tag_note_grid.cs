@@ -46,10 +46,34 @@ namespace gedcom
         /// <summary>Return the contents of the cell at x and y.</summary>
         /// <param name="x">Specifies the x position of the required cell.</param>
         /// <param name="y">Specifies the y position of the required cell.</param>
-        /// <returns></returns>
+        /// <returns>The contents of the cell at x and y or an error code.</returns>
         public string getCell(int x, int y)
         {
+            // Add some range checking.
+
+            // Return the contents of the cell.
             return _grid[x][y];
+        }
+
+
+
+        /// <summary>Return the grid as html.</summary>
+        /// <returns></returns>
+        public string toHtml()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (string[] row in _grid)
+            {
+                stringBuilder.Append("<tr>");
+                foreach (string cell in row)
+                {
+                    stringBuilder.Append("<td>");
+                    stringBuilder.Append(cell);
+                    stringBuilder.Append("</td>");
+                }
+                stringBuilder.Append("</tr>");
+            }
+            return stringBuilder.ToString();
         }
     }
 }
