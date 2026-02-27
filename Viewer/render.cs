@@ -1153,9 +1153,9 @@ namespace gedcom.viewer
             pageContent.Append("<td><span class=\"marriage\">Rank of Profession of Father</span></td>");
             pageContent.Append("</tr>");
             pageContent.Append("<tr>");
-            pageContent.Append("<td rowspan=\"2\">" + tagDate.getShortDate() + "</td>");
-            pageContent.Append("<td>" + grid.getCell(1,1) + "</td>");
-            pageContent.Append("<td>" + grid.getCell(1,3) + "</td>");
+            pageContent.Append($"<td rowspan=\"2\">{tagDate.getShortDate()}</td>");
+            pageContent.Append($"<td>{grid.getCell(1, 1)}</td>");
+            pageContent.Append($"<td>{grid.getCell(1, 3)}</td>");
             pageContent.Append("<td>" + grid.getCell(1,4) + "</td>");
             pageContent.Append("<td>" + grid.getCell(1,5) + "</td>");
             pageContent.Append("<td>" + grid.getCell(3,1) + "</td>");
@@ -1213,7 +1213,7 @@ namespace gedcom.viewer
 
             // The grid of values in the note grid tag.
             TagNoteGrid grid = tagNote.getGridValue();
-            pageContent.Append("<tr><td colspan=\"8\">" + tagDate.yearDisplay + " <span class=\"birth\"> Birth in the registration district of </span> " + grid.getCell(1,1) + "</td></tr>");
+            pageContent.Append($"<tr><td colspan=\"8\">{tagDate.yearDisplay} <span class=\"birth\"> Birth in the registration district of</span> {grid.getCell(1, 1)}</td></tr>");
             pageContent.Append("<tr>");
             pageContent.Append("<td><span class=\"birth\">When and<br/>Where Born</span></td>");
             pageContent.Append("<td><span class=\"birth\">Name</span></td>");
@@ -1225,9 +1225,21 @@ namespace gedcom.viewer
             pageContent.Append("<td><span class=\"birth\">When Registered</span></td>");
             pageContent.Append("</tr>");
 
-            pageContent.Append("<tr><td colspan=\"7\" style=\"text-align: center;\"><span class=\"birth\">GRO Reference</span> " + grid.getCell(0,1) + "</td></tr>");
+            pageContent.Append("<tr>");
+            pageContent.Append($"<td>{grid.getCell(2, 1)}<br/>{grid.getCell(2, 2)}</td>");
+            pageContent.Append($"<td>{grid.getCell(3, 1)}</td>");
+            pageContent.Append($"<td>{grid.getCell(3, 2)}</td>");
+            pageContent.Append($"<td>{grid.getCell(5, 1)}</td>");
+            pageContent.Append($"<td>{grid.getCell(4, 1)}<br/>{grid.getCell(4, 2)}</td>");
+            pageContent.Append($"<td>{grid.getCell(5, 2)}</td>");
+            pageContent.Append($"<td>{grid.getCell(6, 1)}<br/>{grid.getCell(6, 2)}</td>");
+            // pageContent.Append($"<td>{grid.getCell(7, 1)}</td>");
+            pageContent.Append($"<td>{tagDate.getShortDate()}</td>");
+            pageContent.Append("</tr>");
 
-            pageContent.Append(grid.toHtml());
+            pageContent.Append($"<tr><td colspan=\"7\" style=\"text-align: center;\"><span class=\"birth\">GRO Reference</span> {grid.getCell(0, 1)}</td></tr>");
+
+            // pageContent.Append(grid.toHtml());
 
             pageContent.Append("</table>");
 

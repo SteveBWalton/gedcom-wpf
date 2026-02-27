@@ -50,6 +50,14 @@ namespace gedcom
         public string getCell(int x, int y)
         {
             // Add some range checking.
+            if (x >= _grid.Count)
+            {
+                return $"x = {x} is out of range";
+            }
+            if (y >= _grid[x].Length)
+            {
+                return $"y = {y} is out of range";
+            }
 
             // Return the contents of the cell.
             return _grid[x][y];
