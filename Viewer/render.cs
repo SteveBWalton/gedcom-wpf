@@ -1011,6 +1011,10 @@ namespace gedcom.viewer
                             pageContent.html.Append(getBirthCertificate(source, tagNote, dealtWith));
                             break;
 
+                        case Source.SourceType.DEATH_CERTIFICATE:
+                            pageContent.html.Append(getDeathCerificate(source, tagNote, dealtWith));
+                            break;
+
                         default:
                             // Grid value.
                             pageContent.html.Append("<table style=\"border: 2px solid black;\">");
@@ -1191,9 +1195,7 @@ namespace gedcom.viewer
 
 
 
-        /// <summary>
-        /// Get the note grid tag in birth certificate html format.
-        /// </summary>
+        /// <summary>Get the note grid tag in birth certificate html format.</summary>
         /// <param name="source">Specifies the source that contains the note grid.</param>
         /// <param name="tagNote">Specifies the note grid tag in the source.</param>
         /// <param name="dealtWith">Specifies and returns the dealt with tags in the source.</param>
@@ -1238,6 +1240,49 @@ namespace gedcom.viewer
             pageContent.Append("</tr>");
 
             pageContent.Append($"<tr><td colspan=\"7\" style=\"text-align: center;\"><span class=\"birth\">GRO Reference</span> {grid.getCell(0, 1)}</td></tr>");
+
+            // pageContent.Append(grid.toHtml());
+
+            pageContent.Append("</table>");
+
+            // Return the html for a marriage cerificate.
+            return pageContent.ToString();
+        }
+
+
+
+        /// <summary>Get the note grid tag in death certificate html format.</summary>
+        /// <param name="source">Specifies the source that contains the note grid.</param>
+        /// <param name="tagNote">Specifies the note grid tag in the source.</param>
+        /// <param name="dealtWith">Specifies and returns the dealt with tags in the source.</param>
+        /// <returns>A html render of the death cerificate data.</returns>
+        private string getDeathCerificate(Source source, Tag tagNote, List<string> dealtWith)
+        {
+            // Start to build the html for the marriage certificate.
+            StringBuilder pageContent = new StringBuilder();
+
+            // Get the date of the source.
+            Tag tag = source.tag.children.findOne("DATE");
+            dealtWith.Add("DATE");
+            TagDate tagDate = new TagDate(tag);
+
+            // Birth certificate.
+            pageContent.Append("<table style=\"background-color: thistle; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
+
+            // The grid of values in the note grid tag.
+            TagNoteGrid grid = tagNote.getGridValue();
+            // pageContent.Append($"<tr><td colspan=\"8\">{tagDate.yearDisplay} <span class=\"death\"> Birth in the registration district of</span> {grid.getCell(1, 1)}</td></tr>");
+            pageContent.Append("<tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Registration District</td><td colspan=\"3\">{grid.getCell(1, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">When and Where</td><td colspan=\"3\">{grid.getCell(2, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Name</td><td>{grid.getCell(4, 1)}</td><td class=\"death\" style=\"text-align: right\">Sex</td><td>{grid.getCell(4, 2)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Date Place of Birth</td><td colspan=\"3\">{grid.getCell(5, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Occupation</td><td colspan=\"3\">{grid.getCell(6, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Usual Address</td><td colspan=\"3\">{grid.getCell(7, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Cause of Death</td><td colspan=\"3\">{grid.getCell(8, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Informant</td><td>{grid.getCell(9, 1)}</td><td class=\"death\" style=\"text-align: right\">Informant Description</td><td>{grid.getCell(9, 2)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Informant Address</td><td colspan=\"3\">{grid.getCell(10, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">When Registered</td><td>{tagDate.getShortDate()}</td><td class=\"death\" style=\"text-align: right\">Reference</td><td>{grid.getCell(0, 1)}</td></tr>");
 
             // pageContent.Append(grid.toHtml());
 

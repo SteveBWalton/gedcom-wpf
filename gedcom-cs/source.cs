@@ -95,6 +95,10 @@ namespace gedcom
                 {
                     return SourceType.BIRTH_CERTIFICATE;
                 }
+                if (title.StartsWith("Death Certificate"))
+                {
+                    return SourceType.DEATH_CERTIFICATE;
+                }
                 return SourceType.GENERAL;
             }
         }
