@@ -1018,7 +1018,7 @@ namespace gedcom.viewer
                         default:
                             // Grid value.
                             pageContent.html.Append("<table style=\"border: 2px solid black;\">");
-                            TagNoteGrid grid = tagNote.getGridValue();
+                            TagNoteGrid grid = tagNote.getTagNoteGrid();
                             grid.toHtml();
                             pageContent.html.Append("</table>");
                             break;
@@ -1145,7 +1145,7 @@ namespace gedcom.viewer
             pageContent.Append("<table style=\"background-color: #ccff99; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
 
             // The grid of values in the note grid tag.
-            TagNoteGrid grid = tagNote.getGridValue();
+            TagNoteGrid grid = tagNote.getTagNoteGrid();
             pageContent.Append("<tr><td colspan=\"7\">" + tagDate.yearDisplay + " <span class=\"marriage\">Marriage solemnized at</span> " + tagPlace.ToString() + "</td></tr>");
             pageContent.Append("<tr>");
             pageContent.Append("<td><span class=\"marriage\">When Married</span></td>");
@@ -1214,7 +1214,7 @@ namespace gedcom.viewer
             pageContent.Append("<table style=\"background-color: mistyrose; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
 
             // The grid of values in the note grid tag.
-            TagNoteGrid grid = tagNote.getGridValue();
+            TagNoteGrid grid = tagNote.getTagNoteGrid();
             pageContent.Append($"<tr><td colspan=\"8\">{tagDate.yearDisplay} <span class=\"birth\"> Birth in the registration district of</span> {grid.getCell(1, 1)}</td></tr>");
             pageContent.Append("<tr>");
             pageContent.Append("<td><span class=\"birth\">When and<br/>Where Born</span></td>");
@@ -1270,7 +1270,7 @@ namespace gedcom.viewer
             pageContent.Append("<table style=\"background-color: thistle; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
 
             // The grid of values in the note grid tag.
-            TagNoteGrid grid = tagNote.getGridValue();
+            TagNoteGrid grid = tagNote.getTagNoteGrid();
             // pageContent.Append($"<tr><td colspan=\"8\">{tagDate.yearDisplay} <span class=\"death\"> Birth in the registration district of</span> {grid.getCell(1, 1)}</td></tr>");
             pageContent.Append("<tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Registration District</td><td colspan=\"3\">{grid.getCell(1, 1)}</td></tr>");

@@ -37,6 +37,19 @@ namespace gedcom
             foreach (Tag continueTag in tagContinues)
             {
                 line = continueTag.value.Split(':');
+                Tag[] additional = continueTag.children.findAll("CONT");
+                foreach (Tag more in additional)
+                {
+                    string[] extraLine = more.value.Split(':');
+                    for (int i = 0; i < extraLine.Length; i++)
+                    {
+                        if (line.Length > i)
+                        {
+                            // line[i] += "\n" + extraLine[i];
+                            line[i] += "<br/>" + extraLine[i];
+                        }
+                    }
+                }
                 _grid.Add(line);
             }
         }

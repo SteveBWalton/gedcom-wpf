@@ -379,7 +379,7 @@ namespace gedcom
 
         /// <summary>Return the value and any continations as a jagged array of strings.</summary>
         /// <returns>The compelete continued value as a grid.</returns>
-        public TagNoteGrid getGridValue()
+        public TagNoteGrid getTagNoteGrid()
         {
             TagNoteGrid tagNoteGrid = new TagNoteGrid(this);
             return tagNoteGrid;
