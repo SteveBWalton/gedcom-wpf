@@ -460,7 +460,7 @@ namespace gedcom.viewer
                 string[] relationships = individual.getFamilyIdxes();
                 // Tag[] tags = individual.tag.children.findAll("FAMS");
                 // foreach (Tag marriageTag in tags)
-                foreach(string relationship in relationships)
+                foreach (string relationship in relationships)
                 {
                     // pageContent.html.Append(getTagLongPartner(individual, marriageTag, htmlSources));
                     pageContent.html.Append(getTagLongPartner(individual, relationship, htmlSources));
@@ -517,10 +517,10 @@ namespace gedcom.viewer
 
                 // Show the file gedcom.
                 pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.toText() + "</pre>");
-            }
 
-            // Mark the individual as viewed.
-            individual.lastViewed = DateTime.Now;
+                // Mark the individual as viewed.
+                individual.lastViewed = DateTime.Now;
+            }
 
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());
@@ -1328,7 +1328,7 @@ namespace gedcom.viewer
 
             for (int i = 1; i < grid.numRows; i++)
             {
-                pageContent.Append($"<tr><td>{grid.getCell(i, 0)}</td><td>{grid.getCell(i, 3)}</td><td>{grid.getCell(i, 2)}</td><td>{grid.getCell(i, 4)}</td><td>{grid.getCell(i, 5)}</td></tr>");
+                pageContent.Append($"<tr><td><a href=\"app://individual?id={grid.getCell(i, 1).Trim()}\">{grid.getCell(i, 0)}</a></td><td>{grid.getCell(i, 3)}</td><td>{grid.getCell(i, 2)}</td><td>{grid.getCell(i, 4)}</td><td>{grid.getCell(i, 5)}</td></tr>");
             }
 
             // pageContent.Append(grid.toHtml());
