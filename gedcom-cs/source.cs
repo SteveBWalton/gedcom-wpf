@@ -17,6 +17,7 @@ namespace gedcom
             BIRTH_CERTIFICATE,
             MARRIAGE_CERTIFICATE,
             DEATH_CERTIFICATE,
+            CENSUS,
             GENERAL
         }
 
@@ -98,6 +99,10 @@ namespace gedcom
                 if (title.StartsWith("Death Certificate"))
                 {
                     return SourceType.DEATH_CERTIFICATE;
+                }
+                if (title.StartsWith("Census"))
+                {
+                    return SourceType.CENSUS;
                 }
                 return SourceType.GENERAL;
             }

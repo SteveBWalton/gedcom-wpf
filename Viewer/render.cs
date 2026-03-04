@@ -1015,6 +1015,10 @@ namespace gedcom.viewer
                             pageContent.html.Append(getDeathCerificate(source, tagNote, dealtWith));
                             break;
 
+                        case Source.SourceType.CENSUS:
+                            pageContent.html.Append(getCensus(source, tagNote, dealtWith));
+                            break;
+
                         default:
                             // Grid value.
                             pageContent.html.Append("<table style=\"border: 2px solid black;\">");
@@ -1258,7 +1262,7 @@ namespace gedcom.viewer
         /// <returns>A html render of the death cerificate data.</returns>
         private string getDeathCerificate(Source source, Tag tagNote, List<string> dealtWith)
         {
-            // Start to build the html for the marriage certificate.
+            // Start to build the html for the death certificate.
             StringBuilder pageContent = new StringBuilder();
 
             // Get the date of the source.
@@ -1266,12 +1270,11 @@ namespace gedcom.viewer
             dealtWith.Add("DATE");
             TagDate tagDate = new TagDate(tag);
 
-            // Birth certificate.
-            pageContent.Append("<table style=\"background-color: thistle; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
-
             // The grid of values in the note grid tag.
             TagNoteGrid grid = tagNote.getTagNoteGrid();
-            // pageContent.Append($"<tr><td colspan=\"8\">{tagDate.yearDisplay} <span class=\"death\"> Birth in the registration district of</span> {grid.getCell(1, 1)}</td></tr>");
+
+            // Death certificate.
+            pageContent.Append("<table style=\"background-color: thistle; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
             pageContent.Append("<tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Registration District</td><td colspan=\"3\">{grid.getCell(1, 1)}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">When and Where</td><td colspan=\"3\">{grid.getCell(2, 1)}</td></tr>");
@@ -1288,7 +1291,51 @@ namespace gedcom.viewer
 
             pageContent.Append("</table>");
 
-            // Return the html for a marriage cerificate.
+            // Return the html for a death cerificate.
+            return pageContent.ToString();
+        }
+
+
+
+        /// <summary>Get the note grid tag in census source html format.</summary>
+        /// <param name="source">Specifies the source that contains the note grid.</param>
+        /// <param name="tagNote">Specifies the note grid tag in the source.</param>
+        /// <param name="dealtWith">Specifies and returns the dealt with tags in the source.</param>
+        /// <returns>A html render of the census data.</returns>
+        private string getCensus(Source source, Tag tagNote, List<string> dealtWith)
+        {
+            // Start to build the html for the census record.
+            StringBuilder pageContent = new StringBuilder();
+
+            // Get the date of the source.
+            Tag tag = source.tag.children.findOne("DATE");
+            dealtWith.Add("DATE");
+            TagDate tagDate = new TagDate(tag);
+
+            // The grid of values in the note grid tag.
+            TagNoteGrid grid = tagNote.getTagNoteGrid();
+
+            // Census record.
+            pageContent.Append("<table style=\"background-color: lightcyan; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
+            pageContent.Append($"<tr><td class=\"census\" style=\"text-align: center;\" colspan=\"5\"><span style=\"font-size:200%;\">{tagDate.yearDisplay} Census</span> ({tagDate.getShortDate()})</td><td>");
+            pageContent.Append("<tr><td colspan=\"5\">");
+            pageContent.Append("<table width=\"100%\">");
+            pageContent.Append("<tr><td class=\"census\" style=\"text-align: center;\">Series</td><td class=\"census\" style=\"text-align: center;\">Piece</td><td class=\"census\" style=\"text-align: center;\">Folio</td><td class=\"census\" style=\"text-align: center;\">Page</td></tr>");
+            pageContent.Append($"<tr><td style=\"text-align: center;\">{grid.getCell(0, 2)}</td><td style=\"text-align: center;\">{grid.getCell(0, 4)}</td><td style=\"text-align: center;\">{grid.getCell(0, 6)}</td><td style=\"text-align: center;\">{grid.getCell(0, 8)}</td></tr>");
+            pageContent.Append("</table></td></tr>");
+
+            pageContent.Append("<tr><td class=\"census\">Name</td><td class=\"census\">Relation<br/>To Head</td><td class=\"census\">Age</td><td class=\"census\">Occupation</td><td class=\"census\">Born Location</td></tr>");
+
+            for (int i = 1; i < grid.numRows; i++)
+            {
+                pageContent.Append($"<tr><td>{grid.getCell(i, 0)}</td><td>{grid.getCell(i, 3)}</td><td>{grid.getCell(i, 2)}</td><td>{grid.getCell(i, 4)}</td><td>{grid.getCell(i, 5)}</td></tr>");
+            }
+
+            // pageContent.Append(grid.toHtml());
+
+            pageContent.Append("</table>");
+
+            // Return the html for a census record.
             return pageContent.ToString();
         }
 

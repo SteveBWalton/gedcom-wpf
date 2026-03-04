@@ -56,6 +56,16 @@ namespace gedcom
 
         #endregion
 
+        #region Properties
+
+        /// <summary>The number of rows defined on the grid.</summary>
+        public int numRows
+        {
+            get => _grid.Count;
+        }
+
+        #endregion
+
         /// <summary>Return the contents of the cell at x and y.</summary>
         /// <param name="x">Specifies the x position of the required cell.</param>
         /// <param name="y">Specifies the y position of the required cell.</param>
