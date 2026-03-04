@@ -228,18 +228,28 @@ namespace gedcom.viewer
             {
             case "home":
                 return getHome();
+
             case "individual":
                 return getIndividual(query);
+
             case "family":
                 return getFamily(query);
+
             case "source":
                 return getSource(query);
+
             case "media":
                 return getMediaObject(query);
+
             case "repository":
                 return getRepository(query);
+
             case "place":
                 return getPlace(query);
+
+            case "list":
+                return getList(query);
+
             default:
                 return getError(host, query);
             }
@@ -266,7 +276,7 @@ namespace gedcom.viewer
             Individual[] individualsInDateOrder = _gedcom.individuals.inDateOrder();
             foreach (Individual individual in individualsInDateOrder)
             {
-                pageContent.html.AppendLine("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
+                pageContent.html.AppendLine($"<tr><td>{htmlIndividual(individual)}</td><tr>");
                 count++;
                 if (count >= NUM_ITEMS)
                 {
@@ -274,7 +284,7 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + _gedcom.individuals.count.ToString() + " individuals.");
+            pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=individuals\">{_gedcom.individuals.count} individuals</a>.");
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the families.
@@ -285,7 +295,7 @@ namespace gedcom.viewer
             Family[] familiesInDateOrder = _gedcom.families.inDateOrder();
             foreach (Family family in familiesInDateOrder)
             {
-                pageContent.html.AppendLine("<tr><td><a href=\"app://family?id=" + family.idx + "\">" + family.fullName + "</a></td></tr>");
+                pageContent.html.AppendLine($"<tr><td><a href=\"app://family?id={family.idx}\">{family.fullName}</a></td></tr>");
                 count++;
                 if (count >= NUM_ITEMS)
                 {
@@ -293,7 +303,7 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + _gedcom.families.count.ToString() + " families.");
+            pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=families\">{_gedcom.families.count} families</a>.");
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the sources.
@@ -389,6 +399,44 @@ namespace gedcom.viewer
 
             // Return the built string as html.
             // return _userOptions.renderHtml(html.ToString());
+            return pageContent;
+        }
+
+
+
+        /// <summary>Display a list of the specified objects.</summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        private PageContent getList(string query)
+        {
+            PageContent pageContent = new PageContent();
+
+            // Get the type of list.
+            NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
+            string listType = queryParams.Get("type");
+
+            switch (listType)
+            {
+            case "individuals":
+                // Return a complete list of the individuals.
+                pageContent.html.AppendLine("<h1>List of Individuals</h1>");
+                pageContent.html.AppendLine("<table>");
+                int count = 0;
+                foreach (Individual individual in _gedcom.individuals)
+                {
+                    pageContent.html.AppendLine($"<tr><td>{individual.idx}<td><td>{htmlIndividual(individual)}</td><tr>");
+                    count++;
+                }
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine($"<p>There are <a href=\"list?type=individuals\">{_gedcom.individuals.count}</a> individuals.");
+                break;
+
+            default:
+                // Error unknown type.
+                pageContent.html.AppendLine($"Error unknown type '{listType}'.");
+                break;
+            }
+
             return pageContent;
         }
 
