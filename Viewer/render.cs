@@ -461,6 +461,18 @@ namespace gedcom.viewer
                 pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=families\">{_gedcom.families.count} families</a>.");
                 break;
 
+            case "sources":
+                // Return a complete list of the sources.
+                pageContent.html.AppendLine("<h1>List of Sources</h1>");
+                pageContent.html.AppendLine("<table>");
+                foreach (Source source in _gedcom.sources)
+                {
+                    pageContent.html.AppendLine($"<tr><td>{source.idx}</td><td>{htmlSource(source)}</td></tr>");
+                }
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=sources\">{_gedcom.sources.count} sources</a>.");
+                break;
+
             default:
                 // Error unknown type.
                 pageContent.html.AppendLine($"Error unknown type '{listType}'.");
