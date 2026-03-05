@@ -343,7 +343,7 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine($"<p>There are {_gedcom.mediaObjects.count} media objects.");
+            pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=media\">{_gedcom.mediaObjects.count} media objects</a>.");
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the repositories.
@@ -421,7 +421,7 @@ namespace gedcom.viewer
             switch (listType)
             {
             case "individuals":
-                // Return a complete list of the individuals.
+                // Displays a complete list of the individuals in the gedcom.
                 pageContent.html.AppendLine("<h1>List of Individuals</h1>");
                 pageContent.html.AppendLine("<table>");
                 foreach (Individual individual in _gedcom.individuals)
@@ -433,7 +433,7 @@ namespace gedcom.viewer
                 break;
 
             case "families":
-                // Return a complete list of the families.
+                // Displays a complete list of the families in the gedcom.
                 pageContent.html.AppendLine("<h1>List of Families</h1>");
                 pageContent.html.AppendLine("<table>");
                 foreach (Family family in _gedcom.families)
@@ -462,7 +462,7 @@ namespace gedcom.viewer
                 break;
 
             case "sources":
-                // Return a complete list of the sources.
+                // Displays a complete list of the sources in the gedcom.
                 pageContent.html.AppendLine("<h1>List of Sources</h1>");
                 pageContent.html.AppendLine("<table>");
                 foreach (Source source in _gedcom.sources)
@@ -471,6 +471,17 @@ namespace gedcom.viewer
                 }
                 pageContent.html.AppendLine("</table>");
                 pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=sources\">{_gedcom.sources.count} sources</a>.");
+                break;
+
+            case "media":
+                // Displays a complete list of the media objects in the gedcom.
+                pageContent.html.AppendLine("<table>");
+                foreach (MediaObject mediaObject in _gedcom.mediaObjects)
+                {
+                    pageContent.html.AppendLine($"<tr><td>{mediaObject.idx}</td><td>{htmlMediaObject(mediaObject)}</td></tr>");
+                }
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=media\">{_gedcom.mediaObjects.count} media objects</a>.");
                 break;
 
             default:
