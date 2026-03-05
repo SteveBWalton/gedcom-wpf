@@ -218,7 +218,7 @@ namespace gedcom.viewer
 
         #region Content
 
-        /// <summary>Redner the requested host and query as html.</summary>
+        /// <summary>Render the requested host and query as html.</summary>
         /// <param name="host">Specifies the request host. This is usually just the name of page.</param>
         /// <param name="query">Specifies the request query. This is usually just the parameters for the page.</param>
         /// <returns>The requested page as html.</returns>
@@ -264,8 +264,10 @@ namespace gedcom.viewer
             // The number of items to show in each category.
             const int NUM_ITEMS = 15;
 
+            // Start a new page.
             PageContent pageContent = new PageContent();
 
+            // Set a title for the page.
             pageContent.html.AppendLine("<h1>" + _gedcom.fileName + (_gedcom.isDirty ? " (*)" : "") + "</h1>");
 
             // Display the individuals.
@@ -314,7 +316,7 @@ namespace gedcom.viewer
             Source[] sourcesInDateOrder = _gedcom.sources.inDateOrder();
             foreach (Source source in sourcesInDateOrder)
             {
-                pageContent.html.AppendLine("<tr><td>" + htmlSource(source) + "</td></tr>");
+                pageContent.html.AppendLine($"<tr><td>{htmlSource(source)}</td></tr>");
                 count++;
                 if (count >= NUM_ITEMS)
                 {
@@ -322,7 +324,7 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + _gedcom.sources.count.ToString() + " sources.");
+            pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=sources\">{_gedcom.sources.count} sources</a>.");
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the media objects.
@@ -333,7 +335,7 @@ namespace gedcom.viewer
             MediaObject[] mediaObjectsInDateOrder = _gedcom.mediaObjects.inDateOrder();
             foreach (MediaObject mediaObject in mediaObjectsInDateOrder)
             {
-                pageContent.html.AppendLine("<tr><td>" + htmlMediaObject(mediaObject) + "</td></tr>");
+                pageContent.html.AppendLine($"<tr><td>{htmlMediaObject(mediaObject)}</td></tr>");
                 count++;
                 if (count >= NUM_ITEMS)
                 {
@@ -341,7 +343,7 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + _gedcom.mediaObjects.count.ToString() + " media objects.");
+            pageContent.html.AppendLine($"<p>There are {_gedcom.mediaObjects.count} media objects.");
             pageContent.html.AppendLine("</fieldset>");
 
             // Display the repositories.
@@ -352,7 +354,7 @@ namespace gedcom.viewer
             Repository[] repositoriesInDateOrder = _gedcom.repositories.inDateOrder();
             foreach (Repository repository in repositoriesInDateOrder)
             {
-                pageContent.html.AppendLine("<tr><td>" + htmlRepository(repository) + "</td></tr>");
+                pageContent.html.AppendLine($"<tr><td>{htmlRepository(repository)}</td></tr>");
                 count++;
                 if (count >= NUM_ITEMS)
                 {
@@ -360,8 +362,9 @@ namespace gedcom.viewer
                 }
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + _gedcom.repositories.count.ToString() + " repositories.");
+            pageContent.html.AppendLine($"<p>There are {_gedcom.repositories.count} repositories.");
             pageContent.html.AppendLine("</fieldset>");
+
             // Display the places.
             pageContent.html.Append("<fieldset style=\"display: inline-block; vertical-align: top;\">");
             pageContent.html.AppendLine("<legend>Places</legend>");
@@ -370,15 +373,14 @@ namespace gedcom.viewer
             foreach(Place place in _gedcom.places)
             {
                 int totalCount = place.getTotalCount();
-                pageContent.html.AppendLine("<tr><td><a href=\"app://place?id=" + place.name + "\">" + place.name + "</a> (" + totalCount.ToString() + ")</td></tr>");
+                pageContent.html.AppendLine($"<tr><td><a href=\"app://place?id={place.name}\">{place.name}</a> ({totalCount})</td></tr>");
                 count += totalCount;
             }
             pageContent.html.AppendLine("</table>");
-            pageContent.html.AppendLine("<p>There are " + count.ToString() + " places.");
+            pageContent.html.AppendLine($"<p>There are {count} places.");
             pageContent.html.AppendLine("</fieldset>");
 
-            // Return the built string as html.
-            // return _userOptions.renderHtml(html.ToString());
+            // Return the built page.
             return pageContent;
         }
 
@@ -390,15 +392,15 @@ namespace gedcom.viewer
         /// <returns>An error message in html format.</returns>
         private PageContent getError(string host, string query)
         {
+            // Start a new page.
             PageContent pageContent = new PageContent();
-            // StringBuilder html = new StringBuilder();
 
+            // Build an error page.
             pageContent.html.Append("<h1>Error</h1>");
-            pageContent.html.Append("<p>host is '" + host + "', query is '" + query + "'</p>");
+            pageContent.html.Append($"<p>host is '{host}', query is '{query}'</p>");
             pageContent.html.Append("<p><a href=\"app://home\">Home</a></p>");
 
-            // Return the built string as html.
-            // return _userOptions.renderHtml(html.ToString());
+            // Return the error page.
             return pageContent;
         }
 
@@ -409,6 +411,7 @@ namespace gedcom.viewer
         /// <returns></returns>
         private PageContent getList(string query)
         {
+            // Start a new page.
             PageContent pageContent = new PageContent();
 
             // Get the type of list.
@@ -421,14 +424,41 @@ namespace gedcom.viewer
                 // Return a complete list of the individuals.
                 pageContent.html.AppendLine("<h1>List of Individuals</h1>");
                 pageContent.html.AppendLine("<table>");
-                int count = 0;
                 foreach (Individual individual in _gedcom.individuals)
                 {
                     pageContent.html.AppendLine($"<tr><td>{individual.idx}<td><td>{htmlIndividual(individual)}</td><tr>");
-                    count++;
                 }
                 pageContent.html.AppendLine("</table>");
                 pageContent.html.AppendLine($"<p>There are <a href=\"list?type=individuals\">{_gedcom.individuals.count}</a> individuals.");
+                break;
+
+            case "families":
+                // Return a complete list of the families.
+                pageContent.html.AppendLine("<h1>List of Families</h1>");
+                pageContent.html.AppendLine("<table>");
+                foreach (Family family in _gedcom.families)
+                {
+                    pageContent.html.Append($"<tr><td>{family.idx}</td><td><a href=\"app://family?id={family.idx}\">{family.fullName}</a></td>");
+                    if (family.husbandIdx == "")
+                    {
+                        pageContent.html.Append("<td></td>");
+                    }
+                    else
+                    {
+                        pageContent.html.Append($"<td>{htmlIndividual(family.husband)}</td>");
+                    }
+                    if (family.wifeIdx == "")
+                    {
+                        pageContent.html.Append("<td></td>");
+                    }
+                    else
+                    {
+                        pageContent.html.Append($"<td>{htmlIndividual(family.wife)}</td>");
+                    }
+                    pageContent.html.AppendLine("</tr>");
+                }
+                pageContent.html.AppendLine("</table>");
+                pageContent.html.AppendLine($"<p>There are <a href=\"app://list?type=families\">{_gedcom.families.count} families</a>.");
                 break;
 
             default:
@@ -437,6 +467,7 @@ namespace gedcom.viewer
                 break;
             }
 
+            // Return the page built.
             return pageContent;
         }
 
