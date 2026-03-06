@@ -594,6 +594,24 @@ namespace gedcom.viewer
 
                 pageContent.html.AppendLine("</p>");
 
+                // Deal with census records.
+                dealtWith.Add("CENS");
+                tags = individual.tag.children.findAll("CENS");
+                bool isFirst = true;
+                foreach (Tag censusTag in tags)
+                {
+                    if (isFirst)
+                    {
+                        pageContent.html.AppendLine("<table>");
+                        isFirst = false;
+                    }
+                    pageContent.html.AppendLine(getIndividualCensus(tag, htmlSources));
+                }
+                if (!isFirst)
+                {
+                    pageContent.html.AppendLine("</table>");
+                }
+
                 // Deal with the sources.
                 dealtWith.Add("SOUR");
                 tags = individual.tag.children.findAll("SOUR");
@@ -866,6 +884,25 @@ namespace gedcom.viewer
 
             // Return the long description.
             return html.ToString();
+        }
+
+
+
+        /// <summary>Show a cenus 'CENS' tag as a row in a table.</summary>
+        /// <param name="censusTag">Specifies the 'CENS' tag./</param>
+        /// <param name="htmlSources">Specifies and returns the source references.</param>
+        /// <returns>The html row representation of the specified  census tag.</returns>
+        private string getIndividualCensus(Tag censusTag, HtmlSources htmlSources)
+        {
+            // Start the content for the page.
+            StringBuilder pageContent = new StringBuilder();
+            pageContent.Append("<tr>");
+
+            // Close the line.
+            pageContent.Append("</tr>");
+
+            // Return the generated content.
+            return pageContent.ToString();
         }
 
         #endregion
