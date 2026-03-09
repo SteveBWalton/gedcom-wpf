@@ -602,10 +602,11 @@ namespace gedcom.viewer
                 {
                     if (isFirst)
                     {
-                        pageContent.html.AppendLine("<table>");
+                        pageContent.html.AppendLine("<table style=\"background-color: lightcyan; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\">");
+                        pageContent.html.AppendLine("<tr><td class=\"census\" style=\"text-align: center;\" colspan=\"4\">Census Records</td></tr>");
                         isFirst = false;
                     }
-                    pageContent.html.AppendLine(getIndividualCensus(tag, htmlSources));
+                    pageContent.html.AppendLine(getIndividualCensus(censusTag, htmlSources));
                 }
                 if (!isFirst)
                 {
@@ -897,6 +898,16 @@ namespace gedcom.viewer
             // Start the content for the page.
             StringBuilder pageContent = new StringBuilder();
             pageContent.Append("<tr>");
+
+            // Add the date of the census.
+            Tag dateTag = censusTag.children.findOne("DATE");
+            TagDate tagDate = new TagDate(dateTag);
+            pageContent.Append($"<td>{tagDate.getShortDate()}</td>");
+
+            // Add the place of the census.
+            Tag placeTag = censusTag.children.findOne("PLAC");
+            TagPlace tagPlace = new TagPlace(placeTag);
+            pageContent.Append($"<td>{tagPlace.ToString()}</td>");
 
             // Close the line.
             pageContent.Append("</tr>");
