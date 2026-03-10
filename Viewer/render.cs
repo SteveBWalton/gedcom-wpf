@@ -902,7 +902,7 @@ namespace gedcom.viewer
             // Add the date of the census.
             Tag dateTag = censusTag.children.findOne("DATE");
             TagDate tagDate = new TagDate(dateTag);
-            pageContent.Append($"<td>{tagDate.getShortDate()}</td>");
+            pageContent.Append($"<td>{tagDate.getShortDate()}{addSourceReferences(censusTag, htmlSources)}</td>");
 
             // Add the place of the census.
             Tag placeTag = censusTag.children.findOne("PLAC");
