@@ -99,7 +99,7 @@ namespace gedcom
         /// <summary>The whole (original?) line that created this tag.</summary>
         public string line
         {
-            get { return _line; }
+            get => _line;
         }
 
 
@@ -107,7 +107,7 @@ namespace gedcom
         /// <summary>The type or key of the gedcom tag.</summary>
         public string key
         {
-            get { return _key; }
+            get => _key;
         }
 
 
@@ -115,7 +115,7 @@ namespace gedcom
         /// <summary>The value of the gedcom tag.</summary>
         public string value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 if (_value != value)

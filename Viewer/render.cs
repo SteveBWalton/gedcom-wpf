@@ -909,6 +909,20 @@ namespace gedcom.viewer
             TagPlace tagPlace = new TagPlace(placeTag);
             pageContent.Append($"<td>{tagPlace.ToString()}</td>");
 
+            // Add the notes for the row.
+            Tag noteTag = censusTag.children.findOne("NOTE");
+            pageContent.Append("<td>");
+            if (noteTag != null)
+            {
+                pageContent.Append(noteTag.value);
+                Tag[] tagContinues = noteTag.children.findAll("CONT");
+                foreach (Tag tagContinue in tagContinues)
+                {
+                    pageContent.Append($", {tagContinue.value}");
+                }
+            }
+            pageContent.Append("</td>");
+
             // Close the line.
             pageContent.Append("</tr>");
 
