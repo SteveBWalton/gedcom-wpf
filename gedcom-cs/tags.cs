@@ -154,7 +154,7 @@ namespace gedcom
 
         /// <summary>Returns all the tags with the specified key or null.</summary>
         /// <param name="tagKey">Specifies the key to search for.</param>
-        /// <returns>The collection of tags with the specifeid key.</returns>
+        /// <returns>The collection of tags with the specifeid key or null.</returns>
         public Tag[] findAll(string tagKey)
         {
             // Start a collection of tags.

@@ -597,6 +597,7 @@ namespace gedcom.viewer
                 // Deal with census records.
                 dealtWith.Add("CENS");
                 tags = individual.tag.children.findAll("CENS");
+                Array.Sort(tags, Tag.compareTagsDateOrder);
                 bool isFirst = true;
                 foreach (Tag censusTag in tags)
                 {

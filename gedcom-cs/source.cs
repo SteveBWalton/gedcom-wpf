@@ -104,6 +104,7 @@ namespace gedcom
                 {
                     return SourceType.CENSUS;
                 }
+                // Not sure about this!!!
                 if (title.StartsWith("1939 Register"))
                 {
                     return SourceType.CENSUS;

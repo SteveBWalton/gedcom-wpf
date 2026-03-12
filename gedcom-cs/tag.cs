@@ -352,6 +352,34 @@ namespace gedcom
             return tagType1.sortOrder.CompareTo(tagType2.sortOrder);
         }
 
+
+
+        /// <summary>Compare function to sort tags by file order.</summary>
+        /// <param name="tag1">Specifies the first tag.</param>
+        /// <param name="tag2">Specifies the second tag.</param>
+        /// <returns></returns>
+        public static int compareTagsDateOrder(Tag tag1, Tag tag2)
+        {
+            Tag tag1Date = tag1.children.findOne("DATE");
+            Tag tag2Date = tag2.children.findOne("DATE");
+            if (tag1Date == null && tag2Date == null)
+            {
+                // Equal.
+                return 0;
+            }
+            if (tag1Date == null)
+            {
+                return -1;
+            }
+            if (tag2Date == null)
+            {
+                return +1;
+            }
+            TagDate tagDate1 = new TagDate(tag1Date);
+            TagDate tagDate2 = new TagDate(tag2Date);
+            return tagDate1.approxDate.CompareTo(tagDate2.approxDate);
+        }
+
         #region Functions
 
 
