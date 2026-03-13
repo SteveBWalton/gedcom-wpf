@@ -1475,7 +1475,12 @@ namespace gedcom.viewer
             // Get the date of the source.
             Tag tag = source.tag.children.findOne("DATE");
             dealtWith.Add("DATE");
-            TagDate tagDate = new TagDate(tag);
+            TagDate tagDate = tag == null ? null : new TagDate(tag);
+
+            // Get the address of the source.
+            Tag tagPlac = source.tag.children.findOne("PLAC");
+            dealtWith.Add("PLAC");
+            TagPlace tagPlace = tagPlac == null ? null : new TagPlace(tagPlac);
 
             // The grid of values in the note grid tag.
             TagNoteGrid grid = tagNote.getTagNoteGrid();
@@ -1485,8 +1490,9 @@ namespace gedcom.viewer
             pageContent.Append($"<tr><td class=\"census\" style=\"text-align: center;\" colspan=\"5\"><span style=\"font-size:200%;\">{tagDate.yearDisplay} Census</span> ({tagDate.getShortDate()})</td><td>");
             pageContent.Append("<tr><td colspan=\"5\">");
             pageContent.Append("<table width=\"100%\">");
-            pageContent.Append("<tr><td class=\"census\" style=\"text-align: center;\">Series</td><td class=\"census\" style=\"text-align: center;\">Piece</td><td class=\"census\" style=\"text-align: center;\">Folio</td><td class=\"census\" style=\"text-align: center;\">Page</td></tr>");
-            pageContent.Append($"<tr><td style=\"text-align: center;\">{grid.getCell(0, 2)}</td><td style=\"text-align: center;\">{grid.getCell(0, 4)}</td><td style=\"text-align: center;\">{grid.getCell(0, 6)}</td><td style=\"text-align: center;\">{grid.getCell(0, 8)}</td></tr>");
+            pageContent.Append("<tr><td></td><td class=\"census\" style=\"text-align: center;\">Series</td><td class=\"census\" style=\"text-align: center;\">Piece</td><td class=\"census\" style=\"text-align: center;\">Folio</td><td class=\"census\" style=\"text-align: center;\">Page</td></tr>");
+            pageContent.Append($"<tr><td></td><td style=\"text-align: center;\">{grid.getCell(0, 2)}</td><td style=\"text-align: center;\">{grid.getCell(0, 4)}</td><td style=\"text-align: center;\">{grid.getCell(0, 6)}</td><td style=\"text-align: center;\">{grid.getCell(0, 8)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"census\" style=\"text-align: center;\">Address</td><td colspan=\"4\">{tagPlace.ToString()}</td></tr>");
             pageContent.Append("</table></td></tr>");
 
             pageContent.Append("<tr><td class=\"census\">Name</td><td class=\"census\">Relation<br/>To Head</td><td class=\"census\">Age</td><td class=\"census\">Occupation</td><td class=\"census\">Born Location</td></tr>");
