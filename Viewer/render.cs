@@ -1136,16 +1136,16 @@ namespace gedcom.viewer
             string idx = queryParams.Get("id");
 
             // Setup the edit options.
-            pageContent.editForm = "source?id=" + idx;
-            pageContent.editGedomDirectly = "source?id=" + idx;
+            pageContent.editForm = $"source?id={idx}";
+            pageContent.editGedomDirectly = $"source?id={idx}";
 
             Source source = _gedcom.sources.find(idx);
             if (source == null)
             {
                 pageContent.html.Append("<h1>Source</h1>");
-                pageContent.html.Append("<p>query is '" + query + "'</p>");
-                pageContent.html.Append("<p>Can't find '" + idx + "'.</p>");
-                pageContent.html.Append(idx + " not found!");
+                pageContent.html.Append($"<p>query is '{query}'</p>");
+                pageContent.html.Append($"<p>Can't find '{idx}'.</p>");
+                pageContent.html.Append($"{idx} not found!");
             }
             else
             {
@@ -1153,7 +1153,7 @@ namespace gedcom.viewer
                 List<String> dealtWith = new List<String>();
 
                 // Title for the source.
-                pageContent.html.Append("<h1>" + source.fullName + " (" + source.idx + ")</h1>");
+                pageContent.html.Append($"<h1>{source.fullName} ({source.idx})</h1>");
                 dealtWith.Add("TITL");
 
                 // Initialise the sources referenced in this source.  Really expect this to be empty.
@@ -1186,9 +1186,9 @@ namespace gedcom.viewer
 
                         default:
                             // Grid value.
-                            pageContent.html.Append("<table style=\"border: 2px solid black;\">");
+                            pageContent.html.Append("<table style=\"border: 2px solid black;  margin: auto;\">");
                             TagNoteGrid grid = tagNote.getTagNoteGrid();
-                            grid.toHtml();
+                            pageContent.html.Append(grid.toHtml());
                             pageContent.html.Append("</table>");
                             break;
                         }
@@ -1238,11 +1238,11 @@ namespace gedcom.viewer
                     Repository repository = _gedcom.repositories.find(repositoryIdx);
                     if (repository == null)
                     {
-                        pageContent.html.Append("<p>This source is in the {ERROR: " + repositoryIdx + "} repository.</p>");
+                        pageContent.html.Append($"<p>This source is in the ERROR: {repositoryIdx} repository.</p>");
                     }
                     else
                     {
-                        pageContent.html.Append("<p>This source is in the " + repository.name + " repository.</p>");
+                        pageContent.html.Append($"<p>This source is in the {repository.name} repository.</p>");
                     }
                 }
 
@@ -1266,17 +1266,17 @@ namespace gedcom.viewer
                 {
                     if (individual.hasConnection(source))
                     {
-                        pageContent.html.AppendLine("<tr><td>" + htmlIndividual(individual) + "</td><tr>");
+                        pageContent.html.AppendLine($"<tr><td>{htmlIndividual(individual)}</td><tr>");
                         count++;
                     }
                 }
                 pageContent.html.AppendLine("</table>");
-                pageContent.html.AppendLine("<p>There are " + count.ToString() + " individuals with a connection to this source.");
+                pageContent.html.AppendLine($"<p>There are {count} individuals with a connection to this source.");
                 pageContent.html.AppendLine("</fieldset>");
 
 
                 // Show the original gedcom.
-                pageContent.html.Append("<pre>" + source.tag.display(0) + "</pre>");
+                pageContent.html.Append($"<pre>{source.tag.display(0)}</pre>");
             }
 
             // Set the last viewed time.
