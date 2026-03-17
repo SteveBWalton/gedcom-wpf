@@ -88,19 +88,28 @@ namespace gedcom
 
 
 
-        /// <summary>Return the grid as html.</summary>
-        /// <returns></returns>
+        /// <summary>Return the grid as a general html table contents.</summary>
+        /// <returns>The grid as a general html table contents.</returns>
         public string toHtml()
         {
             StringBuilder stringBuilder = new StringBuilder();
             foreach (string[] row in _grid)
             {
                 stringBuilder.Append("<tr>");
+                int column = 0;
                 foreach (string cell in row)
                 {
-                    stringBuilder.Append("<td>");
+                    if (column % 2 == 0)
+                    {
+                        stringBuilder.Append("<td style=\"font-size: 8pt; color: grey; font-family: Tahoma;\">");
+                    }
+                        else
+                    {
+                        stringBuilder.Append("<td>");
+                    }
                     stringBuilder.Append(cell);
                     stringBuilder.Append("</td>");
+                    column++;
                 }
                 stringBuilder.Append("</tr>");
             }
