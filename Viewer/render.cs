@@ -1195,6 +1195,18 @@ namespace gedcom.viewer
                     }
                 }
 
+                // Deal with the date.
+                if (!dealtWith.Contains("DATE"))
+                {
+                    dealtWith.Add("DATE");
+                    Tag dateTag = source.tag.children.findOne("DATE");
+                    if (dateTag != null)
+                    {
+                        TagDate tagDate = new TagDate(dateTag);
+                        pageContent.html.Append($"<p>The date of this source is {tagDate.getLongDate()}.</p>");
+                    }
+                }
+
                 // Deal with the other note tags.
                 dealtWith.Add("NOTE");
                 foreach (Tag tagNote in tagNotes)
