@@ -59,7 +59,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
-                    <MenuItem Header="_Options..."/>
+                    <MenuItem Header="_Options..." Click="menuEditOptionsClick" />
                 </MenuItem>
                 <MenuItem Header="_View">
                     <MenuItem x:Name="appTest" Header="Home" HorizontalAlignment="Left" Width="140" Click="menuViewHomeClick" >

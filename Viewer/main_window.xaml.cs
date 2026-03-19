@@ -466,12 +466,23 @@ namespace gedcom.viewer
             }
         }
 
-        #endregion
+
+
+        /// <summary>Signal handler for the 'Edit' -> 'Options' menu point.</summary>
+        private void menuEditOptionsClick(object sender, RoutedEventArgs e)
+        {
+            DialogOptions dialogOptions = new DialogOptions();
+            if (dialogOptions.ShowDialog() == true)
+            {
+                // Options have changed.
+            }
+        }
 
         #endregion
 
         #endregion
 
+        #endregion
 
     }
 }
