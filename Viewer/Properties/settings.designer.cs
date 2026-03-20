@@ -22,5 +22,17 @@ namespace gedcom.viewer.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool isShowGedcom {
+            get {
+                return ((bool)(this["isShowGedcom"]));
+            }
+            set {
+                this["isShowGedcom"] = value;
+            }
+        }
     }
 }

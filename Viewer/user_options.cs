@@ -16,6 +16,9 @@ namespace gedcom.viewer
         private SimpleFont fontSmall;
         private SimpleFont fontHtmlSuperscript;
 
+        /// <summary>True to show the gedcom in the render, false to hide it by default.</summary>
+        private bool _isShowGedcom;
+
         #endregion
 
         #region Class Constructors
@@ -27,6 +30,41 @@ namespace gedcom.viewer
             fontHeader = new SimpleFont("Verdana", 12f);
             fontSmall=new SimpleFont("Verdana", 8f);
             fontHtmlSuperscript=new SimpleFont("Verdana", 8f);
+
+            loadSettings();
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>True to show the gedcom in the render, false to hide it by default.</summary>
+        public bool isShowGedcom
+        {
+            get => _isShowGedcom;
+            set
+            {
+                _isShowGedcom = value;
+            }
+        }
+
+        #endregion
+
+        #region Persist
+
+        /// <summary>Load the user options values.</summary>
+        public void loadSettings()
+        {
+            _isShowGedcom = Properties.settings.Default.isShowGedcom;
+        }
+
+
+
+        /// <summary>Save the current user options.</summary>
+        public void saveSettings()
+        {
+            Properties.settings.Default.isShowGedcom = _isShowGedcom;
+            Properties.settings.Default.Save();
         }
 
         #endregion

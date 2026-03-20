@@ -5,13 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gedcom.viewer"
         mc:Ignorable="d"
-        Title="DialogOptions" Height="450" Width="800">
+        Title="DialogOptions" Height="450" Width="800" Loaded="windowLoaded">
     <DockPanel>
         <Grid DockPanel.Dock="Bottom">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Margin="5" Padding="5" IsCancel="True" Width="100" Height="31">Cancel</Button>
                 <Button Margin="5" Padding="5" IsDefault="True" Click="buttonOkClick" Width="100" Height="31">OK</Button>
             </StackPanel>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Show Gedcom" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <CheckBox Grid.Column="1" Grid.Row="0" x:Name="_chkShowGedcom" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="4,0,0,0" />
         </Grid>
     </DockPanel>
 </Window>

@@ -17,25 +17,51 @@ namespace gedcom.viewer
     /// <summary>Class to represent the options dialog.</summary>
     public partial class DialogOptions : Window
     {
+        #region Member Variables
+
+        /// <summary>The user options to show on the dialog.</summary>
+        private UserOptions _userOptions;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>Constructor for the options dialog.</summary>
-        public DialogOptions()
+        public DialogOptions(UserOptions userOptions)
         {
             InitializeComponent();
+
+            // Save the parameters.
+            _userOptions = userOptions;
         }
 
         #endregion
 
         #region Signal Handlers
 
+        /// <summary>The signal handler for the window loaded event.</summary>
+        private void windowLoaded(object sender, RoutedEventArgs e)
+        {
+            // Load the user options values onto the dialog.
+            _chkShowGedcom.IsChecked = _userOptions.isShowGedcom;
+        }
+
+
+
         /// <summary>Signal handler for the OK button click.</summary>
         private void buttonOkClick(object sender, RoutedEventArgs e)
         {
+            // Load the user options from the dialog.
+            _userOptions.isShowGedcom = _chkShowGedcom.IsChecked == true;
+
+            // Save the user options.
+            _userOptions.saveSettings();
+
             // Close the dialog with okay.
             this.DialogResult = true;
         }
 
         #endregion
+
     }
 }
