@@ -634,11 +634,14 @@ namespace gedcom.viewer
                 // Show the last changed information.
                 pageContent.html.Append("<p>Last Changed " + individual.lastChanged.ToString() + "</p>");
 
-                // Show the original gedcom.
-                pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");
+                if (_userOptions.isShowGedcom)
+                {
+                    // Show the original gedcom.
+                    pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.display(0) + "</pre>");
 
-                // Show the file gedcom.
-                pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.toText() + "</pre>");
+                    // Show the file gedcom.
+                    pageContent.html.Append("<pre style=\"width: 400px; display: inline-block; vertical-align: top;\">" + individual.tag.toText() + "</pre>");
+                }
 
                 // Mark the individual as viewed.
                 individual.lastViewed = DateTime.Now;
@@ -1286,9 +1289,11 @@ namespace gedcom.viewer
                 pageContent.html.AppendLine($"<p>There are {count} individuals with a connection to this source.");
                 pageContent.html.AppendLine("</fieldset>");
 
-
                 // Show the original gedcom.
-                pageContent.html.Append($"<pre>{source.tag.display(0)}</pre>");
+                if (_userOptions.isShowGedcom)
+                {
+                    pageContent.html.Append($"<pre>{source.tag.display(0)}</pre>");
+                }
             }
 
             // Set the last viewed time.
