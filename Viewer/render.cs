@@ -1110,7 +1110,10 @@ namespace gedcom.viewer
                 pageContent.html.Append("<p>Last Changed " + family.lastChanged.ToString() + "</p>");
 
                 // Show the original gedcom.
-                pageContent.html.Append("<pre>" + family.tag.display(0) + "</pre>");
+                if (_userOptions.isShowGedcom)
+                {
+                    pageContent.html.Append("<pre>" + family.tag.display(0) + "</pre>");
+                }
             }
 
             // Set the last viewed time.
