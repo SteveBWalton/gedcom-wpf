@@ -88,7 +88,7 @@ namespace gedcom.viewer
             _gedcom = thisGedcom;
             _isExpand = isExpand;
             _setParentHeight = setParentHeight;
-            _askParentDelete = askParentDelete;            
+            _askParentDelete = askParentDelete;
             _tellParentValueChanged = tellParentValueChanged;
             _children = new List<TagControl>();
 
@@ -203,6 +203,7 @@ namespace gedcom.viewer
                         sourceComboBox.SelectedIndex = sourceComboBox.Items.Count - 1;
                     }
                 }
+                sourceComboBox.SelectionChanged += sourceComboBoxSelectionChanged;
                 _mainGrid.Children.Add(sourceComboBox);
                 Grid.SetRow(sourceComboBox, 0);
                 Grid.SetColumn(sourceComboBox, 2);
@@ -528,7 +529,7 @@ namespace gedcom.viewer
                 {
                     i++;
                 }
-            }            
+            }
         }
 
 
@@ -831,7 +832,25 @@ namespace gedcom.viewer
                     _tagValue = key;
                     _tellParentValueChanged?.Invoke(_tagKey, _tagValue);
                 }
-            }            
+            }
+        }
+
+
+
+        /// <summary>The default handler for a combobox holding sources changing selection.</summary>
+        private void sourceComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox != null)
+            {
+                Source selectedSource = comboBox.SelectedItem as Source;
+                string key = gedcom.Tag.toKey(selectedSource.idx);
+                if (_tagValue != key)
+                {
+                    _tagValue = key;
+                    // Tell parent is not needed.  No will will ever care that a source has changed!
+                }
+            }
         }
 
         #endregion
