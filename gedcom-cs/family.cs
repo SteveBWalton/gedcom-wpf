@@ -19,7 +19,7 @@ namespace gedcom
         public Family(Gedcom gedcom) : base(gedcom)
         {
             // Create an key for the individual.
-            string newKey = "@F" + gedcom.families.getNextIndex() + "@";
+            string newKey = Tag.toKey(gedcom.families.getNextIndex());
 
             // An empty family top level tag.
             _tag = new Tag(gedcom, newKey, "FAM");

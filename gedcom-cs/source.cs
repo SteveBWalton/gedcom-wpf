@@ -32,7 +32,7 @@ namespace gedcom
 
             // This does not work because early sources might be deleted.
             // string newKey = "@S" + (gedcom.sources.Count() + 1).ToString("0000") + "@";
-            string newKey = "@S" + gedcom.sources.getNextIndex() + "@";
+            string newKey = Tag.toKey(gedcom.sources.getNextIndex());
 
             // An empty source top level tag.
             _tag = new Tag(gedcom, newKey, "SOUR");

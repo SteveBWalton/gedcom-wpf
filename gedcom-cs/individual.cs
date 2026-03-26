@@ -21,7 +21,7 @@ namespace gedcom
         public Individual(Gedcom gedcom) : base(gedcom)
         {
             // Create an key for the individual.
-            string newKey = "@I" + gedcom.individuals.getNextIndex() + "@";
+            string newKey = Tag.toKey(gedcom.individuals.getNextIndex());
 
             // An empty individual top level tag.
             _tag = new Tag(gedcom, newKey, "INDI");
