@@ -196,8 +196,20 @@ namespace gedcom.viewer
                     break;
 
                 default:
-                    // Add this tag to the control.
+                    if (_source.tag.children[i].key == "NOTE")
+                    {
+                        if (_source.tag.children[i].value.StartsWith("GRID:"))
+                        {
+                            _txtSpecial.Text = _source.tag.children[i].value;
+                            foreach(Tag childTag in _source.tag.children[i].children)
+                            {
+                                _txtSpecial.Text = _txtSpecial.Text + "\n" + childTag.value;
+                            }
+                            break;
+                        }
+                    }
 
+                    // Add this tag to the control.
                     TagControl tagControl = new TagControl(_source.tag.children[i], false, setChildSizeIndividual, askParentDelete, null);
                     tagControl.VerticalAlignment = VerticalAlignment.Top;
                     _tagControls.Add(tagControl);

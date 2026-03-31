@@ -51,7 +51,11 @@
                 <ComboBox Grid.Column="3" Grid.Row="2" Width="200" x:Name="_cboRepository" HorizontalAlignment="Left" VerticalAlignment="Center" />
             </Grid>
         </GroupBox>
-        <GroupBox Header="Special" Grid.Column="0" Grid.Row="1"></GroupBox>
+        <GroupBox Header="Special" Grid.Column="0" Grid.Row="1">
+            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+                <TextBox x:Name="_txtSpecial" AcceptsReturn="True" />
+            </ScrollViewer>
+        </GroupBox>
         <GroupBox Header="Other Tags" Grid.Column="0" Grid.Row="2">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                 <Grid x:Name="_gridTags">
