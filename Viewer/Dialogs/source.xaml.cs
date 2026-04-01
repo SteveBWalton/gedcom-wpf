@@ -200,7 +200,7 @@ namespace gedcom.viewer
                     {
                         if (_source.tag.children[i].value.StartsWith("GRID:"))
                         {
-                            _txtSpecial.Text = _source.tag.children[i].value;
+                            _txtSpecial.Text = _source.tag.children[i].value.Substring(6);
                             foreach(Tag childTag in _source.tag.children[i].children)
                             {
                                 _txtSpecial.Text = _txtSpecial.Text + "\n" + childTag.value;
