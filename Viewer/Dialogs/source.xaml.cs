@@ -249,6 +249,20 @@ namespace gedcom.viewer
             // Add a date.
             tagsAsText.AppendLine("1 DATE " + _txtDate.Text);
 
+            // Add the special note.
+            if (_txtSpecial.Text != "")
+            {
+                string[] lines = _txtSpecial.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
+                if (lines.Length > 1)
+                {
+                    tagsAsText.AppendLine($"1 NOTE GRID: {lines[0]}");
+                }
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    tagsAsText.AppendLine($"2 CONT {lines[i]}");
+                }
+            }
+
             // Might sort these into a better order.
             // Get the value of each tag control.
             foreach (TagControl tagControl in _tagControls)
