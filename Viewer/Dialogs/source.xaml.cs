@@ -323,7 +323,23 @@ namespace gedcom.viewer
 
         }
 
-        #endregion
 
+
+        /// <summary>Signal handler for the source type combobox changing value.</summary>
+        private void _cboSourceType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_cboSourceType.SelectedIndex>0)
+            {
+                // Show the template button.
+                _buttonTemplate.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                // Hide the template button.
+                _buttonTemplate.Visibility = Visibility.Hidden;
+            }
+        }
+
+        #endregion
     }
 }

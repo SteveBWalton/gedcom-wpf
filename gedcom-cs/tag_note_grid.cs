@@ -103,7 +103,7 @@ namespace gedcom
                     {
                         stringBuilder.Append("<td style=\"font-size: 8pt; color: grey; font-family: Tahoma;\">");
                     }
-                        else
+                    else
                     {
                         stringBuilder.Append("<td>");
                     }
