@@ -39,7 +39,10 @@
                         <ComboBoxItem Content="Marriage Certificate" />
                         <ComboBoxItem Content="Death Certificate" />
                     </ComboBox>
-                    <Button x:Name="_buttonTemplate" Width="22" Height="22" Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button x:Name="_buttonTemplate" Width="22" Height="22" ToolTip="Apply template to special note." Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button.Content>
+                            <Image Source="/Resources/16/template.png" />
+                        </Button.Content>
                     </Button>
                 </StackPanel>
                 <TextBox Grid.Column="1" Grid.Row="1" x:Name="_txtTitle" Width="200" VerticalAlignment="Center" HorizontalAlignment="Left" />
