@@ -1462,12 +1462,12 @@ namespace gedcom.viewer
             pageContent.Append("<table style=\"background-color: thistle; border: 1px solid black; margin: auto;\" cellpadding=\"5\" cellspacing=\"0\" >");
             pageContent.Append("<tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Registration District</td><td colspan=\"3\">{grid.getCell(1, 1)}</td></tr>");
-            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">When and Where</td><td colspan=\"3\">{grid.getCell(2, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">When and Where</td><td colspan=\"3\">{grid.getCell(2, 1)} {grid.getCell(3, 1)}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Name</td><td>{grid.getCell(4, 1)}</td><td class=\"death\" style=\"text-align: right\">Sex</td><td>{grid.getCell(4, 2)}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Date Place of Birth</td><td colspan=\"3\">{grid.getCell(5, 1)}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Occupation</td><td colspan=\"3\">{grid.getCell(6, 1)}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Usual Address</td><td colspan=\"3\">{grid.getCell(7, 1)}</td></tr>");
-            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Cause of Death</td><td colspan=\"3\">{grid.getCell(8, 1)}</td></tr>");
+            pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Cause of Death</td><td colspan=\"3\">{grid.getCell(8, 1).Replace("|","<br/>")}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Informant</td><td>{grid.getCell(9, 1)}</td><td class=\"death\" style=\"text-align: right\">Informant Description</td><td>{grid.getCell(9, 2)}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">Informant Address</td><td colspan=\"3\">{grid.getCell(10, 1)}</td></tr>");
             pageContent.Append($"<tr><td class=\"death\" style=\"text-align: right\">When Registered</td><td>{tagDate.getShortDate()}</td><td class=\"death\" style=\"text-align: right\">Reference</td><td>{grid.getCell(0, 1)}</td></tr>");

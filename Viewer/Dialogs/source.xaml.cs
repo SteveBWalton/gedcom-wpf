@@ -200,11 +200,14 @@ namespace gedcom.viewer
                     {
                         if (_source.tag.children[i].value.StartsWith("GRID:"))
                         {
-                            _txtSpecial.Text = _source.tag.children[i].value.Substring(6);
-                            foreach(Tag childTag in _source.tag.children[i].children)
-                            {
-                                _txtSpecial.Text = _txtSpecial.Text + "\n" + childTag.value;
-                            }
+                            TagNoteGrid tagNoteGrid = new TagNoteGrid(_source.tag.children[i]);
+                            _txtSpecial.Text = tagNoteGrid.ToString();
+
+                            //_txtSpecial.Text = _source.tag.children[i].value.Substring(6);
+                            //foreach (Tag childTag in _source.tag.children[i].children)
+                            //{
+                            //    _txtSpecial.Text = _txtSpecial.Text + "\n" + childTag.value;
+                            //}
                             break;
                         }
                     }
@@ -252,7 +255,7 @@ namespace gedcom.viewer
             // Add the special note.
             if (_txtSpecial.Text != "")
             {
-                string[] lines = _txtSpecial.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
+                string[] lines = _txtSpecial.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length > 1)
                 {
                     tagsAsText.AppendLine($"1 NOTE GRID: {lines[0]}");
@@ -326,7 +329,7 @@ namespace gedcom.viewer
 
 
         /// <summary>Signal handler for the source type combobox changing value.</summary>
-        private void _cboSourceType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cboSourceTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_cboSourceType.SelectedIndex>0)
             {
@@ -338,6 +341,51 @@ namespace gedcom.viewer
                 // Hide the template button.
                 _buttonTemplate.Visibility = Visibility.Hidden;
             }
+        }
+
+
+
+        /// <summary>Signal handler for the apply template button click.</summary>
+        private void buttonTemplateClick(object sender, RoutedEventArgs e)
+        {
+            string[] template = null;
+            switch(_cboSourceType.SelectedIndex)
+            {
+            case 1: // Birth Certifiicate.
+                template = new string[] { "GRO Reference: ", "Registration District: ", "When and Where:: ", "Name:: ", "Mother:: ", "Father:: ", "Informant:: " };
+                break;
+
+            case 2: // Marriage Certificate.
+                template = new string[] { "GRO Reference: ", "Groom:::: ", "Bride::::: ", "Groom's Father::: ", "Bride's Father::: ", "Witness: " };
+                break;
+
+            case 3: // Death Certificate.
+                template = new string[] { "GRO Reference: ", "Registration District: ", "When: ", "Where: ", "Name: : Sex: ", "Date & Place of Birth: : ", "Occupation: ", "Usual Address: ", "Cause of Death: ", "Informant::Description: ", "Informant Address: " };
+                break;
+            }
+            // Check if template is defined.
+            if (template == null)
+            {
+                return;
+            }
+
+            // This is not exactly what a tag note grid is but it should work well.
+            TagNoteGrid tagNoteGrid = new TagNoteGrid(_txtSpecial.Text);
+            for (int i = 0; i < template.Length; i++)
+            {
+                string[] cells = template[i].Split(':');
+                for (int j = 0; j < cells.Length; j++)
+                {
+                    if (cells[j].Trim() != "")
+                    {
+                        tagNoteGrid.setCell(i, j, cells[j]);
+                    }
+                }
+            }
+
+            // Set the special text.
+            _txtSpecial.Text = tagNoteGrid.ToString();
+
         }
 
         #endregion

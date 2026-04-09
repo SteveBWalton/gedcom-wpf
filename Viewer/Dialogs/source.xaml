@@ -33,13 +33,13 @@
                 <TextBlock Grid.Column="0" Grid.Row="1" Text="Title" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <TextBlock Grid.Column="0" Grid.Row="2" Text="Date" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <ComboBox x:Name="_cboSourceType" Width="200" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="_cboSourceType_SelectionChanged">
+                    <ComboBox x:Name="_cboSourceType" Width="200" HorizontalAlignment="Left" VerticalAlignment="Center" SelectionChanged="cboSourceTypeSelectionChanged">
                         <ComboBoxItem Content="General" />
                         <ComboBoxItem Content="Birth Certificate" />
                         <ComboBoxItem Content="Marriage Certificate" />
                         <ComboBoxItem Content="Death Certificate" />
                     </ComboBox>
-                    <Button x:Name="_buttonTemplate" Width="22" Height="22" ToolTip="Apply template to special note." Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button x:Name="_buttonTemplate" Width="22" Height="22" ToolTip="Apply template to special note." Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="buttonTemplateClick">
                         <Button.Content>
                             <Image Source="/Resources/16/template.png" />
                         </Button.Content>
