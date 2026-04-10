@@ -362,6 +362,12 @@ namespace gedcom.viewer
             case 3: // Death Certificate.
                 template = new string[] { "GRO Reference: ", "Registration District: ", "When: ", "Where: ", "Name: : Sex: ", "Date & Place of Birth: : ", "Occupation: ", "Usual Address: ", "Cause of Death: ", "Informant::Description: ", "Informant Address: " };
                 break;
+
+            case 4: // Census.
+            case 5: // 1939 Register.
+                template = new string[] { "Reference: Series: : Piece: : Folio: : Page: ", "Name:PersonIdx:Age:Household:Occupation:BornLocation " };
+                break;
+
             }
             // Check if template is defined.
             if (template == null)

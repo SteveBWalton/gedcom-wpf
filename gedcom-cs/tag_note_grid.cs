@@ -187,9 +187,9 @@ namespace gedcom
                 {
                     if (column > 0)
                     {
-                        stringBuilder.Append(":");
+                        stringBuilder.Append(": ");
                     }
-                    stringBuilder.Append(cell);
+                    stringBuilder.Append(cell.Trim());
                     column++;
                 }
                 stringBuilder.AppendLine();

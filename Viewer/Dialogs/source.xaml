@@ -38,6 +38,8 @@
                         <ComboBoxItem Content="Birth Certificate" />
                         <ComboBoxItem Content="Marriage Certificate" />
                         <ComboBoxItem Content="Death Certificate" />
+                        <ComboBoxItem Content="Census" />
+                        <ComboBoxItem Content="1939 Register" />
                     </ComboBox>
                     <Button x:Name="_buttonTemplate" Width="22" Height="22" ToolTip="Apply template to special note." Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="buttonTemplateClick">
                         <Button.Content>
