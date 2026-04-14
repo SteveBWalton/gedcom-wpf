@@ -365,7 +365,7 @@ namespace gedcom.viewer
 
             case 4: // Census.
             case 5: // 1939 Register.
-                template = new string[] { "Reference: Series: : Piece: : Folio: : Page: ", "Name:PersonIdx:Age:Household:Occupation:BornLocation " };
+                template = new string[] { "Reference: Series:1:Piece:2:Folio:3:Page:4", "Name:PersonIdx:Age:Household:Occupation:BornLocation " };
                 break;
 
             }
