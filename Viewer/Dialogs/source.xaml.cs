@@ -352,11 +352,11 @@ namespace gedcom.viewer
             switch(_cboSourceType.SelectedIndex)
             {
             case 1: // Birth Certifiicate.
-                template = new string[] { "GRO Reference: ", "Registration District: ", "When and Where:: ", "Name:: ", "Mother:: ", "Father:: ", "Informant:: " };
+                template = new string[] { "GRO Reference:1", "Registration District:2", "When and Where:3:4", "Name:5:6", "Mother:7:8 ", "Father:9:10", "Informant:11:12" };
                 break;
 
             case 2: // Marriage Certificate.
-                template = new string[] { "GRO Reference: ", "Groom:::: ", "Bride::::: ", "Groom's Father::: ", "Bride's Father::: ", "Witness: " };
+                template = new string[] { "GRO Reference:1", "Groom:2:3:4:5", "Bride:6:7:8:9:10", "Groom's Father:11:12:13", "Bride's Father:14:15:16", "Witness:17" };
                 break;
 
             case 3: // Death Certificate.
