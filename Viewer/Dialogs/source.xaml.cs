@@ -227,7 +227,6 @@ namespace gedcom.viewer
                     break;
                 }
             }
-
         }
 
 
@@ -279,10 +278,6 @@ namespace gedcom.viewer
                 Repository repository = (Repository)_cboRepository.SelectedItem;
                 tagsAsText.AppendLine("1 REPO " + gedcom.Tag.toKey(repository.idx));
             }
-            //else
-            //{
-            //    // Repository None.
-            //}
 
             // Clear the existing tags.
             _source.tag.children.clear();
@@ -331,7 +326,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the source type combobox changing value.</summary>
         private void cboSourceTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_cboSourceType.SelectedIndex>0)
+            if (_cboSourceType.SelectedIndex > 0)
             {
                 // Show the template button.
                 _buttonTemplate.Visibility = Visibility.Visible;
@@ -365,7 +360,7 @@ namespace gedcom.viewer
 
             case 4: // Census.
             case 5: // 1939 Register.
-                template = new string[] { "Reference: Series:1:Piece:2:Folio:3:Page:4", "Name:PersonIdx:Age:Household:Occupation:BornLocation " };
+                template = new string[] { "Reference: Series:1:Piece:2:Folio:3:Page:4", "Name:PersonIdx:Age:Household:Occupation:BornLocation" };
                 break;
 
             }
@@ -391,7 +386,6 @@ namespace gedcom.viewer
 
             // Set the special text.
             _txtSpecial.Text = tagNoteGrid.ToString();
-
         }
 
         #endregion
