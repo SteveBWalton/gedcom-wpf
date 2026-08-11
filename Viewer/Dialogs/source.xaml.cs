@@ -39,7 +39,7 @@ namespace gedcom.viewer
 
         /// <summary>Constructor for the edit source dialog to create a new source.</summary>
         /// <param name="gedcom">Specifies the gedcom that contains the individual to edit.</param>
-        public DialogSource(Gedcom gedcom)
+        public DialogSource(Gedcom gedcom, Window ownerWindow)
         {
             InitializeComponent();
 
@@ -47,6 +47,7 @@ namespace gedcom.viewer
             _gedcom = gedcom;
             _source = new Source(gedcom);
             _tagControls = new List<TagControl>();
+            this.Owner = ownerWindow;
         }
 
 
@@ -54,7 +55,7 @@ namespace gedcom.viewer
         /// <summary>Constrcutor for the edit individual dialog to edit an existing source.</summary>
         /// <param name="gedcom">Specifies the gedcom that contains the individual to edit.</param>
         /// <param name="query">Specifies the query string which contains an ID key to identifiy the individual.</param>
-        public DialogSource(Gedcom gedcom, string query):this(gedcom)
+        public DialogSource(Gedcom gedcom, Window ownerWindow, string query) : this(gedcom, ownerWindow)
         {
             // Get the idx of the source.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);

@@ -166,7 +166,7 @@ namespace gedcom.viewer
                 break;
 
             case "source":
-                DialogSource dialogSource = new DialogSource(_gedcom, query);
+                DialogSource dialogSource = new DialogSource(_gedcom, this, query);
                 dialogSource.ShowDialog();
                 break;
             }
@@ -455,7 +455,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'Edit' -> 'Add Source' menu point.</summary>
         private void menuEditAddSourceClick(object sender, RoutedEventArgs e)
         {
-            DialogSource dialogSource = new DialogSource(_gedcom);
+            DialogSource dialogSource = new DialogSource(_gedcom, this);
             if (dialogSource.ShowDialog() == true)
             {
                 // Add the source to the gedcom.
