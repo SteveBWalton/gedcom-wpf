@@ -595,7 +595,7 @@ namespace gedcom.viewer
         private void addChildTagButtonClick(object sender, RoutedEventArgs e)
         {
             // DialogSelectTag dialogSelectTag = new DialogSelectTag(_tag);
-            DialogSelectTag dialogSelectTag = new DialogSelectTag(_tagKey, _tagValue, getChildrenAsKeys());
+            DialogSelectTag dialogSelectTag = new DialogSelectTag(_tagKey, _tagValue, Window.GetWindow(this), getChildrenAsKeys());
             if (dialogSelectTag.ShowDialog() == true)
             {
                 // Add the tag to this tag as a child.

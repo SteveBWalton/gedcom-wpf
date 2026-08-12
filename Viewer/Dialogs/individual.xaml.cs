@@ -185,7 +185,7 @@ namespace gedcom.viewer
         private void addTagButtonClick(object sender, RoutedEventArgs e)
         {
             // Allow the user to select the tag to add to the dialog.
-            DialogSelectTag dialogSelectTag = new DialogSelectTag(_individual);
+            DialogSelectTag dialogSelectTag = new DialogSelectTag(_individual, this);
             if (dialogSelectTag.ShowDialog() == true)
             {
                 // Add a new tag control to the dialog.

@@ -46,9 +46,19 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Constructor which sets the window owner.</summary>
+        /// <param name="ownerWindow">Specifies the window that owns this window.</param>
+        private DialogSelectTag(Window ownerWindow):this()
+        {
+            Owner = ownerWindow;
+        }
+
+
+
         /// <summary>Constructor for regualar parent tag.</summary>
         /// <param name="parentTag">Specifies the regular parent tag.</param>
-        public DialogSelectTag(Tag parentTag) : this()
+        /// <param name="ownerWindow">Specifies the window that owns this window.</param>
+        public DialogSelectTag(Tag parentTag, Window ownerWindow) : this(ownerWindow)
         {
             _isTopLevel = false;
             _parentTagKey = parentTag.key;
@@ -66,8 +76,9 @@ namespace gedcom.viewer
         /// <summary>Constructor for a parent tag control with no actual tag.</summary>
         /// <param name="tagKey"></param>
         /// <param name="tagValue"></param>
+        /// <param name="ownerWindow">Specifies the window that owns this window.</param>
         /// <param name="childKeys"></param>
-        public DialogSelectTag(string tagKey, string tagValue, string[] childKeys) : this()
+        public DialogSelectTag(string tagKey, string tagValue, Window ownerWindow, string[] childKeys) : this(ownerWindow)
         {
             _isTopLevel = false;
             _parentTagKey = tagKey;
@@ -79,7 +90,8 @@ namespace gedcom.viewer
 
         /// <summary>Constructor for top level parent tag.</summary>
         /// <param name="parentTag">Specifies the parent top level tag.</param>
-        public DialogSelectTag(TopLevel parentTag) : this()
+        /// <param name="ownerWindow">Specifies the window that owns this window.</param>
+        public DialogSelectTag(TopLevel parentTag, Window ownerWindow) : this(ownerWindow)
         {
             _isTopLevel = true;
             if (parentTag != null)
