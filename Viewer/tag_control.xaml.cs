@@ -692,7 +692,7 @@ namespace gedcom.viewer
                 }
             }
 
-            PlaceDialog placeDialog = new PlaceDialog(_gedcom);
+            PlaceDialog placeDialog = new PlaceDialog(_gedcom, Window.GetWindow(this));
             placeDialog.tagPlace = txtPlace.Text;
             placeDialog.tagLatitude = latitude;
             placeDialog.tagLongitude = longitude;

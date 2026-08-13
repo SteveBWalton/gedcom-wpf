@@ -44,9 +44,13 @@ namespace gedcom.viewer
 
         #region Constructors
 
-        public PlaceDialog(Gedcom gedcom)
+        /// <summary>Constructor.</summary>
+        /// <param name="gedcom">Specifies the gedcom that this dialog should show places from.</param>
+        /// <param name="ownerWindow">Specifies the window that owns this dialog.</param>
+        public PlaceDialog(Gedcom gedcom, Window ownerWindow)
         {
             _gedcom = gedcom;
+            Owner = ownerWindow;
             _isNoUpdate = true;
             InitializeComponent();
         }

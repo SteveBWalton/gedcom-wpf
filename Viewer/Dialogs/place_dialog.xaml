@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gedcom.viewer"
         mc:Ignorable="d"
-        Title="Gedcom Place Value" Height="450" Width="600" Loaded="windowLoaded">
+        Title="Gedcom Place Value" Height="450" Width="600" Loaded="windowLoaded" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
