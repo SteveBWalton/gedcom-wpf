@@ -152,7 +152,7 @@ namespace gedcom.viewer
             switch (host)
             {
             case "individual":
-                DialogIndividual dialogIndividual = new DialogIndividual(_gedcom, query);
+                DialogIndividual dialogIndividual = new DialogIndividual(_gedcom, query, this);
                 dialogIndividual.ShowDialog();
                 break;
 
@@ -419,7 +419,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'Edit' -> 'Add Individual' menu point.</summary>
         private void menuEditAddIndividualClick(object sender, RoutedEventArgs e)
         {
-            DialogIndividual dialogIndividual = new DialogIndividual(_gedcom);
+            DialogIndividual dialogIndividual = new DialogIndividual(_gedcom, this);
             if (dialogIndividual.ShowDialog() == true)
             {
                 // Add the individual to the gedcom.

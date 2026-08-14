@@ -39,12 +39,14 @@ namespace gedcom.viewer
 
         /// <summary>Constructor for the edit individual dialog to create a new individual.</summary>
         /// <param name="gedcom">Specifies the gedom to add the individual to.</param>
-        public DialogIndividual(Gedcom gedcom)
+        /// <param name="ownerWindow">Specifies the window that owns this dialog.</param>
+        public DialogIndividual(Gedcom gedcom, Window ownerWindow)
         {
             InitializeComponent();
 
             // Save the parameters.
             _gedcom = gedcom;
+            this.Owner = ownerWindow;
             _individual = new Individual(gedcom);
             _tagControls = new List<TagControl>();
         }
@@ -54,7 +56,8 @@ namespace gedcom.viewer
         /// <summary>Constrcutor for the edit individual dialog to edit an existing individual.</summary>
         /// <param name="gedcom">Specifies the gedcom that contains the individual to edit.</param>
         /// <param name="query">Specifies the query string which contains an ID key to identifiy the individual.</param>
-        public DialogIndividual(Gedcom gedcom, string query) : this(gedcom)
+        /// <param name="ownerWindow">Specifies the window that owns this dialog.</param>
+        public DialogIndividual(Gedcom gedcom, string query, Window ownerWindow) : this(gedcom, ownerWindow)
         {
             // Get the index of the individual.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
