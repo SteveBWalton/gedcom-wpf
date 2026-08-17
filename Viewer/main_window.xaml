@@ -22,7 +22,11 @@
                             <Image Source="/Resources/file_open.png" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Save" Click="menuFileSaveClick"/>
+                    <MenuItem Header="Save" Click="menuFileSaveClick">
+                        <MenuItem.Icon>
+                            <Image Source="/Resources/16/file_save.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header="Save As..." Click="menuFileSaveAsClick"/>
                     <Separator />
                     <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="menuFileExitClick" >
@@ -81,7 +85,10 @@
                         <Image Source="/Resources/24/file_new.png" Height="24" />
                     </Button>
                     <Button ToolTip="Open a gedcom document." Click="menuFileOpenClick">
-                        <Image Source="/Resources/24/file_open.png" Height="24"/>
+                        <Image Source="/Resources/24/file_open.png" Height="24" />
+                    </Button>
+                    <Button x:Name="_tsbFileSave" ToolTip="Save this gedcom document." IsEnabled="False" Click="menuFileSaveClick">
+                        <Image Source="/Resources/24/file_save.png" Height="24" />
                     </Button>
                     <Separator/>
                     <Button Click="menuEditEditClick" x:Name="_toolbarEdit">

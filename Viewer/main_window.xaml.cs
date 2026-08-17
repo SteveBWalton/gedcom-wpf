@@ -132,6 +132,8 @@ namespace gedcom.viewer
 
 
 
+        /// <summary>Set the window title including the current document dirty mark.</summary>
+        /// <remarks>This also enables disables the save tool menu button.</remarks>
         private void setWindowTitle()
         {
             string fileName = System.IO.Path.GetFileName(_gedcom.fileName);
@@ -140,6 +142,7 @@ namespace gedcom.viewer
                 fileName = "New Document";
             }
             Title = fileName + (_gedcom.isDirty ? "*" : "") + " - Gedom Viewer WPF";
+            _tsbFileSave.IsEnabled = _gedcom.isDirty;
         }
 
 
