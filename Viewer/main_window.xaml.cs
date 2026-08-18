@@ -160,7 +160,7 @@ namespace gedcom.viewer
                 break;
 
             case "family":
-                DialogFamily dialogFamily = new DialogFamily(_gedcom, query);
+                DialogFamily dialogFamily = new DialogFamily(_gedcom, query, this);
                 if (dialogFamily.ShowDialog() == true)
                 {
                     // Update the individuals with changes in this family.
@@ -439,7 +439,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'Edit' -> 'Add Family' menu point.</summary>
         private void menuEditAddFamilyClick(object sender, RoutedEventArgs e)
         {
-            DialogFamily dialogFamily = new DialogFamily(_gedcom);
+            DialogFamily dialogFamily = new DialogFamily(_gedcom, this);
             if (dialogFamily.ShowDialog() == true)
             {
                 // Add the family to the gedcom.

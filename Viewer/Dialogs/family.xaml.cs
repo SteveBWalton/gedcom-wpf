@@ -39,12 +39,14 @@ namespace gedcom.viewer
 
         /// <summary>Constructor for the edit family dialog to create a new family.</summary>
         /// <param name="gedcom">Specifies the gedcom to add the new family to.</param>
-        public DialogFamily(Gedcom gedcom)
+        /// <param name="ownerWindow">Specifies the window that owns this dialog.</param>
+        public DialogFamily(Gedcom gedcom, Window ownerWindow)
         {
             InitializeComponent();
 
             // Save the parameters.
             _gedcom = gedcom;
+            Owner = ownerWindow;
             _family = new Family(gedcom);
             _tagControls = new List<TagControl>();
         }
@@ -54,7 +56,8 @@ namespace gedcom.viewer
         /// <summary>Constructor for the edit family dialog to edit an existing family.</summary>
         /// <param name="gedcom">Specifies the gedcom that contains the family.</param>
         /// <param name="query">Specifies a query that contains an ID to identify the family.</param>
-        public DialogFamily(Gedcom gedcom, string query) : this(gedcom)
+        /// <param name="ownerWindow">Specifies the window that owns this dialog.</param>
+        public DialogFamily(Gedcom gedcom, string query, Window ownerWindow) : this(gedcom, ownerWindow)
         {
             // Get the index of the individual.
             NameValueCollection queryParams = HttpUtility.ParseQueryString(query);
