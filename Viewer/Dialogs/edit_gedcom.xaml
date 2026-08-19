@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gedcom.viewer"
         mc:Ignorable="d"
-        Title="Edit Gedcom" Height="450" Width="800">
+        Title="Edit Gedcom" Height="450" Width="800" WindowStartupLocation="CenterOwner">
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" >
             <Button x:Name="buttonCancel" Margin="5" Padding="5" Width="100" Height="31" Click="buttonCancelClick" IsCancel="True">Cancel</Button>

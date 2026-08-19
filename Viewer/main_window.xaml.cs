@@ -402,7 +402,7 @@ namespace gedcom.viewer
             // Let the user edit the top level tag.
             if (topLevel != null)
             {
-                DialogEditGedcom dialogEditGedcom = new DialogEditGedcom(topLevel.tag);
+                DialogEditGedcom dialogEditGedcom = new DialogEditGedcom(topLevel.tag, this);
                 if (dialogEditGedcom.ShowDialog() == true)
                 {
                     // Mark the gedcom as dirty.

@@ -28,10 +28,13 @@ namespace gedcom.viewer
         #region Class constructor
 
         /// <summary>Class constructor for the edit gedcom dialog.</summary>
-        public DialogEditGedcom(Tag tag)
+        /// <param name="tag">Specifies the toplevel tag of the toplevel gedcom object to edit.</param>
+        /// <param name="ownerWindow">Specifies the window that owns this dialog.</param>
+        public DialogEditGedcom(Tag tag, Window ownerWindow)
         {
             InitializeComponent();
             _tag = tag;
+            Owner = ownerWindow;
             _statusTextBox.Text = tag.toText();
         }
 
