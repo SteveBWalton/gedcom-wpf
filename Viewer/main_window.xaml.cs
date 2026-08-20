@@ -474,7 +474,7 @@ namespace gedcom.viewer
         /// <summary>Signal handler for the 'Edit' -> 'Options' menu point.</summary>
         private void menuEditOptionsClick(object sender, RoutedEventArgs e)
         {
-            DialogOptions dialogOptions = new DialogOptions(_userOptions);
+            DialogOptions dialogOptions = new DialogOptions(_userOptions, this);
             if (dialogOptions.ShowDialog() == true)
             {
                 // Options have changed.

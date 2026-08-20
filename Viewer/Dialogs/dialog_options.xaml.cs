@@ -27,12 +27,15 @@ namespace gedcom.viewer
         #region Constructors
 
         /// <summary>Constructor for the options dialog.</summary>
-        public DialogOptions(UserOptions userOptions)
+        /// <param name="userOptions">Specifies the user options to display.</param>
+        /// <param name="ownerWindow">Specifies the window that owns this dialog.</param>
+        public DialogOptions(UserOptions userOptions, Window ownerWindow)
         {
             InitializeComponent();
 
             // Save the parameters.
             _userOptions = userOptions;
+            Owner = ownerWindow;
         }
 
         #endregion
