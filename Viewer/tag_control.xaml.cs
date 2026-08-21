@@ -638,7 +638,7 @@ namespace gedcom.viewer
             Button buttonDateHelper = (Button)sender;
             TextBox txtDate = (TextBox)buttonDateHelper.Tag;
 
-            DateDialog dateDialog = new DateDialog();
+            DateDialog dateDialog = new DateDialog(Window.GetWindow(this));
             dateDialog.tagDate = txtDate.Text;
             if (dateDialog.ShowDialog() == true)
             {

@@ -293,16 +293,17 @@ namespace gedcom.viewer
 
         private DialogDate _firstDate;
         private DialogDate _secondDate;
-        
+
         #endregion
 
         #region Constructors
 
         /// <summary>Constructor for the Date Helper dialog.</summary>
-        public DateDialog()
+        public DateDialog(Window ownerWindow)
         {
             _isNoUpdate = true;
             InitializeComponent();
+            Owner = ownerWindow;
 
             _firstDate = new DialogDate();
             _secondDate = new DialogDate();
@@ -317,7 +318,7 @@ namespace gedcom.viewer
         public string tagDate
         {
             get => _tagDate;
-            set 
+            set
             {
                 _tagDate = value;
 
